@@ -10,8 +10,20 @@ import 'details.dart';
 
 class Menu extends GetView<MenuController> {
   List produit = [
-    {"nom": "Soupe", "logo": "cuisine2.jpg"},
-    {"nom": "Fruit & légume", "logo": "cuisine3.jpeg"},
+    {
+      "id": "1",
+      "devise": "FC",
+      "price": "1000",
+      "nom": "Soupe",
+      "logo": "cuisine2.jpg"
+    },
+    {
+      "id": "2",
+      "devise": "FC",
+      "price": "2000",
+      "nom": "Fruit & légume",
+      "logo": "cuisine3.jpeg"
+    },
   ];
 
   Menu({Key? key}) : super(key: key) {
@@ -24,7 +36,18 @@ class Menu extends GetView<MenuController> {
   Widget build(BuildContext context) {
     return controller.obx(
       (state) => Container(
-        color: Color.fromARGB(255, 255, 232, 235),
+        decoration: const BoxDecoration(
+            // gradient: LinearGradient(
+            //   colors: [
+            //     Color.fromRGBO(255, 137, 147, 1),
+            //     Color(0xFFFFFFFF),
+            //   ],
+            //   begin: FractionalOffset(0.0, 0.0),
+            //   end: FractionalOffset(1.0, 1.0),
+            //   stops: [0.0, 1.0],
+            //   tileMode: TileMode.clamp,
+            // ),
+            ), // Color.fromARGB(255, 255, 232, 235),
         child: GridView.count(
           controller: ScrollController(),
           padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -36,7 +59,7 @@ class Menu extends GetView<MenuController> {
             produit.length,
             (index) => InkWell(
               onTap: () {
-                //
+                //PanierController
                 //
                 showModalBottomSheet(
                   context: context,
@@ -124,7 +147,7 @@ class Menu extends GetView<MenuController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        flex: 7,
+                        flex: 8,
                         child: Container(
                           alignment: Alignment.center,
                           decoration: const BoxDecoration(
@@ -145,22 +168,22 @@ class Menu extends GetView<MenuController> {
                                       "assets/${produit[index]['logo']}"),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(2),
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.favorite_outline,
-                                      size: 20,
-                                    ),
-                                    color: Colors.red,
-                                    onPressed: () {
-                                      //
-                                    },
-                                  ),
-                                ),
-                              )
+                              // Padding(
+                              //   padding: EdgeInsets.all(2),
+                              //   child: Align(
+                              //     alignment: Alignment.topRight,
+                              //     child: IconButton(
+                              //       icon: const Icon(
+                              //         Icons.favorite_outline,
+                              //         size: 20,
+                              //       ),
+                              //       color: Colors.red,
+                              //       onPressed: () {
+                              //         //
+                              //       },
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -205,54 +228,62 @@ class Menu extends GetView<MenuController> {
                         ),
                       ),
                       Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Container(
                           alignment: Alignment.center,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    ),
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.remove,
-                                    size: 19,
-                                    color: Colors.red,
-                                  ),
+                              // InkWell(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 20,
+                              //     width: 20,
+                              //     alignment: Alignment.center,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.white,
+                              //       borderRadius: BorderRadius.circular(
+                              //         10,
+                              //       ),
+                              //       border: Border.all(
+                              //         color: Colors.grey.shade300,
+                              //       ),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.remove,
+                              //       size: 19,
+                              //       color: Colors.red,
+                              //     ),
+                              //   ),
+                              // ),
+
+                              Text(
+                                "En stock",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text("10"),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 20,
-                                  width: 20,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.shade700,
-                                    borderRadius: BorderRadius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                              // InkWell(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 20,
+                              //     width: 20,
+                              //     alignment: Alignment.center,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.red.shade700,
+                              //       borderRadius: BorderRadius.circular(
+                              //         10,
+                              //       ),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       size: 20,
+                              //       color: Colors.white,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

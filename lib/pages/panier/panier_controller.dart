@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
 
 class PanierController extends GetxController {
-  List listeDeElement = [];
+  RxList listeDeElement = RxList();
 }

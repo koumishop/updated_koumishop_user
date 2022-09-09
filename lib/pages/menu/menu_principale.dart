@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/pages/menu/menu.dart';
 import 'package:koumishop/pages/panier/panier.dart';
+import 'package:koumishop/pages/panier/panier_controller.dart';
 
 class MenuPrincipal extends StatefulWidget {
+  //
+  List data;
+  //
+  MenuPrincipal(this.data);
+  //
   @override
   State<StatefulWidget> createState() {
     return _MenuPrincipal();
@@ -27,6 +33,8 @@ class _MenuPrincipal extends State<MenuPrincipal> {
     "Mayonnaise"
   ];
   RxList categories = ["Banane"].obs;
+  //
+  PanierController panierController = Get.find();
   //
   late Rx vue;
   List options = [
@@ -62,278 +70,310 @@ class _MenuPrincipal extends State<MenuPrincipal> {
         bottom: false,
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 255, 232, 235),
-          body: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 5),
-                  height: 55,
-                  color: Color.fromARGB(255, 255, 232, 235),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Card(
-                        elevation: 1,
-                        child: InkWell(
-                            onTap: () {
-                              Get.back();
-                              // showM.value == 4 ? showM.value = 0 : showM.value = 4;
-                              // n == 2 ? n = 3 : n = 2;
-                            },
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "K",
-                                style: TextStyle(fontSize: 30),
-                              ),
-                            )),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Card(
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const TextField(
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                              decoration: InputDecoration(
-                                  fillColor: Colors.red,
-                                  focusColor: Colors.red,
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 5),
-                                  hintText: 'Recherche',
-                                  hintStyle: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                  border: InputBorder.none
-                                  // border: OutlineInputBorder(
-                                  //   borderRadius: BorderRadius.circular(20),
-                                  //   borderSide: const BorderSide(
-                                  //     color: Colors.white,
-                                  //     width: 1,
-                                  //   ),
-                                  // ),
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        //color: Colors.white,
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 5),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Card(
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      //
-                                      print("Salut........................");
-                                      //
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(builder: (c) {
-                                        return Panier();
-                                      }));
-                                      //Get.to(Panier());
-                                      //
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(255, 137, 147, 1),
+                  Color(0xFFFFFFFF),
+                ],
+                begin: FractionalOffset(0.0, 0.0),
+                end: FractionalOffset(1.0, 1.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+            child: false
+                ? ListView(
+                    children: List.generate(
+                      widget.data.length,
+                      (index) => Text("${widget.data[index]}"),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 5),
+                          height: 55,
+                          //color: Color.fromARGB(255, 255, 232, 235),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Card(
+                                elevation: 1,
+                                child: InkWell(
+                                    onTap: () {
+                                      Get.back();
+                                      // showM.value == 4 ? showM.value = 0 : showM.value = 4;
+                                      // n == 2 ? n = 3 : n = 2;
                                     },
-                                    icon: const Icon(
-                                      CupertinoIcons.shopping_cart,
-                                      size: 22,
-                                      color: Colors.red,
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      alignment: Alignment.center,
+                                      child: const Text(
+                                        "K",
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                    )),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Card(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: const TextField(
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                      decoration: InputDecoration(
+                                          fillColor: Colors.red,
+                                          focusColor: Colors.red,
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color: Colors.black,
+                                            size: 25,
+                                          ),
+                                          contentPadding:
+                                              EdgeInsets.symmetric(vertical: 5),
+                                          hintText: 'Recherche',
+                                          hintStyle: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          border: InputBorder.none
+                                          // border: OutlineInputBorder(
+                                          //   borderRadius: BorderRadius.circular(20),
+                                          //   borderSide: const BorderSide(
+                                          //     color: Colors.white,
+                                          //     width: 1,
+                                          //   ),
+                                          // ),
+                                          ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(0),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  padding: EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow.shade700,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  //alignment: Alignment.center,
-                                  child: InkWell(
-                                    onLongPress: () => Get.to(Panier()),
-                                    onTap: () {
-                                      //
-                                      print("Salut........................");
-                                      //
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(builder: (c) {
-                                        return Panier();
-                                      }));
-                                      //Get.to(Panier());
-                                      //
-                                    },
-                                    child: Text("100"),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 35,
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 232, 235),
-                  ),
-                  child: Obx(
-                    () => ListView(
-                      scrollDirection: Axis.horizontal,
-                      controller: ScrollController(),
-                      children: List.generate(
-                        categories.length,
-                        (index) => Card(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                            margin: const EdgeInsets.symmetric(horizontal: 3),
-                            height: 30,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.white,
-                              ),
-                            ),
-                            child: Text("${categories[index]}"),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 3),
-                    color: Color.fromARGB(255, 255, 232, 235),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Card(
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: ListView(
-                                padding: const EdgeInsets.all(10),
-                                controller: ScrollController(),
-                                children: List.generate(
-                                  options.length,
-                                  (index) => InkWell(
-                                    onTap: () {
-                                      //
-                                      i.value = index;
-                                      //
-                                      var rng = Random();
-                                      int c1 = rng.nextInt(6);
-                                      //
-                                      categories.clear();
-                                      for (var i = 0; i < c1; i++) {
-                                        categories.add('${l[i]}');
-                                      }
-                                      //
-                                      vue = Rx(
-                                        Menu(
-                                          key: UniqueKey(),
-                                        ),
-                                      );
-                                      //
-                                    },
-                                    child: Obx(
-                                      () => Container(
-                                        height: 60,
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: Colors.grey,
-                                              width: 1,
+                              Container(
+                                height: 50,
+                                width: 50,
+                                //color: Colors.white,
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Card(
+                                          elevation: 1,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              //
+                                              print(
+                                                  "Salut........................");
+                                              //
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (c) {
+                                                return Panier();
+                                              }));
+                                              //Get.to(Panier());
+                                              //
+                                            },
+                                            icon: const Icon(
+                                              CupertinoIcons.shopping_cart,
+                                              size: 22,
+                                              color: Colors.red,
                                             ),
                                           ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Image.asset(
-                                                  "assets/${options[index]['logo']}"),
-                                            ),
-                                            Expanded(
-                                              flex: 7,
-                                              child: Center(
-                                                child: Text(
-                                                  "${options[index]['nom']}",
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: i.value == index
-                                                        ? Colors.black
-                                                        : Colors.grey,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(0),
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Container(
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.yellow.shade700,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          //alignment: Alignment.center,
+                                          child: InkWell(
+                                            onLongPress: () => Get.to(Panier()),
+                                            onTap: () {
+                                              //
+                                              print(
+                                                  "Salut........................");
+                                              //
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (c) {
+                                                return Panier();
+                                              }));
+                                              //Get.to(Panier());
+                                              //
+                                            },
+                                            child: Obx(() => Text(
+                                                "${panierController.listeDeElement.length}")),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 35,
+                          alignment: Alignment.centerLeft,
+                          decoration: const BoxDecoration(
+                              //color: Color.fromARGB(255, 255, 232, 235),
+                              ),
+                          child: Obx(
+                            () => ListView(
+                              scrollDirection: Axis.horizontal,
+                              controller: ScrollController(),
+                              children: List.generate(
+                                categories.length,
+                                (index) => Card(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    height: 30,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: Text("${categories[index]}"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 3),
+                            //color: Color.fromARGB(255, 255, 232, 235),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Card(
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(20),
+                                        ),
+                                      ),
+                                      child: ListView(
+                                        padding: const EdgeInsets.all(10),
+                                        controller: ScrollController(),
+                                        children: List.generate(
+                                          options.length,
+                                          (index) => InkWell(
+                                            onTap: () {
+                                              //
+                                              i.value = index;
+                                              //
+                                              var rng = Random();
+                                              int c1 = rng.nextInt(6);
+                                              //
+                                              categories.clear();
+                                              for (var i = 0; i < c1; i++) {
+                                                categories.add('${l[i]}');
+                                              }
+                                              //
+                                              vue = Rx(
+                                                Menu(
+                                                  key: UniqueKey(),
+                                                ),
+                                              );
+                                              //
+                                            },
+                                            child: Obx(
+                                              () => Container(
+                                                height: 60,
+                                                decoration: const BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: Colors.grey,
+                                                      width: 1,
+                                                    ),
                                                   ),
                                                 ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 4,
+                                                      child: Image.asset(
+                                                          "assets/${options[index]['logo']}"),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 7,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "${options[index]['nom']}",
+                                                          style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: i.value ==
+                                                                    index
+                                                                ? Colors.black
+                                                                : Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            )
-                                          ],
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                Expanded(
+                                  flex: 7,
+                                  child: vue.value,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: vue.value,
-                        ),
+                        )
                       ],
                     ),
                   ),
-                )
-              ],
-            ),
           ),
         ),
       ),

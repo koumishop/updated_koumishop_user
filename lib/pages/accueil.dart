@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/categorie/categorie.dart';
 import 'package:koumishop/pages/favorits/favorit.dart';
 import 'package:koumishop/pages/menu/menu_principale.dart';
 import 'package:koumishop/pages/profil/profil.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 RxInt index = 0.obs;
 PageController? controllerP;
@@ -18,6 +20,7 @@ class Accueil extends StatefulWidget {
 
 class _Accueil extends State<Accueil> {
   //
+  AccueilController accueilController = Get.find();
 
   @override
   void initState() {
@@ -41,49 +44,148 @@ class _Accueil extends State<Accueil> {
         right: false,
         bottom: false,
         child: Scaffold(
-          body: PageView(
-            controller: controllerP,
-            onPageChanged: (e) {
-              index.value = e;
-              print(e);
-            },
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.to(MenuPrincipal());
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                    ),
-                    child: Categorie(
-                        "Koumi Market", "", CupertinoIcons.cart_badge_minus),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                    ),
-                    child: Categorie("Koumi Food", "Table dressée avec viande",
-                        Icons.fastfood_sharp),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(EdgeInsets.zero),
-                    ),
-                    child: Categorie("Koumi Pharma", "Acheter vos produits",
-                        CupertinoIcons.add_circled_solid),
-                  ),
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(255, 137, 147, 1),
+                  Color(0xFFFFFFFF),
                 ],
+                begin: FractionalOffset(0.0, 0.0),
+                end: FractionalOffset(1.0, 1.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
               ),
-              Favorit(),
-              Profil(),
-            ],
+            ),
+            child: PageView(
+              controller: controllerP,
+              onPageChanged: (e) {
+                index.value = e;
+                print(e);
+              },
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        var connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.mobile ||
+                            connectivityResult == ConnectivityResult.wifi) {
+                          // I am connected to a mobile network.
+                          // I am connected to a wifi network.
+                          Get.dialog(
+                            const Material(
+                              color: Colors.transparent,
+                              child: Center(
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.red,
+                                    strokeWidth: 7,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          //
+                          accueilController.getService(1);
+                          //
+                        } else {
+                          Get.snackbar("Connexion",
+                              "Veuillez vous connecter à internet svp!");
+                        }
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child:
+                          Categorie("Koumi Market", "", Icons.shopping_basket),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.mobile ||
+                            connectivityResult == ConnectivityResult.wifi) {
+                          // I am connected to a mobile network.
+                          // I am connected to a wifi network.
+                          Get.dialog(
+                            const Material(
+                              color: Colors.transparent,
+                              child: Center(
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.red,
+                                    strokeWidth: 7,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          //
+                          accueilController.getService(2);
+                          //
+                        } else {
+                          Get.snackbar("Connexion",
+                              "Veuillez vous connecter à internet svp!");
+                        }
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child: Categorie("Koumi Food",
+                          "Table dressée avec viande", Icons.fastfood_sharp),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var connectivityResult =
+                            await (Connectivity().checkConnectivity());
+                        if (connectivityResult == ConnectivityResult.mobile ||
+                            connectivityResult == ConnectivityResult.wifi) {
+                          // I am connected to a mobile network.
+                          // I am connected to a wifi network.
+                          Get.dialog(
+                            const Material(
+                              color: Colors.transparent,
+                              child: Center(
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.red,
+                                    strokeWidth: 7,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          //
+                          accueilController.getService(3);
+                          //
+                        } else {
+                          Get.snackbar("Connexion",
+                              "Veuillez vous connecter à internet svp!");
+                        }
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child: Categorie("Koumi Pharma", "Acheter vos produits",
+                          Icons.local_hospital),
+                    ),
+                  ],
+                ),
+                Favorit(),
+                Profil(),
+              ],
+            ),
           ),
           // body: Obx(() {
           //   if (index.value == 0) {

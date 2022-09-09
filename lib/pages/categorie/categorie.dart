@@ -59,7 +59,7 @@ class Categorie extends StatelessWidget {
                         sousTitre,
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 10,
+                          fontSize: 13,
                         ),
                       ),
                     ],

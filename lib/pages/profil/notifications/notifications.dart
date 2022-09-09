@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:koumishop/pages/accueil.dart';
 
 class Notifications extends StatefulWidget {
@@ -30,13 +31,8 @@ class _Notifications extends State<Notifications> {
                   children: [
                     InkWell(
                       onTap: () {
-                        index.value = 0;
                         //
-                        controllerP!.animateToPage(
-                          0,
-                          duration: const Duration(seconds: 1),
-                          curve: Curves.ease,
-                        );
+                        Get.back();
                       },
                       child: Container(
                         padding: const EdgeInsets.only(left: 10),

@@ -1,21 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
-import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
-import 'package:koumishop/pages/profil/adresse/nouvelle_adresse.dart';
-import 'package:koumishop/pages/profil/log/log.dart';
-import 'package:koumishop/pages/profil/profil.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
-
 import 'favorits/favorit_controller.dart';
-import 'menu/menu_principale.dart';
+import 'profil/autres/autre_controller.dart';
 import 'profil/notifications/notification_controller.dart';
 
 class SplashtScreen extends StatelessWidget {
@@ -31,6 +25,7 @@ class SplashtScreen extends StatelessWidget {
       MenuController menuController = Get.put(MenuController());
       NotificationController notificationController =
           Get.put(NotificationController());
+      AutreController autreController = Get.put(AutreController());
       //
       //
       Get.off(Accueil());
@@ -40,14 +35,24 @@ class SplashtScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.red.shade700,
-            direction: ShimmerDirection.ttb,
-            child: Text(
-              "Koumishop",
-              style: TextStyle(fontSize: 23),
-            )),
+        child: Container(
+          height: 100,
+          width: 250,
+          alignment: Alignment.center,
+          child: Shimmer.fromColors(
+            baseColor: Colors.red,
+            highlightColor: Colors.yellow,
+            child: const Text(
+              "KOUMISHOP",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

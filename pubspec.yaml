@@ -37,8 +37,13 @@ dependencies:
   get_storage:
   get:
   shimmer:
+  http:
   google_fonts: ^3.0.1
   share_plus: ^4.1.0
+  accordion: ^2.5.1
+  jwt_decoder: ^2.0.1
+  dart_jsonwebtoken: ^2.4.2
+  connectivity_plus: ^2.3.6+1
 
 dev_dependencies:
   flutter_test:

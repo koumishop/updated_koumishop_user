@@ -1,12 +1,23 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:koumishop/pages/favorits/favorit_controller.dart';
+import 'package:koumishop/pages/panier/panier_controller.dart';
 
 import 'details_controller.dart';
 
 class Details extends GetView<DetailsController> {
+  //
   Map produit;
+  RxBool contient = false.obs;
+  //
+  PanierController panierController = Get.find();
+  FavoritController favoritController = Get.find();
   //
   List produitS = [
     {"nom": "Soupe", "logo": "cuisine2.jpg"},
@@ -17,6 +28,11 @@ class Details extends GetView<DetailsController> {
     {"nom": "Fruit & légume", "logo": "cuisine3.jpeg"},
   ];
   //
+  RxInt nombre = 0.obs;
+  int x = 0;
+  //final box = GetStorage();
+  //List paniers = [];
+  //
   List produitC = [
     {"nom": "Produit menager", "logo": "menage1.png"},
     {"nom": "Viande", "logo": "viande1.jpeg"},
@@ -25,7 +41,48 @@ class Details extends GetView<DetailsController> {
     {"nom": "Charcuteir", "logo": "saucisse1.jpeg"},
   ];
   //
-  Details(this.produit);
+  Details(this.produit) {
+    //
+    //panierController.listeDeElement.value = box.read('paniers') ?? [];
+    Timer(Duration(seconds: 1), () {
+      contient.value = favoritController.listeDeElement.contains(produit);
+      print(contient.value);
+      for (var i = 0; i < panierController.listeDeElement.length; i++) {
+        if (panierController.listeDeElement[i]['id'] == produit["id"]) {
+          contient.value = true;
+        }
+      }
+      //
+      print(contient.value);
+      //panierController.listeDeElement.addAll(box.read('paniers') ?? []);
+    });
+    //
+    print("la liste: ${panierController.listeDeElement.value}");
+    //paniers.add(produit);
+    //box.write('paniers', paniers);
+    //
+    for (var i = 0; i < panierController.listeDeElement.length; i++) {
+      Map e = panierController.listeDeElement.elementAt(i);
+      print("le produit: $e");
+      if (e["id"] == produit["id"]) {
+        // Map p = box.read('${produit["id"]}');
+        //print("le produit: $p");
+        //produit["nombre"] = p["nombre"];
+        nombre.value = int.parse(produit["nombre"]);
+        //
+        break;
+      } else {
+        //
+        nombre.value = 0;
+        produit["nombre"] = "0";
+      }
+      x++;
+    }
+    //
+    //
+  }
+  //
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -76,7 +133,7 @@ class Details extends GetView<DetailsController> {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            "La banane Frécinette",
+                            "${produit['nom']}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.black,
@@ -104,81 +161,129 @@ class Details extends GetView<DetailsController> {
                       Expanded(
                         flex: 3,
                         child: Container(
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: SizedBox(),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 30,
-                                            width: 30,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                15,
-                                              ),
-                                              border: Border.all(
-                                                color: Colors.grey.shade300,
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.remove,
-                                              size: 19,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ),
-                                        Text("10"),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            height: 30,
-                                            width: 30,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.red.shade700,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                15,
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.add,
-                                              size: 20,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: SizedBox(),
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.red,
                                     ),
                                   ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (nombre.value > 0) {
+                                            nombre.value--;
+                                            produit["nombre"] =
+                                                "${nombre.value}";
+                                            //box.write(
+                                            //  '${produit["id"]}', produit);
+                                          }
+                                          if (nombre.value == 0) {
+                                            panierController.listeDeElement
+                                                .remove(produit);
+                                            // box.write(
+                                            //     'paniers',
+                                            //     panierController
+                                            //         .listeDeElement);
+                                            //panierController.listeDeElement
+                                            //  .clear();
+                                            //panierController
+                                            //  .listeDeElement.value = paniers;
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                            border: Border.all(
+                                              color: Colors.grey.shade300,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.remove,
+                                            size: 19,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Text("${nombre.value}"),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          nombre.value++;
+                                          produit["nombre"] = "${nombre.value}";
+                                          //box.write('${produit["id"]}',
+                                          //  jsonEncode(produit));
+                                          bool v = false;
+                                          panierController.listeDeElement
+                                              .add(produit);
+                                          panierController.listeDeElement =
+                                              panierController.listeDeElement
+                                                  .toSet()
+                                                  .toList()
+                                                  .obs;
+
+                                          //
+                                          // if (!v) {
+                                          //   panierController.listeDeElement
+                                          //       .add('${produit["id"]}');
+                                          //   box.write(
+                                          //       'paniers',
+                                          //       panierController
+                                          //           .listeDeElement.value);
+                                          //   //panierController.listeDeElement
+                                          //   //  .clear();
+                                          //   //panierController
+                                          //   //  .listeDeElement.value = paniers;
+                                          // }
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.shade700,
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.add,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: SizedBox(),
-                                )
-                              ],
-                            )),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: SizedBox(),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -190,10 +295,32 @@ class Details extends GetView<DetailsController> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.favorite_outline,
-                        color: Colors.red,
+                      onPressed: () async {
+                        if (!contient.value) {
+                          favoritController.listeDeElement.add(produit);
+                          favoritController.listeDeElement = favoritController
+                              .listeDeElement
+                              .toSet()
+                              .toList()
+                              .obs; //
+                          contient.value = true;
+                        } else {
+                          favoritController.listeDeElement.remove(produit); //
+                          contient.value = false;
+                          //
+                        }
+                        //print(favoritController.listeDeElement);
+                        print(contient.value);
+                        //print(
+                        //  favoritController.listeDeElement.contains(produit));
+                      },
+                      icon: Obx(
+                        () => Icon(
+                          contient.value
+                              ? Icons.favorite
+                              : Icons.favorite_outline,
+                          color: Colors.red,
+                        ),
                       ),
                     )
                   ],
@@ -511,8 +638,8 @@ class Details extends GetView<DetailsController> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "FC 10000",
-                    style: TextStyle(
+                    "${produit['devise']} ${produit['price']}",
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
