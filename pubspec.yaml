@@ -44,6 +44,16 @@ dependencies:
   jwt_decoder: ^2.0.1
   dart_jsonwebtoken: ^2.4.2
   connectivity_plus: ^2.3.6+1
+  flutter_widget_from_html: ^0.8.5
+  fl_country_code_picker: ^0.0.3
+  firebase_messaging: ^13.0.1
+  geolocator: ^9.0.1
+  firebase_core: ^1.22.0
+  firebase_core_platform_interface: ^4.5.1
+  firebase_crashlytics: ^2.8.10
+  firebase_dynamic_links: ^4.3.7
+  firebase_analytics: ^9.3.4
+  firebase_auth: ^3.8.0
 
 dev_dependencies:
   flutter_test:

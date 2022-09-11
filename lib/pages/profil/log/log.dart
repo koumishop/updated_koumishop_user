@@ -1,9 +1,19 @@
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:koumishop/pages/profil/profil_controller.dart';
 
 class Log extends StatefulWidget {
+  State? state;
+  Log(state);
   @override
   State<StatefulWidget> createState() {
     return _Log();
@@ -17,6 +27,9 @@ class _Log extends State<Log> {
   final numeroC = TextEditingController();
   //
   final pwC = TextEditingController();
+  //
+  var box = GetStorage();
+  bool showPw = true;
   //
   @override
   Widget build(BuildContext context) {
@@ -138,7 +151,7 @@ class _Log extends State<Log> {
                           children: <Widget>[
                             TextFormField(
                               decoration: InputDecoration(
-                                labelText: "Numéro ex: 0822221111",
+                                labelText: "Numéro ex: 822221111",
                                 // border: OutlineInputBorder(
                                 //   borderRadius: BorderRadius.circular(10),
                                 // ),
@@ -158,12 +171,24 @@ class _Log extends State<Log> {
                               height: 20,
                             ),
                             TextFormField(
+                              obscureText: showPw,
                               decoration: InputDecoration(
                                 labelText: "Mot de passe",
                                 // border: OutlineInputBorder(
                                 //   borderRadius: BorderRadius.circular(10),
                                 // ),
                                 prefixIcon: Icon(Icons.lock),
+                                suffix: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      showPw ? showPw = false : showPw = true;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.remove_red_eye,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                               ),
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -194,7 +219,86 @@ class _Log extends State<Log> {
                                     Colors.red.shade100,
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  //
+                                  final fcmToken = await FirebaseMessaging
+                                      .instance
+                                      .getToken();
+                                  //
+                                  Get.dialog(
+                                    const Center(
+                                      child: SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.red,
+                                          strokeWidth: 7,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                  //
+                                  var headers = {
+                                    'Authorization':
+                                        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                  };
+                                  var request = http.MultipartRequest(
+                                      'POST',
+                                      Uri.parse(
+                                          'https://webadmin.koumishop.com/api-firebase/login.php'));
+                                  request.fields.addAll({
+                                    'accesskey': '90336',
+                                    'login': '1',
+                                    'mobile': numeroC.text,
+                                    'password': pwC.text,
+                                    'fcm_id': '$fcmToken',
+                                  });
+
+                                  request.headers.addAll(headers);
+
+                                  http.StreamedResponse response =
+                                      await request.send();
+
+                                  if (response.statusCode == 200) {
+                                    Map infos = jsonDecode(
+                                        await response.stream.bytesToString());
+                                    infos["mdp"] = pwC.text;
+                                    print("$infos");
+                                    //
+                                    ProfilController profilController =
+                                        Get.find();
+                                    //
+                                    profilController.infos.value = infos;
+                                    //
+                                    box.write("profile", infos);
+                                    //
+                                    Get.back();
+                                    Get.back();
+                                    Get.snackbar(
+                                        "Succès", "Bienvenu ${infos['name']}");
+                                    Timer(Duration(seconds: 1), () {
+                                      //
+                                      widget.state!.setState(() {});
+                                    });
+                                    // showDialog(
+                                    //     context: context,
+                                    //     builder: (c) {
+                                    //       return Material(
+                                    //         child: ListView(
+                                    //           children: [
+                                    //             Text("$infos"),
+                                    //           ],
+                                    //         ),
+                                    //       );
+                                    //     });
+
+                                  } else {
+                                    print(response.reasonPhrase);
+                                    Get.back();
+                                    Get.snackbar("Erreur d'authentification",
+                                        "${response.reasonPhrase}. Code: ${response.statusCode}");
+                                  }
+                                },
                                 child: Container(
                                   height: 50,
                                   alignment: Alignment.center,
@@ -250,7 +354,7 @@ class _Log extends State<Log> {
                           height: 50,
                           alignment: Alignment.center,
                           child: Text(
-                            "Se connecter",
+                            "Inscrivez-vous",
                             style: TextStyle(
                               color: Colors.red,
                               fontSize: 17,

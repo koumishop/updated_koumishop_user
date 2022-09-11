@@ -22,7 +22,7 @@ class Categorie extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            flex: 4,
+            flex: 3,
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class Categorie extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 6,
+            flex: 9,
             child: Container(
               padding: EdgeInsets.all(10),
               child: Column(
@@ -46,22 +46,32 @@ class Categorie extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        titre,
-                        style: TextStyle(color: Colors.black),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          titre,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        sousTitre,
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13,
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          sousTitre,
+                          maxLines: 2,
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ],

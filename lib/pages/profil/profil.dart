@@ -1,15 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/retry.dart';
 import 'package:koumishop/pages/accueil.dart';
+import 'package:koumishop/pages/profil/autres/change_mdp.dart';
 import 'package:koumishop/pages/profil/autres/faq.dart';
 import 'package:koumishop/pages/profil/autres/politique.dart';
 import 'package:koumishop/pages/profil/autres/termes.dart';
 import 'package:koumishop/pages/profil/notifications/notifications.dart';
+import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:share_plus/share_plus.dart';
 import 'adresse/adresse.dart';
 import 'autres/apropos.dart';
 import 'log/log.dart';
+import 'package:http/http.dart' as http;
 
 class Profil extends StatefulWidget {
   @override
@@ -20,14 +29,26 @@ class Profil extends StatefulWidget {
 
 class _Profil extends State<Profil> {
   //
-  final _formKey = GlobalKey<FormState>();
+  ProfilController profilController = Get.find();
+  //
+  //
+  var box = GetStorage();
+  //
+  Future<void> initializeDefault() async {
+    Firebase.initializeApp();
+    //print('Initialized default app $app');
+  }
+  //
 
-  final numeroC = TextEditingController();
   //
-  final pwNC = TextEditingController();
-  //
-  final pwC = TextEditingController();
-  //
+  @override
+  void initState() {
+    //
+    initializeDefault();
+    //
+    super.initState();
+  }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -139,30 +160,67 @@ class _Profil extends State<Profil> {
                             ),
                             child: Container(
                               alignment: Alignment.center,
-                              child: Text(
-                                "K",
-                                style: TextStyle(
-                                  fontSize: 50,
-                                ),
-                              ),
                               height: 100,
                               width: 100,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                               ),
+                              child: Obx(
+                                () => profilController.infos['name'] == null
+                                    ? const Text(
+                                        "K",
+                                        style: TextStyle(
+                                          fontSize: 50,
+                                        ),
+                                      )
+                                    : Stack(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.all(0),
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 55,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(0),
+                                            child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: IconButton(
+                                                icon: const Icon(
+                                                  Icons.edit_note,
+                                                  color: Colors.red,
+                                                  size: 35,
+                                                ),
+                                                onPressed: () {
+                                                  //
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                              ),
                             ),
                           ),
-                          Text(
-                            "Bienvenue",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 17,
+                          Obx(
+                            () => Text(
+                              "${profilController.infos['name'] ?? "Bienvenue"}",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                              ),
                             ),
                           ),
-                          Text(
-                            "S'identifier ou S'inscrire",
-                            style: TextStyle(
-                              color: Colors.grey,
+                          Obx(
+                            () => Text(
+                              "${profilController.infos['mobile'] != null ? profilController.infos['mobile'] : "S'identifier ou S'inscrire"}",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                           Expanded(
@@ -272,192 +330,52 @@ class _Profil extends State<Profil> {
                                       size: 20,
                                     ),
                                   ),
-                                  ListTile(
-                                    onTap: () {
-                                      //
-                                      showModalBottomSheet(
-                                        context: context,
-                                        builder: (c) {
-                                          return Container(
-                                            padding: const EdgeInsets.all(30),
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(25),
-                                                topRight: Radius.circular(25),
-                                              ),
+                                  Obx(
+                                    () => profilController.infos['mobile'] ==
+                                            null
+                                        ? Container()
+                                        : ListTile(
+                                            onTap: () {
+                                              //
+                                              // showModalBottomSheet(
+                                              //   context: context,
+                                              //   builder: (c) {
+                                              //     return ChangeMdp();
+                                              //   },
+                                              //   backgroundColor:
+                                              //       Colors.transparent,
+                                              // );
+                                              showDialog(
+                                                context: context,
+                                                builder: (c) {
+                                                  return Material(
+                                                    color: Colors.transparent,
+                                                    child: Column(
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: ChangeMdp(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            leading: Icon(
+                                              Icons.lock_outline,
+                                              color: Colors.black,
                                             ),
-                                            child: Column(
-                                              children: [
-                                                const Text(
-                                                  "Modifier le mot de passe ?",
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w300,
-                                                    fontSize: 25,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                Form(
-                                                  key: _formKey,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      TextFormField(
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          labelText:
-                                                              "Ancien mot de passe",
-                                                          // border: OutlineInputBorder(
-                                                          //   borderRadius: BorderRadius.circular(10),
-                                                          // ),
-                                                          prefixIcon:
-                                                              Icon(Icons.lock),
-                                                        ),
-                                                        validator: (value) {
-                                                          if (value!.isEmpty) {
-                                                            return "Veuillez saisir le mot de passe";
-                                                          }
-                                                          return null;
-                                                        },
-                                                        controller: numeroC,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      TextFormField(
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          labelText:
-                                                              "Nouveau mot de passe",
-                                                          // border: OutlineInputBorder(
-                                                          //   borderRadius: BorderRadius.circular(10),
-                                                          // ),
-                                                          prefixIcon:
-                                                              Icon(Icons.lock),
-                                                        ),
-                                                        validator: (value) {
-                                                          if (value!.isEmpty) {
-                                                            return "Veuillez saisir le mot de passe";
-                                                          }
-                                                          return null;
-                                                        },
-                                                        controller: pwNC,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      TextFormField(
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          labelText:
-                                                              "Confirm mot de passe",
-                                                          // border: OutlineInputBorder(
-                                                          //   borderRadius: BorderRadius.circular(10),
-                                                          // ),
-                                                          prefixIcon:
-                                                              Icon(Icons.lock),
-                                                        ),
-                                                        validator: (value) {
-                                                          if (value!.isEmpty) {
-                                                            return "Veuillez saisir le mot de passe";
-                                                          }
-                                                          return null;
-                                                        },
-                                                        controller: pwC,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal: 0),
-                                                        child: ElevatedButton(
-                                                          style: ButtonStyle(
-                                                            elevation:
-                                                                MaterialStateProperty
-                                                                    .all(0),
-                                                            shape:
-                                                                MaterialStateProperty
-                                                                    .all(
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                              ),
-                                                            ),
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all(
-                                                              Colors.red,
-                                                            ),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .all(
-                                                              Colors
-                                                                  .red.shade100,
-                                                            ),
-                                                          ),
-                                                          onPressed: () {},
-                                                          child: Container(
-                                                            height: 50,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: const Text(
-                                                              "Modifier le mot de passe",
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 17,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
+                                            title: Text(
+                                              "Modifier le mot de passe ?",
+                                              style: styleDeMenu(),
                                             ),
-                                          );
-                                        },
-                                        backgroundColor: Colors.transparent,
-                                      );
-                                      // showDialog(
-                                      //   context: context,
-                                      //   builder: (c) {
-                                      //     return Material(
-                                      //       color: Colors.transparent,
-                                      //       child: Column(),
-                                      //     );
-                                      //   },
-                                      // );
-                                    },
-                                    leading: Icon(
-                                      Icons.lock_outline,
-                                      color: Colors.black,
-                                    ),
-                                    title: Text(
-                                      "Modifier le mot de passe ?",
-                                      style: styleDeMenu(),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 20,
-                                    ),
+                                            trailing: Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 20,
+                                            ),
+                                          ),
                                   ),
                                   ListTile(
                                     onTap: () {
@@ -580,15 +498,64 @@ class _Profil extends State<Profil> {
                                   ListTile(
                                     onTap: () {
                                       //
-                                      Get.to(Log());
+                                      if (profilController.infos['mobile'] ==
+                                          null) {
+                                        Get.to(Log(this));
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (c) {
+                                            return AlertDialog(
+                                              title: Text("Déconnexion"),
+                                              content: Text(
+                                                  "Voulez-vous vraiment vous déconnecter ?"),
+                                              actions: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.close,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    //ar box
+                                                    profilController
+                                                        .infos.value = {};
+                                                    box.write("profile", null);
+                                                    Timer(Duration(seconds: 1),
+                                                        () {
+                                                      setState(() {
+                                                        Get.back();
+                                                      });
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.check,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     },
                                     leading: Icon(
-                                      CupertinoIcons.person_circle,
+                                      profilController.infos['mobile'] == null
+                                          ? CupertinoIcons.person_circle
+                                          : Icons.exit_to_app,
                                       color: Colors.black,
                                     ),
-                                    title: Text(
-                                      "Se connecter",
-                                      style: styleDeMenu(),
+                                    title: Obx(
+                                      () => Text(
+                                        profilController.infos['mobile'] == null
+                                            ? "Se connecter"
+                                            : "Se déconnexion",
+                                        style: styleDeMenu(),
+                                      ),
                                     ),
                                     trailing: Icon(
                                       Icons.arrow_forward_ios,
@@ -606,6 +573,51 @@ class _Profil extends State<Profil> {
                 )
               ],
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              //
+              final fcmToken = await FirebaseMessaging.instance.getToken();
+              //
+              var headers = {
+                'Authorization':
+                    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+              };
+              var request = http.MultipartRequest(
+                  'POST',
+                  Uri.parse(
+                      'https://webadmin.koumishop.com/api-firebase/login.php'));
+              request.fields.addAll({
+                'accesskey': '90336',
+                'login': '1',
+                'mobile': '815381693',
+                'password': 'jojo1717',
+                'fcm_id': '$fcmToken',
+              });
+
+              request.headers.addAll(headers);
+
+              http.StreamedResponse response = await request.send();
+
+              if (response.statusCode == 200) {
+                Map infos = jsonDecode(await response.stream.bytesToString());
+                print("");
+                showDialog(
+                    context: context,
+                    builder: (c) {
+                      return Material(
+                        child: ListView(
+                          children: [
+                            Text("$infos"),
+                          ],
+                        ),
+                      );
+                    });
+              } else {
+                print(response.reasonPhrase);
+              }
+            },
+            child: const Icon(Icons.query_builder),
           ),
         ),
       ),

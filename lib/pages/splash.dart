@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/pages/profil/profil.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'favorits/favorit_controller.dart';
@@ -27,8 +29,11 @@ class SplashtScreen extends StatelessWidget {
           Get.put(NotificationController());
       AutreController autreController = Get.put(AutreController());
       //
+      var box = GetStorage();
+      profilController.infos.value = box.read("profile") ?? RxMap();
+      print("---------------------------- ${profilController.infos}");
       //
-      Get.off(Accueil());
+      Get.off(Profil());
     });
   }
   @override

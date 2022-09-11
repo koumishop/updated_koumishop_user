@@ -11,26 +11,34 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 RxInt index = 0.obs;
 PageController? controllerP;
 
-class Accueil extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _Accueil();
-  }
-}
-
-class _Accueil extends State<Accueil> {
+class Accueil extends GetView<AccueilController> {
   //
   AccueilController accueilController = Get.find();
-
-  @override
-  void initState() {
-    //
+  //
+  Accueil() {
     controllerP = PageController();
-    //
-    vue = Container();
-    //
-    super.initState();
+    controller.getService1(1);
   }
+  //
+  List listeData = [
+    Icons.shopping_basket,
+    Icons.fastfood_sharp,
+    Icons.local_hospital,
+    Icons.mail,
+    Icons.nature
+  ];
+
+  // @override
+  // void initState() {
+  //   //
+  //   controllerP = PageController();
+  //   //
+  //   accueilController.getService1(1);
+  //   //
+  //   vue = Container();
+  //   //
+  //   super.initState();
+  // }
 
   //
   Widget? vue;
@@ -49,7 +57,7 @@ class _Accueil extends State<Accueil> {
               gradient: LinearGradient(
                 colors: [
                   Color.fromRGBO(255, 137, 147, 1),
-                  Color(0xFFFFFFFF),
+                  Color(0xFFFFFF),
                 ],
                 begin: FractionalOffset(0.0, 0.0),
                 end: FractionalOffset(1.0, 1.0),
@@ -64,123 +72,124 @@ class _Accueil extends State<Accueil> {
                 print(e);
               },
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        var connectivityResult =
-                            await (Connectivity().checkConnectivity());
-                        if (connectivityResult == ConnectivityResult.mobile ||
-                            connectivityResult == ConnectivityResult.wifi) {
-                          // I am connected to a mobile network.
-                          // I am connected to a wifi network.
-                          Get.dialog(
-                            const Material(
-                              color: Colors.transparent,
-                              child: Center(
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.red,
-                                    strokeWidth: 7,
-                                  ),
+                controller.obx(
+                  (state) {
+                    List menus = state!;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(menus.length, (index) {
+                        return SizedBox(
+                          height: 90,
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  var connectivityResult = await (Connectivity()
+                                      .checkConnectivity());
+                                  if (connectivityResult ==
+                                          ConnectivityResult.mobile ||
+                                      connectivityResult ==
+                                          ConnectivityResult.wifi) {
+                                    // I am connected to a mobile network.
+                                    // I am connected to a wifi network.
+                                    Get.dialog(
+                                      const Material(
+                                        color: Colors.transparent,
+                                        child: Center(
+                                          child: SizedBox(
+                                            height: 50,
+                                            width: 50,
+                                            child: CircularProgressIndicator(
+                                              backgroundColor: Colors.red,
+                                              strokeWidth: 7,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    //
+                                    //Get.to(MenuPrincipal(service));
+                                    accueilController.getService2(menus[index]);
+                                    //
+                                  } else {
+                                    Get.snackbar("Connexion",
+                                        "Veuillez vous connecter à internet svp!");
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.zero),
+                                ),
+                                child: Categorie(
+                                  "${menus[index]['name']}",
+                                  "${menus[index]['service_description']}",
+                                  listeData[index],
                                 ),
                               ),
-                            ),
-                          );
-                          //
-                          accueilController.getService(1);
-                          //
-                        } else {
-                          Get.snackbar("Connexion",
-                              "Veuillez vous connecter à internet svp!");
-                        }
-                      },
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        );
+                      }),
+                    );
+                  },
+                  onEmpty: Center(
+                    child: ElevatedButton(
+                      onPressed: () async {},
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.zero),
                       ),
-                      child:
-                          Categorie("Koumi Market", "", Icons.shopping_basket),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var connectivityResult =
-                            await (Connectivity().checkConnectivity());
-                        if (connectivityResult == ConnectivityResult.mobile ||
-                            connectivityResult == ConnectivityResult.wifi) {
-                          // I am connected to a mobile network.
-                          // I am connected to a wifi network.
-                          Get.dialog(
-                            const Material(
-                              color: Colors.transparent,
-                              child: Center(
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.red,
-                                    strokeWidth: 7,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                          //
-                          accueilController.getService(2);
-                          //
-                        } else {
-                          Get.snackbar("Connexion",
-                              "Veuillez vous connecter à internet svp!");
-                        }
-                      },
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      child: Categorie(
+                        "Reessayez",
+                        "Pas d'information",
+                        Icons.cloud_off_outlined,
                       ),
-                      child: Categorie("Koumi Food",
-                          "Table dressée avec viande", Icons.fastfood_sharp),
                     ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var connectivityResult =
-                            await (Connectivity().checkConnectivity());
-                        if (connectivityResult == ConnectivityResult.mobile ||
-                            connectivityResult == ConnectivityResult.wifi) {
-                          // I am connected to a mobile network.
-                          // I am connected to a wifi network.
-                          Get.dialog(
-                            const Material(
-                              color: Colors.transparent,
-                              child: Center(
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircularProgressIndicator(
-                                    backgroundColor: Colors.red,
-                                    strokeWidth: 7,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                          //
-                          accueilController.getService(3);
-                          //
-                        } else {
-                          Get.snackbar("Connexion",
-                              "Veuillez vous connecter à internet svp!");
-                        }
-                      },
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                  ),
+                  onError: (e) {
+                    if (e == "serveur") {
+                      return Center(
+                        child: ElevatedButton(
+                          onPressed: () async {},
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          ),
+                          child: Categorie(
+                            "Erreur au serveur",
+                            "Un problème est survenu veuillez reessayer",
+                            Icons.cloud_off_outlined,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: ElevatedButton(
+                          onPressed: () async {},
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          ),
+                          child: Categorie(
+                            "Connexion internet",
+                            "Connectez-vous et reessayer",
+                            Icons.cloud_off_outlined,
+                          ),
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: Text("Erreur à cause de $e"),
+                    );
+                  },
+                  onLoading: const Center(
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.red,
+                        strokeWidth: 7,
                       ),
-                      child: Categorie("Koumi Pharma", "Acheter vos produits",
-                          Icons.local_hospital),
                     ),
-                  ],
+                  ),
                 ),
                 Favorit(),
                 Profil(),

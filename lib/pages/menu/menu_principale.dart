@@ -296,8 +296,12 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                         padding: const EdgeInsets.all(10),
                                         controller: ScrollController(),
                                         children: List.generate(
-                                          options.length,
-                                          (index) => InkWell(
+                                            widget.data.length, (index) {
+                                          //
+                                          print(
+                                              "-----------:::${widget.data[index]}");
+                                          //
+                                          return InkWell(
                                             onTap: () {
                                               //
                                               i.value = index;
@@ -307,6 +311,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                               //
                                               categories.clear();
                                               for (var i = 0; i < c1; i++) {
+                                                //
                                                 categories.add('${l[i]}');
                                               }
                                               //
@@ -335,14 +340,16 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                                   children: [
                                                     Expanded(
                                                       flex: 4,
-                                                      child: Image.asset(
-                                                          "assets/${options[index]['logo']}"),
+                                                      child: Container(
+                                                        child: Image.network(
+                                                            "${widget.data[index]['image']}"),
+                                                      ),
                                                     ),
                                                     Expanded(
                                                       flex: 7,
                                                       child: Center(
                                                         child: Text(
-                                                          "${options[index]['nom']}",
+                                                          "${widget.data[index]['name']}",
                                                           style: TextStyle(
                                                             fontSize: 10,
                                                             color: i.value ==
@@ -357,8 +364,8 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        }),
                                       ),
                                     ),
                                   ),
