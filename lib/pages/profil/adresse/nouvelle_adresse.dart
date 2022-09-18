@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,59 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
   final avenueNumC = TextEditingController();
   //
   final pointRepC = TextEditingController();
+  //
+  saveAdresse(Map m) async {
+    //
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Mzk5MjA0MzAsImlzcyI6ImVLYXJ0IiwiZXhwIjoxNjM5OTIyMjMwLCJzdWIiOiJlS2FydCBBdXRoZW50aWNhdGlvbiJ9.gs9zSWMO1B5SvDXaX0cBeGPSpCUkQUFaTIBek-OJKsI'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/user-addresses.php'));
+    request.fields.addAll({
+      'accesskey': '90336',
+      'add_address': '1',
+      'user_id': '5',
+      'name': 'address postman update',
+      'mobile': '1234567890',
+      'type': 'office',
+      'address': 'postman 5, paris 16',
+      'landmark': 'Mirzapar',
+      'pincode_id': '9',
+      'city_id': '62',
+      'is_default': '0'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      //
+      Get.back();
+      //
+      Get.snackbar("Adresse", "Enregistrement éffectué");
+      //
+      nomC.clear();
+      tel1C.clear();
+      tel2C.clear();
+      avenueNumC.clear();
+      pointRepC.clear();
+      //
+      Get.back();
+      Timer(Duration(seconds: 1), () {
+        //
+        widget.state.setState(() {});
+      });
+    } else {
+      Get.snackbar("Erreur", "Un problème est survenu");
+      print(response.reasonPhrase);
+    }
+  }
+
   //
   String c1 = "Kinshasa";
   String c2 = "";
@@ -370,7 +424,21 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                             onPressed: () {
                               //
                               final box = GetStorage();
-                              //
+                              /**
+                               * {
+                                  'accesskey': '90336',
+                                  'add_address': '1',
+                                  'user_id': '5',
+                                  'name': 'address postman update',
+                                  'mobile': '1234567890',
+                                  'type': 'office',
+                                  'address': 'postman 5, paris 16',
+                                  'landmark': 'Mirzapar',
+                                  'pincode_id': '9',
+                                  'city_id': '62',
+                                  'is_default': '0'
+                                }
+                               */
                               Map adresse = {
                                 "nom": nomC.text,
                                 "tel1": tel1C.text,
@@ -383,27 +451,25 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                                 "default": dft,
                               };
                               //
-                              List adresses = box.read('adresses') ?? [];
+                              Get.dialog(
+                                const Center(
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Colors.red,
+                                      strokeWidth: 7,
+                                    ),
+                                  ),
+                                ),
+                              );
                               //
-                              adresses.add(adresse);
-                              box.write('adresses', adresses);
+                              saveAdresse(adresse);
                               //
-                              Get.back();
+                              //List adresses = box.read('adresses') ?? [];
                               //
-                              Get.snackbar(
-                                  "Adresse", "Enregistrement éffectué");
-                              //
-                              nomC.clear();
-                              tel1C.clear();
-                              tel2C.clear();
-                              avenueNumC.clear();
-                              pointRepC.clear();
-                              //
-                              Get.back();
-                              Timer(Duration(seconds: 1), () {
-                                //
-                                widget.state.setState(() {});
-                              });
+                              //adresses.add(adresse);
+                              //box.write('adresses', adresses);
                             },
                             child: Container(
                               height: 50,

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
 
 import 'favorit_controller.dart';
@@ -15,15 +18,23 @@ class Favorit extends StatefulWidget {
 class _Favorit extends State<Favorit> {
   FavoritController favoritController = Get.find();
   //favoritController
-  List options = [
-    {"nom": "Fruit & légume", "logo": "fruit.jpeg"},
-    {"nom": "Boisson", "logo": "jus1.jpeg"},
-    {"nom": "Viande", "logo": "viande1.jpeg"},
-    {"nom": "Pain", "logo": "pain2.jpeg"},
-    {"nom": "Produit laitié", "logo": "lait.jpeg"},
-    {"nom": "Charcuteir", "logo": "saucisse1.jpeg"},
-    {"nom": "Scnack", "logo": "pain1.png"},
-  ];
+  var box = GetStorage();
+  //
+  @override
+  void initState() {
+    Timer(Duration(seconds: 1), () {
+      loading();
+    });
+    //
+    super.initState();
+  }
+
+  loading() async {
+    //
+    favoritController.listeDeElement.value = box.read("favoris") ?? [];
+    //
+  }
+
   //
   @override
   Widget build(BuildContext context) {
@@ -117,8 +128,7 @@ class _Favorit extends State<Favorit> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
                                   image: DecorationImage(
-                                    image: ExactAssetImage(
-                                        "assets/${favoris['logo']}"),
+                                    image: NetworkImage("${favoris['image']}"),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -128,7 +138,7 @@ class _Favorit extends State<Favorit> {
                               flex: 1,
                               child: ListTile(
                                 title: Text(
-                                  "${favoris['nom']}",
+                                  "${favoris['name']}",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -138,7 +148,7 @@ class _Favorit extends State<Favorit> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  "${favoris['price']} ${favoris['devise']}",
+                                  "${favoris['price']} FC",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     color: Colors.grey.shade700,
@@ -152,6 +162,8 @@ class _Favorit extends State<Favorit> {
                                     setState(() {
                                       favoritController.listeDeElement
                                           .removeAt(index);
+                                      box.write("favoris",
+                                          favoritController.listeDeElement);
                                     });
                                   },
                                   icon: const Icon(

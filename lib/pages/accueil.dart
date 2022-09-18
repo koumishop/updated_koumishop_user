@@ -86,34 +86,43 @@ class Accueil extends GetView<AccueilController> {
                                 onPressed: () async {
                                   var connectivityResult = await (Connectivity()
                                       .checkConnectivity());
-                                  if (connectivityResult ==
-                                          ConnectivityResult.mobile ||
-                                      connectivityResult ==
-                                          ConnectivityResult.wifi) {
-                                    // I am connected to a mobile network.
-                                    // I am connected to a wifi network.
-                                    Get.dialog(
-                                      const Material(
-                                        color: Colors.transparent,
-                                        child: Center(
-                                          child: SizedBox(
-                                            height: 50,
-                                            width: 50,
-                                            child: CircularProgressIndicator(
-                                              backgroundColor: Colors.red,
-                                              strokeWidth: 7,
+                                  print(menus[index]['is_available']);
+                                  if (int.parse(menus[index]['is_available']) ==
+                                      1) {
+                                    if (connectivityResult ==
+                                            ConnectivityResult.mobile ||
+                                        connectivityResult ==
+                                            ConnectivityResult.wifi) {
+                                      // I am connected to a mobile network.
+                                      // I am connected to a wifi network.
+                                      Get.dialog(
+                                        const Material(
+                                          color: Colors.transparent,
+                                          child: Center(
+                                            child: SizedBox(
+                                              height: 50,
+                                              width: 50,
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: Colors.red,
+                                                strokeWidth: 7,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                    //
-                                    //Get.to(MenuPrincipal(service));
-                                    accueilController.getService2(menus[index]);
-                                    //
+                                      );
+                                      //
+                                      //Get.to(MenuPrincipal(service));
+                                      accueilController.getService2(
+                                          menus[index],
+                                          "${menus[index]['id']}");
+                                      //
+                                    } else {
+                                      Get.snackbar("Connexion",
+                                          "Veuillez vous connecter à internet svp!");
+                                    }
                                   } else {
-                                    Get.snackbar("Connexion",
-                                        "Veuillez vous connecter à internet svp!");
+                                    Get.snackbar("Oups",
+                                        "Le service n'est pas disponible");
                                   }
                                 },
                                 style: ButtonStyle(

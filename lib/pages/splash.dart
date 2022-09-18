@@ -6,12 +6,17 @@ import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/menu/recherche_controller.dart';
+import 'package:koumishop/pages/menu/sous_categorie_controller.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/pages/profil/log/miseajour.dart';
+import 'package:koumishop/pages/profil/log/log.dart';
 import 'package:koumishop/pages/profil/profil.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'favorits/favorit_controller.dart';
 import 'profil/autres/autre_controller.dart';
+import 'profil/commande/commande_controller.dart';
 import 'profil/notifications/notification_controller.dart';
 
 class SplashtScreen extends StatelessWidget {
@@ -29,11 +34,18 @@ class SplashtScreen extends StatelessWidget {
           Get.put(NotificationController());
       AutreController autreController = Get.put(AutreController());
       //
+      CommandeController commandeController = Get.put(CommandeController());
+      //
+      RechercheController rechercheController = Get.put(RechercheController());
+      //
+      SousCategorieController sousCategorieController =
+          Get.put(SousCategorieController());
+      //
       var box = GetStorage();
       profilController.infos.value = box.read("profile") ?? RxMap();
       print("---------------------------- ${profilController.infos}");
       //
-      Get.off(Profil());
+      Get.off(Accueil());
     });
   }
   @override

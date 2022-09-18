@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class AccueilController extends GetxController with StateMixin<List> {
   Connexion connexion = Connexion();
-  getService2(Map service) async {
+  getService2(Map service, String id) async {
     var headers = {
       'Authorization':
           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
@@ -20,7 +20,7 @@ class AccueilController extends GetxController with StateMixin<List> {
             'https://webadmin.koumishop.com/api-firebase/get-service-data.php'));
     request.fields.addAll({
       'accesskey': '90336',
-      'service_id': '1',
+      'service_id': id,
       'get_category_by_service': '1'
     });
 

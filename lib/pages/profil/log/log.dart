@@ -1,12 +1,14 @@
 import 'dart:async';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
 import 'package:http/http.dart' as http;
+import 'package:koumishop/pages/profil/log/inscription.dart';
+import 'package:koumishop/pages/profil/log/miseajour.dart';
 import 'dart:convert';
 
 import 'package:koumishop/pages/profil/profil_controller.dart';
@@ -28,8 +30,14 @@ class _Log extends State<Log> {
   //
   final pwC = TextEditingController();
   //
+  final phone = TextEditingController();
+  //
   var box = GetStorage();
   bool showPw = true;
+  //
+  RxString cd = "+243".obs;
+  //
+  final countryPicker = const FlCountryCodePicker();
   //
   @override
   Widget build(BuildContext context) {
@@ -273,13 +281,18 @@ class _Log extends State<Log> {
                                     box.write("profile", infos);
                                     //
                                     Get.back();
-                                    Get.back();
-                                    Get.snackbar(
-                                        "Succès", "Bienvenu ${infos['name']}");
-                                    Timer(Duration(seconds: 1), () {
-                                      //
-                                      widget.state!.setState(() {});
-                                    });
+                                    if (infos['error']) {
+                                      Get.snackbar("Erreur d'authentification",
+                                          "${infos['message']}");
+                                    } else {
+                                      Get.back();
+                                      Get.snackbar("Succès",
+                                          "Bienvenu ${infos['name']}");
+                                      Timer(Duration(seconds: 1), () {
+                                        //
+                                        //widget.state!.setState(() {});
+                                      });
+                                    }
                                     // showDialog(
                                     //     context: context,
                                     //     builder: (c) {
@@ -349,7 +362,178 @@ class _Log extends State<Log> {
                             Colors.red.shade100,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          //
+                          showDialog(
+                              context: context,
+                              builder: (c) {
+                                return AlertDialog(
+                                  title: Text("Vérification du numéro"),
+                                  content: Container(
+                                    height: 50,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 4,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              final code = await countryPicker
+                                                  .showPicker(context: context);
+                                              if (code != null) {
+                                                cd.value = code.dialCode;
+                                                print(code);
+                                              }
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 4.0),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.blue,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              child: Obx(
+                                                () => Text(
+                                                  cd.value,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: TextField(
+                                            controller: phone,
+                                            decoration: InputDecoration(
+                                                hintText: "ex: 820011111"),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                        elevation: MaterialStateProperty.all(0),
+                                        padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                        ),
+                                        shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                          Colors.red,
+                                        ),
+                                        overlayColor: MaterialStateProperty.all(
+                                          Colors.red.shade100,
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        //
+                                        if (phone.text.isNotEmpty) {
+                                          final fcmToken =
+                                              await FirebaseMessaging.instance
+                                                  .getToken();
+                                          //
+                                          Get.dialog(
+                                            const Center(
+                                              child: SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  backgroundColor: Colors.red,
+                                                  strokeWidth: 7,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                          //
+                                          var headers = {
+                                            'Authorization':
+                                                'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                          };
+                                          var request = http.MultipartRequest(
+                                              'POST',
+                                              Uri.parse(
+                                                  'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                                          request.fields.addAll({
+                                            'accesskey': '90336',
+                                            'mobile': phone.text,
+                                            'type': 'verify-user'
+                                          });
+
+                                          request.headers.addAll(headers);
+
+                                          http.StreamedResponse response =
+                                              await request.send();
+
+                                          if (response.statusCode == 200) {
+                                            String rep = await response.stream
+                                                .bytesToString();
+                                            Map map = json.decode(rep);
+                                            if ("${map['message']}"
+                                                .contains("l'OTP !")) {
+                                              Get.back();
+                                              Get.back();
+                                              Get.back();
+                                              Get.to(Inscription());
+                                              //
+                                            } else {
+                                              Get.back();
+                                              Get.back();
+                                              Get.snackbar(
+                                                "Téléphone",
+                                                "${map['message']}",
+                                                duration: const Duration(
+                                                  seconds: 7,
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            print(response.reasonPhrase);
+                                          }
+                                        } else {
+                                          Get.snackbar("Téléphone",
+                                              "Numéro de téléphone vide.");
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Vérifier OTP",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                         child: Container(
                           height: 50,
                           alignment: Alignment.center,

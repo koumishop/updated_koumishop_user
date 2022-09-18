@@ -1,12 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:get/get.dart';
 
-class MenuController extends GetxController with StateMixin<List> {
-  Rx vue = Rx(Container());
-  Future<List> getMenu(String subcategory_id) async {
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+class RechercheController extends GetxController with StateMixin<List> {
+  getRecherche(String text) async {
     //
     change([], status: RxStatus.loading());
     //
@@ -19,12 +17,12 @@ class MenuController extends GetxController with StateMixin<List> {
         Uri.parse(
             'https://webadmin.koumishop.com/api-firebase/get-products.php'));
     request.fields.addAll({
+      'search': text,
+      ' offset': '0',
       'accesskey': '90336',
-      'subcategory_id': subcategory_id,
-      'offset': '0',
-      'accesskey': '90336',
+      'service_id': '1',
       'limit': '10',
-      ' get_all_products': '1'
+      'get_all_products': '1'
     });
 
     request.headers.addAll(headers);
@@ -36,18 +34,14 @@ class MenuController extends GetxController with StateMixin<List> {
       Map map = jsonDecode(rep);
       List l = map["data"] ?? [];
       print("-------:$l");
-      change(l, status: RxStatus.success());
-      return l;
+      if (l.isEmpty) {
+        change(l, status: RxStatus.empty());
+      } else {
+        change(l, status: RxStatus.success());
+      }
     } else {
       print(response.reasonPhrase);
       change([], status: RxStatus.empty());
-      return [];
     }
-
-    //
-    //change([], status: RxStatus.loading());
-    // Timer(Duration(seconds: 2), () {
-    //   change([], status: RxStatus.success());
-    // });
   }
 }

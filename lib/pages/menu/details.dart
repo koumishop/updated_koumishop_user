@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
@@ -8,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koumishop/pages/favorits/favorit_controller.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'details_controller.dart';
 
@@ -44,18 +44,23 @@ class Details extends GetView<DetailsController> {
   Details(this.produit) {
     //
     //panierController.listeDeElement.value = box.read('paniers') ?? [];
-    Timer(Duration(seconds: 1), () {
-      contient.value = favoritController.listeDeElement.contains(produit);
-      print(contient.value);
-      for (var i = 0; i < panierController.listeDeElement.length; i++) {
-        if (panierController.listeDeElement[i]['id'] == produit["id"]) {
-          contient.value = true;
-        }
-      }
+    try {
       //
-      print(contient.value);
-      //panierController.listeDeElement.addAll(box.read('paniers') ?? []);
-    });
+      Timer(Duration(seconds: 1), () {
+        contient.value = favoritController.listeDeElement.contains(produit);
+        print(contient.value);
+        for (var i = 0; i < panierController.listeDeElement.value.length; i++) {
+          if (panierController.listeDeElement[i]['id'] == produit["id"]) {
+            contient.value = true;
+          }
+        }
+        //
+        print(contient.value);
+        //panierController.listeDeElement.addAll(box.read('paniers') ?? []);
+      });
+    } catch (e) {
+      print(e);
+    }
     //
     print("la liste: ${panierController.listeDeElement.value}");
     //paniers.add(produit);
@@ -68,7 +73,7 @@ class Details extends GetView<DetailsController> {
         // Map p = box.read('${produit["id"]}');
         //print("le produit: $p");
         //produit["nombre"] = p["nombre"];
-        nombre.value = int.parse(produit["nombre"]);
+        nombre.value = int.parse(produit["nombre"] ?? "0");
         //
         break;
       } else {
@@ -85,6 +90,7 @@ class Details extends GetView<DetailsController> {
 
   @override
   Widget build(BuildContext context) {
+    //RxDouble x = 0.0.obs;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -110,7 +116,7 @@ class Details extends GetView<DetailsController> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: ExactAssetImage("assets/${produit['logo']}"),
+                      image: NetworkImage("${produit['image']}"),
                       fit: BoxFit.cover,
                     ),
                     color: Colors.white,
@@ -133,7 +139,7 @@ class Details extends GetView<DetailsController> {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            "${produit['nom']}",
+                            "${produit['name']}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.black,
@@ -148,7 +154,7 @@ class Details extends GetView<DetailsController> {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            "4 gm",
+                            "${produit['variants'][0]['measurement']} ${produit['variants'][0]['measurement_unit_name']}",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.comicNeue(
                               color: Colors.black,
@@ -194,6 +200,12 @@ class Details extends GetView<DetailsController> {
                                           if (nombre.value == 0) {
                                             panierController.listeDeElement
                                                 .remove(produit);
+                                            //
+                                            var box = GetStorage();
+                                            box.write(
+                                                "panier",
+                                                panierController
+                                                    .listeDeElement);
                                             // box.write(
                                             //     'paniers',
                                             //     panierController
@@ -236,11 +248,18 @@ class Details extends GetView<DetailsController> {
                                           bool v = false;
                                           panierController.listeDeElement
                                               .add(produit);
-                                          panierController.listeDeElement =
+                                          panierController
+                                                  .listeDeElement.value =
                                               panierController.listeDeElement
                                                   .toSet()
                                                   .toList()
                                                   .obs;
+                                          //
+                                          var box = GetStorage();
+                                          box.write("panier",
+                                              panierController.listeDeElement);
+                                          // panierController.listeDeElement
+                                          //     .forEach((element) {});
 
                                           //
                                           // if (!v) {
@@ -277,7 +296,7 @@ class Details extends GetView<DetailsController> {
                                   ),
                                 ),
                               ),
-                              Expanded(
+                              const Expanded(
                                 flex: 3,
                                 child: SizedBox(),
                               )
@@ -304,9 +323,18 @@ class Details extends GetView<DetailsController> {
                               .toList()
                               .obs; //
                           contient.value = true;
+                          //
+                          var box = GetStorage();
+                          box.write(
+                              "favoris", favoritController.listeDeElement);
+                          //
                         } else {
                           favoritController.listeDeElement.remove(produit); //
                           contient.value = false;
+                          //
+                          var box = GetStorage();
+                          box.write(
+                              "favoris", favoritController.listeDeElement);
                           //
                         }
                         //print(favoritController.listeDeElement);
@@ -329,7 +357,7 @@ class Details extends GetView<DetailsController> {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Row(
@@ -347,135 +375,221 @@ class Details extends GetView<DetailsController> {
           height: 100,
           alignment: Alignment.centerLeft,
           decoration: const BoxDecoration(color: Colors.white),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: ScrollController(),
-            children: List.generate(
-              produitS.length,
-              (index) => Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                    elevation: 2,
-                    child: InkWell(
-                      onTap: () {
-                        //
-                        Get.back();
-                        //
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (c) {
-                            //return Details();
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
+          child: FutureBuilder(
+            future: controller.getSimilaire("${produit['category_id']}",
+                "${produit['variants'][0]['product_id']}"),
+            builder: (context, t) {
+              if (t.hasData) {
+                List l1 = t.data as List;
+                return ListView(
+                  scrollDirection: Axis.horizontal,
+                  controller: ScrollController(),
+                  children: List.generate(l1.length, (index) {
+                    Map p1 = l1[index];
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          elevation: 2,
+                          child: InkWell(
+                            onTap: () {
+                              //
+                              Get.back();
+                              //
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (c) {
+                                  //return Details();
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 50,
                                       ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 50,
-                                          child: Container(),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                              ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 50,
-                                                  child: Row(
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 50,
+                                                child: Container(),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(10),
+                                                      topRight:
+                                                          Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Get.back();
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.arrow_back_ios,
-                                                          color: Colors.black,
+                                                      SizedBox(
+                                                        height: 50,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                Get.back();
+                                                              },
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_back_ios,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          child: Details(p1),
                                                         ),
                                                       )
                                                     ],
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Details(
-                                                        produitS[index]),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        //padding: const EdgeInsets.symmetric(horizontal: 10),
-                        //margin: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 70,
-                        width: 70,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: ExactAssetImage(
-                                "assets/${produitS[index]['logo']}"),
-                            fit: BoxFit.cover,
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(35),
-                          border: Border.all(
-                            color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              //padding: const EdgeInsets.symmetric(horizontal: 10),
+                              //margin: const EdgeInsets.symmetric(horizontal: 10),
+                              height: 70,
+                              width: 70,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage("${p1['image']}"),
+                                  fit: BoxFit.cover,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(35),
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              //child: Image.asset("assets/${produit['logo']}"),
+                            ),
                           ),
                         ),
-                        //child: Image.asset("assets/${produit['logo']}"),
+                        Text("${p1['name']}"),
+                      ],
+                    );
+                  }),
+                );
+              } else if (t.hasError) {
+                return Container();
+              }
+              return Container(
+                height: 70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     ),
-                  ),
-                  Text("${produitS[index]['nom']}"),
-                ],
-              ),
-            ),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
         Row(
@@ -493,135 +607,214 @@ class Details extends GetView<DetailsController> {
           height: 100,
           alignment: Alignment.centerLeft,
           decoration: const BoxDecoration(color: Colors.white),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: ScrollController(),
-            children: List.generate(
-              produitC.length,
-              (index) => Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                    elevation: 2,
-                    child: InkWell(
-                      onTap: () {
-                        //
-                        Get.back();
-                        //
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (c) {
-                            //return Details();
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
+          child: FutureBuilder(
+            future: controller.getComplementaire("${produit['category_id']}",
+                "${produit['variants'][0]['product_id']}"),
+            builder: (context, t) {
+              if (t.hasData) {
+                List l1 = t.data as List;
+                return ListView(
+                  scrollDirection: Axis.horizontal,
+                  controller: ScrollController(),
+                  children: List.generate(l1.length, (index) {
+                    Map p1 = l1[index];
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          elevation: 2,
+                          child: InkWell(
+                            onTap: () {
+                              //
+                              Get.back();
+                              //
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (c) {
+                                  //return Details();
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 50,
                                       ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 50,
-                                          child: Container(),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                              ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 50,
-                                                  child: Row(
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 50,
+                                                child: Container(),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(10),
+                                                      topRight:
+                                                          Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          Get.back();
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.arrow_back_ios,
-                                                          color: Colors.black,
+                                                      SizedBox(
+                                                        height: 50,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                Get.back();
+                                                              },
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_back_ios,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          child: Details(p1),
                                                         ),
                                                       )
                                                     ],
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Details(
-                                                        produitC[index]),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        //padding: const EdgeInsets.symmetric(horizontal: 10),
-                        //margin: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 70,
-                        width: 70,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: ExactAssetImage(
-                                "assets/${produitC[index]['logo']}"),
-                            fit: BoxFit.cover,
-                          ),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(35),
-                          border: Border.all(
-                            color: Colors.white,
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              //padding: const EdgeInsets.symmetric(horizontal: 10),
+                              //margin: const EdgeInsets.symmetric(horizontal: 10),
+                              height: 70,
+                              width: 70,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage("${p1['image']}"),
+                                  fit: BoxFit.cover,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(35),
+                                border: Border.all(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              //child: Image.asset("assets/${produit['logo']}"),
+                            ),
                           ),
                         ),
-                        //child: Image.asset("assets/${produit['logo']}"),
+                        Text("${p1['name']}"),
+                      ],
+                    );
+                  }),
+                );
+              } else if (t.hasError) {
+                return Container();
+              }
+              return Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                direction: ShimmerDirection.ttb,
+                child: Container(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 10,
+                      ),
+                    ],
                   ),
-                  Text("${produitC[index]['nom']}"),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Card(
@@ -637,13 +830,24 @@ class Details extends GetView<DetailsController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "${produit['devise']} ${produit['price']}",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Obx(
+                    () => nombre.value != 0
+                        ? Text(
+                            "FC ${nombre.value * double.parse(produit['price'])}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : Text(
+                            "FC ${produit['price']}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                   Container(
                     height: 34,

@@ -12,6 +12,8 @@ import 'package:koumishop/pages/profil/autres/change_mdp.dart';
 import 'package:koumishop/pages/profil/autres/faq.dart';
 import 'package:koumishop/pages/profil/autres/politique.dart';
 import 'package:koumishop/pages/profil/autres/termes.dart';
+import 'package:koumishop/pages/profil/commande/commande.dart';
+import 'package:koumishop/pages/profil/log/miseajour.dart';
 import 'package:koumishop/pages/profil/notifications/notifications.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:share_plus/share_plus.dart';
@@ -189,13 +191,17 @@ class _Profil extends State<Profil> {
                                             padding: EdgeInsets.all(0),
                                             child: Align(
                                               alignment: Alignment.bottomRight,
-                                              child: IconButton(
-                                                icon: const Icon(
+                                              child: InkWell(
+                                                child: Icon(
                                                   Icons.edit_note,
                                                   color: Colors.red,
                                                   size: 35,
                                                 ),
-                                                onPressed: () {
+                                                onTap: () {
+                                                  //
+                                                  print("cool");
+                                                  //
+                                                  Get.to(MiseaJour());
                                                   //
                                                 },
                                               ),
@@ -259,6 +265,15 @@ class _Profil extends State<Profil> {
                                   ListTile(
                                     onTap: () {
                                       //
+                                      Map p = box.read("profile") ?? RxMap();
+                                      if (p['name'] == null) {
+                                        //
+                                        Get.snackbar("Oups",
+                                            "Creez un compte ou loggez-vous");
+                                      } else {
+                                        //
+                                        Get.to(Commande());
+                                      }
                                     },
                                     leading: Icon(
                                       Icons.delivery_dining_outlined,
@@ -276,7 +291,15 @@ class _Profil extends State<Profil> {
                                   ListTile(
                                     onTap: () {
                                       //
-                                      Get.to(Adresse());
+                                      Map p = box.read("profile") ?? RxMap();
+                                      if (p['name'] == null) {
+                                        //
+                                        Get.snackbar("Oups",
+                                            "Creez un compte ou loggez-vous");
+                                      } else {
+                                        //
+                                        Get.to(Adresse());
+                                      }
                                       //
                                     },
                                     leading: Icon(
@@ -339,24 +362,34 @@ class _Profil extends State<Profil> {
                                               //
                                               // showModalBottomSheet(
                                               //   context: context,
+                                              //   shape:
+                                              //       const RoundedRectangleBorder(
+                                              //     borderRadius:
+                                              //         BorderRadius.only(
+                                              //       topLeft:
+                                              //           Radius.circular(25),
+                                              //       topRight:
+                                              //           Radius.circular(25),
+                                              //     ),
+                                              //   ),
                                               //   builder: (c) {
                                               //     return ChangeMdp();
                                               //   },
-                                              //   backgroundColor:
-                                              //       Colors.transparent,
+                                              //   isScrollControlled: false,
+                                              //   enableDrag: true,
+                                              //   backgroundColor: Colors.white,
                                               // );
                                               showDialog(
                                                 context: context,
+                                                anchorPoint: const Offset(0, 0),
                                                 builder: (c) {
                                                   return Material(
                                                     color: Colors.transparent,
                                                     child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
                                                       children: [
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: ChangeMdp(),
-                                                        )
+                                                        ChangeMdp(),
                                                       ],
                                                     ),
                                                   );
@@ -577,8 +610,14 @@ class _Profil extends State<Profil> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               //
+              //profilController.infos
+              //
               final fcmToken = await FirebaseMessaging.instance.getToken();
               //
+              // var headers = {
+              //   'Authorization':
+              //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+              // };
               var headers = {
                 'Authorization':
                     'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
@@ -586,13 +625,13 @@ class _Profil extends State<Profil> {
               var request = http.MultipartRequest(
                   'POST',
                   Uri.parse(
-                      'https://webadmin.koumishop.com/api-firebase/login.php'));
+                      'https://webadmin.koumishop.com/api-firebase/get-products.php'));
               request.fields.addAll({
                 'accesskey': '90336',
-                'login': '1',
-                'mobile': '815381693',
-                'password': 'jojo1717',
-                'fcm_id': '$fcmToken',
+                'category_id': '26',
+                'user_id': profilController.infos['user_id'],
+                'limit': '2',
+                'offset': '0',
               });
 
               request.headers.addAll(headers);
@@ -600,19 +639,7 @@ class _Profil extends State<Profil> {
               http.StreamedResponse response = await request.send();
 
               if (response.statusCode == 200) {
-                Map infos = jsonDecode(await response.stream.bytesToString());
-                print("");
-                showDialog(
-                    context: context,
-                    builder: (c) {
-                      return Material(
-                        child: ListView(
-                          children: [
-                            Text("$infos"),
-                          ],
-                        ),
-                      );
-                    });
+                print(await response.stream.bytesToString());
               } else {
                 print(response.reasonPhrase);
               }

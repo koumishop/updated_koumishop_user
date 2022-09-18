@@ -1,23 +1,44 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:koumishop/pages/accueil.dart';
-import 'package:koumishop/pages/profil/profil_controller.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'nouvelle_adresse.dart';
+import '../profil_controller.dart';
 
-class Adresse extends StatefulWidget {
+class Commande extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _Adresse();
+    return _Commande();
   }
 }
 
-class _Adresse extends State<Adresse> {
+class _Commande extends State<Commande> {
+  /*
+  var headers = {
+  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDAyNTM3ODYsImlzcyI6ImVLYXJ0IiwiZXhwIjoxNjQwMjU1NTg2LCJzdWIiOiJlS2FydCBBdXRoZW50aWNhdGlvbiJ9.cBhkpRrvjJDK15wBtHtENZJGWG1YdvX09Z9zysbAnyA'
+};
+var request = http.MultipartRequest('POST', Uri.parse('koumishopapi/webadmin/api-firebase/order-process.php'));
+request.fields.addAll({
+  'accesskey': '90336',
+  'get_orders': '1',
+  'user_id': '5'
+});
+
+request.headers.addAll(headers);
+
+http.StreamedResponse response = await request.send();
+
+if (response.statusCode == 200) {
+  print(await response.stream.bytesToString());
+}
+else {
+  print(response.reasonPhrase);
+}
+
+  */
   //
   ProfilController profilController = Get.find();
   //
@@ -34,7 +55,7 @@ class _Adresse extends State<Adresse> {
     request.fields.addAll(
       {
         'accesskey': '90336',
-        'user_id': profilController.infos['user_id'] ?? "",
+        'user_id': profilController.infos['user_id'],
         'get_addresses': '1',
       },
     );
@@ -237,17 +258,6 @@ class _Adresse extends State<Adresse> {
                   ),
                 )
               ],
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              //
-              Get.to(NouvelleAdresse(this));
-            },
-            backgroundColor: Colors.red,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
             ),
           ),
         ),
