@@ -28,6 +28,16 @@ class MyApp extends StatelessWidget {
         // floatingActionButtonTheme: FloatingActionButtonThemeData(
         //     backgroundColor: Colors.yellow,
         //     sizeConstraints: BoxConstraints.loose(Size(40, 40))),
+        bottomSheetTheme: const BottomSheetThemeData(
+          modalBackgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+        ),
         primaryColor: Colors.red,
         appBarTheme: const AppBarTheme(
           color: Colors.red,

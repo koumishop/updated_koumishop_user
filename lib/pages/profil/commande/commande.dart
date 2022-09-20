@@ -174,7 +174,7 @@ else {
                                 color: Colors.red,
                               ),
                               Text(
-                                "Vos adresses",
+                                "Vos commande",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
@@ -190,71 +190,249 @@ else {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    // ignore: sort_child_properties_last
-                    child: FutureBuilder(
-                      future: getFaq(),
-                      builder: (context, t) {
-                        if (t.hasData) {
-                          return t.data as Widget;
-                        } else if (t.hasError) {
-                          return Container();
-                        }
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          direction: ShimmerDirection.ttb,
+                  child: ListView(
+                    children: [
+                      Card(
+                        elevation: 1,
+                        child: SizedBox(
+                          height: Get.size.height / 4,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const SizedBox(
-                                height: 5,
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    //color: Colors.green,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "OTP: 452740",
+                                        style: tx(),
+                                      ),
+                                      Text(
+                                        "N° 379",
+                                        style: tx(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(flex: 4, child: Shimm()),
-                                  Expanded(flex: 4, child: Shimm()),
-                                ],
+                              Container(
+                                height: 1,
+                                color: Colors.black,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
                               ),
-                              const SizedBox(
-                                height: 20,
+                              Expanded(
+                                flex: 2,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Commande placée",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "Commande en traitemant",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "Commande en cours de livraison",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "Commande livrée",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(flex: 4, child: Shimm()),
-                                  Expanded(flex: 4, child: Shimm()),
-                                ],
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(Icons.shopping_cart),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          height: 1,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Icon(Icons.shopping_bag),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          height: 1,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Icon(Icons.delivery_dining_outlined),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          height: 1,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Icon(Icons.headset),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              const SizedBox(
-                                height: 20,
+                              Expanded(
+                                flex: 2,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "09-06-2022",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "09-06-2022",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "10-06-2022",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Text(
+                                            "10-06-2022",
+                                            textAlign: TextAlign.center,
+                                            style: tx2(11),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(flex: 4, child: Shimm()),
-                                  Expanded(flex: 4, child: Shimm()),
-                                ],
+                              Container(
+                                height: 1,
+                                color: Colors.black,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              const SizedBox(
-                                height: 15,
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    //color: Colors.green,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text.rich(
+                                        TextSpan(
+                                          text: "FC 50000   ",
+                                          children: [
+                                            TextSpan(
+                                              text: "50 \$",
+                                              style: tx2(17),
+                                            ),
+                                          ],
+                                        ),
+                                        style: tx(),
+                                      ),
+                                      Text(
+                                        "Afficher le details",
+                                        style: tx2(17),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        );
-                      },
-                    ),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                      ),
-                    ),
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
@@ -262,6 +440,24 @@ else {
           ),
         ),
       ),
+    );
+  }
+
+  //
+  TextStyle tx() {
+    return TextStyle(
+      color: Colors.black,
+      fontSize: 17,
+      fontWeight: FontWeight.w900,
+    );
+  }
+
+  //
+  TextStyle tx2(double taille) {
+    return TextStyle(
+      color: Colors.black,
+      fontSize: taille,
+      fontWeight: FontWeight.w300,
     );
   }
 

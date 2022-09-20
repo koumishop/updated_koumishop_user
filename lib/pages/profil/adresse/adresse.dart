@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
+import 'package:koumishop/pages/profil/adresse/adresse_modification.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -21,7 +22,39 @@ class _Adresse extends State<Adresse> {
   //
   ProfilController profilController = Get.find();
   //
+  supprimerAddresse(String id) async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/user-addresses.php'));
+    request.fields
+        .addAll({'accesskey': '90336', 'id': id, 'delete_address': '1'});
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rep = await response.stream.bytesToString();
+      print("reponse pour la supp: $rep");
+      Get.back();
+      Get.snackbar("Succès", "Adresse supprimé");
+    } else {
+      //print(response.reasonPhrase);
+      Get.snackbar("Erreur", response.reasonPhrase!);
+      Get.back();
+    }
+  }
+
+  //
   Future<Widget> getFaq() async {
+    //
+    getAllCommune();
     //
     var headers = {
       'Authorization':
@@ -55,27 +88,103 @@ class _Adresse extends State<Adresse> {
           padding: const EdgeInsets.all(20),
           children: List.generate(adresses.length, (index) {
             Map adresse = adresses[index];
+            bool v = adresse["is_default"] == "0";
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   flex: 1,
-                  child: ListTile(
-                    title: Text("${adresse["landmark"]}"),
-                    subtitle:
-                        Text("${adresse["address"]} / ${adresse["city"]}"),
-                    trailing: IconButton(
-                      onPressed: () {
-                        //
-                        setState(() {
-                          adresses.removeAt(index);
-                          box.write('adresses', adresses);
-                          Get.snackbar("Adresse", "Suppression éffectué");
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
+                  child: Card(
+                    elevation: 1,
+                    child: Container(
+                      height: 120,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                              flex: 7,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    child: Checkbox(
+                                      value: v,
+                                      checkColor: Colors.red.shade700,
+                                      onChanged: (e) {
+                                        //
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: ListTile(
+                                      onTap: () {
+                                        Get.to(
+                                            ModificationAdresse(this, adresse));
+                                      },
+                                      title: Text("${adresse["landmark"]}"),
+                                      subtitle: Text(
+                                          "${adresse["address"]} / ${adresse["city"]}"),
+                                      trailing: IconButton(
+                                        onPressed: () {
+                                          Get.dialog(
+                                            const Center(
+                                              child: SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  backgroundColor: Colors.red,
+                                                  strokeWidth: 7,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                          //
+                                          setState(() {
+                                            //
+                                            supprimerAddresse(
+                                                "${adresse["id"]}");
+                                            //
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )),
+                          Expanded(
+                            flex: 4,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade700,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Icon(
+                                    Icons.phone,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -88,6 +197,39 @@ class _Adresse extends State<Adresse> {
     } else {
       print(response.reasonPhrase);
       return Container();
+    }
+  }
+
+  getAllCommune() async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/get-locations.php'));
+    request.fields.addAll({
+      'search': '',
+      'get_pincodes': '1',
+      'offset': '0',
+      'accesskey': '90336',
+      'limit': '30'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      Map adresse = jsonDecode(await response.stream.bytesToString());
+      var box = GetStorage();
+      //
+      box.write("adresse", adresse);
+      //print(adresse);
+    } else {
+      print(response.reasonPhrase);
     }
   }
 
@@ -141,7 +283,7 @@ class _Adresse extends State<Adresse> {
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
-                          width: 150,
+                          //width: 150,
                           height: 40,
                           alignment: Alignment.center,
                           child: Row(
@@ -153,7 +295,7 @@ class _Adresse extends State<Adresse> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "Vos adresses",
+                                "Adresses de livraison",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,

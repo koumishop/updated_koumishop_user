@@ -241,39 +241,49 @@ class Details extends GetView<DetailsController> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          nombre.value++;
-                                          produit["nombre"] = "${nombre.value}";
-                                          //box.write('${produit["id"]}',
-                                          //  jsonEncode(produit));
-                                          bool v = false;
-                                          panierController.listeDeElement
-                                              .add(produit);
-                                          panierController
-                                                  .listeDeElement.value =
-                                              panierController.listeDeElement
-                                                  .toSet()
-                                                  .toList()
-                                                  .obs;
-                                          //
-                                          var box = GetStorage();
-                                          box.write("panier",
-                                              panierController.listeDeElement);
-                                          // panierController.listeDeElement
-                                          //     .forEach((element) {});
+                                          if (int.parse(produit['variants'][0]
+                                                  ['stock']) ==
+                                              0) {
+                                            Get.snackbar(
+                                                "Oups!", "stock épuisé");
+                                          } else {
+                                            nombre.value++;
+                                            produit["nombre"] =
+                                                "${nombre.value}";
+                                            //box.write('${produit["id"]}',
+                                            //  jsonEncode(produit));
+                                            bool v = false;
+                                            panierController.listeDeElement
+                                                .add(produit);
+                                            panierController
+                                                    .listeDeElement.value =
+                                                panierController.listeDeElement
+                                                    .toSet()
+                                                    .toList()
+                                                    .obs;
+                                            //
+                                            var box = GetStorage();
+                                            box.write(
+                                                "panier",
+                                                panierController
+                                                    .listeDeElement);
+                                            // panierController.listeDeElement
+                                            //     .forEach((element) {});
 
-                                          //
-                                          // if (!v) {
-                                          //   panierController.listeDeElement
-                                          //       .add('${produit["id"]}');
-                                          //   box.write(
-                                          //       'paniers',
-                                          //       panierController
-                                          //           .listeDeElement.value);
-                                          //   //panierController.listeDeElement
-                                          //   //  .clear();
-                                          //   //panierController
-                                          //   //  .listeDeElement.value = paniers;
-                                          // }
+                                            //
+                                            // if (!v) {
+                                            //   panierController.listeDeElement
+                                            //       .add('${produit["id"]}');
+                                            //   box.write(
+                                            //       'paniers',
+                                            //       panierController
+                                            //           .listeDeElement.value);
+                                            //   //panierController.listeDeElement
+                                            //   //  .clear();
+                                            //   //panierController
+                                            //   //  .listeDeElement.value = paniers;
+                                            // }
+                                          }
                                         },
                                         child: Container(
                                           height: 30,

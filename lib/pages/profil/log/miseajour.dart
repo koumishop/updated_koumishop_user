@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class MiseaJour extends StatefulWidget {
 
 class _MiseaJour extends State<MiseaJour> {
   //
+  ProfilController profilController = Get.find();
   //
   final _formKey = GlobalKey<FormState>();
 
@@ -29,13 +31,17 @@ class _MiseaJour extends State<MiseaJour> {
   //
   final countryPicker = const FlCountryCodePicker();
   //
-  /**
-   * *user_id:10
-*name:"jean"
-*email:"...."
-*mobile :"+24384...."
-*profile :file //optionnel
-   */
+  @override
+  void initState() {
+    //
+    name.text = profilController.infos['name'];
+    email.text = profilController.infos['email'];
+    mobile.text = profilController.infos['mobile'];
+    //
+    super.initState();
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -249,25 +255,34 @@ class _MiseaJour extends State<MiseaJour> {
                                       ),
                                     );
                                     //
+                                    final fcmToken = await FirebaseMessaging
+                                        .instance
+                                        .getToken();
+                                    //
                                     var headers = {
                                       'Authorization':
-                                          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+                                      'Cookie':
+                                          'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
                                     };
                                     var request = http.MultipartRequest(
                                         'POST',
                                         Uri.parse(
-                                            'Https://webadmin.koumishop.com/api-firebase/user-registraction.php'));
-                                    request.fields.addAll({
-                                      //register//edit-profile
-                                      "type": "edit-profile",
-                                      'accesskey': '90336',
-                                      "user_id":
-                                          "${profilController.infos['user_id']}",
-                                      "name": name.text,
-                                      "email": email.text,
-                                      "mobile": mobile.text,
-                                      //"profile": "file",
-                                    });
+                                            'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                                    request.fields.addAll(
+                                      {
+                                        'accesskey': '90336',
+                                        'user_id':
+                                            '${profilController.infos['user_id']}',
+                                        'latitude': '0',
+                                        ' name': name.text,
+                                        ' mobile': mobile.text,
+                                        ' type': 'edit-profile',
+                                        'fcm_id': '$fcmToken',
+                                        ' longitude': '0',
+                                        ' email': email.text,
+                                      },
+                                    );
 
                                     request.headers.addAll(headers);
 

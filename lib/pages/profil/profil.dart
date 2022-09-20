@@ -139,7 +139,7 @@ class _Profil extends State<Profil> {
                     )
                   ],
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(0),
                   child: Align(
                     alignment: Alignment.bottomCenter,
@@ -169,11 +169,20 @@ class _Profil extends State<Profil> {
                               ),
                               child: Obx(
                                 () => profilController.infos['name'] == null
-                                    ? const Text(
-                                        "K",
-                                        style: TextStyle(
-                                          fontSize: 50,
+                                    ? Container(
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(35),
+                                          image: const DecorationImage(
+                                            image: ExactAssetImage(
+                                              "assets/logo_koumi_squared.png",
+                                            ),
+                                            fit: BoxFit.contain,
+                                          ),
                                         ),
+                                        alignment: Alignment.center,
                                       )
                                     : Stack(
                                         children: [
@@ -192,7 +201,7 @@ class _Profil extends State<Profil> {
                                             child: Align(
                                               alignment: Alignment.bottomRight,
                                               child: InkWell(
-                                                child: Icon(
+                                                child: const Icon(
                                                   Icons.edit_note,
                                                   color: Colors.red,
                                                   size: 35,

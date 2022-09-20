@@ -1,27 +1,29 @@
 import 'dart:async';
-//import 'dart:convert';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-//import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-//import 'package:koumishop/pages/accueil.dart';
+import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 
 enum Type { MAISON, BUREAU, AUTRE }
 
-class NouvelleAdresse extends StatefulWidget {
+class ModificationAdresse extends StatefulWidget {
   State state;
-  NouvelleAdresse(
+  Map adrs;
+  ModificationAdresse(
     this.state,
+    this.adrs,
   );
   @override
   State<StatefulWidget> createState() {
-    return _NouvelleAdresse();
+    return _ModificationAdresse();
   }
 }
 
-class _NouvelleAdresse extends State<NouvelleAdresse> {
+class _ModificationAdresse extends State<ModificationAdresse> {
   //
   Type choix = Type.MAISON;
   ProfilController profilController = Get.find();
@@ -32,11 +34,11 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
   //
   var tel1C = TextEditingController();
   //
-  final tel2C = TextEditingController();
+  var tel2C = TextEditingController();
   //
-  final avenueNumC = TextEditingController();
+  var avenueNumC = TextEditingController();
   //
-  final pointRepC = TextEditingController();
+  var pointRepC = TextEditingController();
   //
   saveAdresse(Map<String, String> m) async {
     //
@@ -108,13 +110,36 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
   @override
   void initState() {
     var box = GetStorage();
-    //
+    //widget.adrs["id"]
     nomC = TextEditingController(text: profilController.infos['name']);
     //
     tel1C = TextEditingController(text: profilController.infos['mobile']);
     //
     adresse = box.read("adresse") ?? {};
     lc = adresse['data'];
+    //
+    lc.forEach((element) {
+      if (element['id'] == "${widget.adrs["pincode_id"]}") {
+        idComm = "${element['pincode']}";
+        c1 = element['pincode'];
+        lq = element['cities'];
+        lq.forEach((s) {
+          if (s['id'] == "${widget.adrs["city_id"]}") {
+            //
+            c2 = s["name"];
+            idQuart = s['id'];
+          }
+        });
+      }
+    });
+    //
+
+    //widget.adrs["id"]
+    tel2C.text = "${widget.adrs["alternate_mobile"]}";
+    //
+    avenueNumC.text = "${widget.adrs["address"]}";
+    //
+    pointRepC.text = "${widget.adrs["landmark"]}";
     //
     super.initState();
   }
@@ -168,7 +193,7 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "Adresse de livraison",
+                                "Mettre à jour l'adresse de livraison",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
@@ -483,6 +508,9 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                                 'pincode_id': idComm,
                                 'city_id': idQuart,
                                 'is_default': dft ? "0" : "1",
+                                'longitude': '0',
+                                'latitude': '0',
+                                'id': widget.adrs["id"],
                               };
                               //  {
                               //   "country_code": nomC.text,

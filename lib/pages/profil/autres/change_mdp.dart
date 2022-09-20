@@ -33,6 +33,33 @@ class _ChangeMdp extends State<ChangeMdp> {
   bool showPw3 = true;
   //
   ProfilController profilController = Get.find();
+  //
+  changeMDP(String mdp) async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+    request.fields.addAll({
+      'password': mdp,
+      'user_id': profilController.infos['user_id'],
+      'type': 'change-password'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
 
   //
   @override
@@ -235,9 +262,9 @@ class _ChangeMdp extends State<ChangeMdp> {
                   var request = http.MultipartRequest(
                       'POST',
                       Uri.parse(
-                          'https://webadmin.koumishop.com/api-firebase/login.php'));
+                          'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
                   request.fields.addAll({
-                    //'accesskey': '90336',
+                    'accesskey': '90336',
                     'type': 'change-password',
                     'password': pwC.text,
                     'user_id': '${profilController.infos['user_id']}',
