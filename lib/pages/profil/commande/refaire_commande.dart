@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koumishop/pages/panier/creno_horaire.dart';
-import 'package:koumishop/pages/panier/paiement_mobile.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/adresse/adresse_show.dart';
 import 'package:koumishop/pages/profil/adresse/nouvelle_adresse.dart';
@@ -18,16 +17,17 @@ import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'mode_paiement.dart';
-
-class Panier extends StatefulWidget {
+class RefaireCommande extends StatefulWidget {
+  List listeC;
+  RefaireCommande(this.listeC);
+  //
   @override
   State<StatefulWidget> createState() {
-    return _Panier();
+    return _RefaireCommande();
   }
 }
 
-class _Panier extends State<Panier> {
+class _RefaireCommande extends State<RefaireCommande> {
   //
   PanierController panierController = Get.find();
   ProfilController profilController = Get.find();
@@ -56,9 +56,9 @@ class _Panier extends State<Panier> {
     //r = getTo1();
     //
     adresses = box.read('adresses') ?? [];
-    //panierController.listeDeElement.clear();
+    //widget.listeC.clear();
     //
-    //panierController.listeDeElement.value = box.read("panier") ?? [];
+    //widget.listeC.value = box.read("panier") ?? [];
     //
   }
 
@@ -104,7 +104,7 @@ class _Panier extends State<Panier> {
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
-                          width: 100,
+                          //width: 100,
                           height: 40,
                           alignment: Alignment.center,
                           child: Row(
@@ -116,7 +116,7 @@ class _Panier extends State<Panier> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "Panier",
+                                "Refaire la commande",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
@@ -135,33 +135,28 @@ class _Panier extends State<Panier> {
                   child: Obx(
                     () => ListView(
                       children: List.generate(
-                        panierController.listeDeElement.length,
+                        widget.listeC.length,
                         (index) {
-                          Map produit = panierController.listeDeElement[index];
+                          Map produit = widget.listeC[index];
                           //
-                          int nombres = int.parse(
-                              panierController.listeDeElement[index]["nombre"]);
+                          int nombres =
+                              int.parse(widget.listeC[index]["quantity"]);
                           RxInt p = 0.obs;
-                          double prix =
-                              double.parse(produit['variants'][0]['price']);
+                          double prix = double.parse(produit['price']);
                           //
-                          if (produit['variants'][0]['discounted_price'] ==
-                                  "" ||
-                              produit['variants'][0]['discounted_price'] ==
-                                  "0") {
+                          if (produit['discounted_price'] == "" ||
+                              produit['discounted_price'] == "0") {
                             prix = prix +
                                 (prix *
                                     double.parse(produit['tax_percentage']) /
                                     100);
                             p.value = prix.round();
                             //p.value = p.value *
-                            //  int.parse(panierController.listeDeElement[index]
+                            //  int.parse(widget.listeC[index]
                             //    ["nombre"]);
                           } else {
-                            prix = double.parse(produit['variants'][0]
-                                    ['discounted_price']) +
-                                (double.parse(produit['variants'][0]
-                                        ['discounted_price']) *
+                            prix = double.parse(produit['discounted_price']) +
+                                (double.parse(produit['discounted_price']) *
                                     double.parse(produit['tax_percentage']) /
                                     100);
                             p.value = prix.round();
@@ -350,7 +345,7 @@ class _Panier extends State<Panier> {
                                                             nombres++;
                                                             //p.value++;
                                                             setState(() {
-                                                              panierController.listeDeElement[
+                                                              widget.listeC[
                                                                           index]
                                                                       [
                                                                       "nombre"] =
@@ -423,11 +418,10 @@ class _Panier extends State<Panier> {
                                       IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            panierController.listeDeElement
-                                                .removeAt(index);
+                                            widget.listeC.removeAt(index);
                                             //
                                             r = getTo1();
-                                            //panierController.listeDeElement.value = box.read("panier");
+                                            //widget.listeC.value = box.read("panier");
                                             box.write(
                                                 "panier",
                                                 panierController
@@ -517,7 +511,7 @@ class _Panier extends State<Panier> {
                                                   .adresse.value['address'] ==
                                               null
                                           ? "Veuillez sélectionner l'adresse de livraison"
-                                          : "${panierController.adresse.value['landmark']}",
+                                          : "${panierController.adresse.value['address']}",
                                       style: TextStyle(fontSize: 11),
                                     ),
                                   ),
@@ -575,24 +569,24 @@ class _Panier extends State<Panier> {
                                     if (p['name'] == null) {
                                       Get.to(Log(this));
                                     } else {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        builder: (c) {
-                                          //return Details();
-                                          return Material(
-                                            color: Colors.transparent,
-                                            child: Center(
-                                              child: Container(
-                                                color: Colors.white,
-                                                height: Get.size.height / 2,
-                                                child: ModePaiement(this),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
+                                      // showModalBottomSheet(
+                                      //   context: context,
+                                      //   isScrollControlled: true,
+                                      //   backgroundColor: Colors.transparent,
+                                      //   builder: (c) {
+                                      //     return Details();
+                                      //     return Material(
+                                      //       color: Colors.transparent,
+                                      //       child: Center(
+                                      //         child: Container(
+                                      //           color: Colors.white,
+                                      //           height: Get.size.height / 2,
+                                      //           child: ModePaiement(this),
+                                      //         ),
+                                      //       ),
+                                      //     );
+                                      //   },
+                                      // );
                                     }
                                     //
                                   },
@@ -761,15 +755,13 @@ class _Panier extends State<Panier> {
                                       .contains("1")) {
                                     //
                                     List l = [];
-                                    panierController.listeDeElement
-                                        .forEach((produit) {
+                                    widget.listeC.forEach((produit) {
                                       //
                                       l.add(produit['id']);
                                     });
                                     //
                                     List ll = [];
-                                    panierController.listeDeElement
-                                        .forEach((produit) {
+                                    widget.listeC.forEach((produit) {
                                       //
                                       ll.add(produit['nombre']);
                                     });
@@ -807,7 +799,7 @@ class _Panier extends State<Panier> {
                                             .split("/")
                                             .first ==
                                         "Mobile money") {
-                                      //https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF
+                                      //
                                       commande = {
                                         'order_note': '',
                                         'total': '${r.value}',
@@ -830,15 +822,9 @@ class _Panier extends State<Panier> {
                                         'accesskey': '90336'
                                       };
                                       //
-                                      Get.to(
-                                        PaiementMobile(
-                                          "https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF",
-                                          {},
-                                        ),
-                                      );
                                       // ignore: use_build_context_synchronously
-                                      //panierController.paiement_mobile(
-                                      //  commande, context);
+                                      panierController.paiement_mobile(
+                                          commande, context);
                                     } else {
                                       //
                                       commande = {
@@ -866,12 +852,6 @@ class _Panier extends State<Panier> {
                                       // ignore: use_build_context_synchronously
                                       //panierController.paiement_livraison(
                                       //commande, context);
-                                      Get.to(
-                                        PaiementMobile(
-                                          "https://koumishop.com/pay/getAwayCard.php?phone=+243815824641&reference=1664189374560271&amount=20&description=payement par visa",
-                                          {},
-                                        ),
-                                      );
                                     }
 
                                     // ignore: use_build_context_synchronously
@@ -927,22 +907,22 @@ class _Panier extends State<Panier> {
   RxDouble getTo1() {
     RxDouble x = 0.0.obs;
     RxInt p = 0.obs;
-    panierController.listeDeElement.forEach((produit) {
+    widget.listeC.forEach((produit) {
       //
-      double prix = double.parse(produit['variants'][0]['price']);
+      double prix = double.parse(produit['price']);
 
       //
-      if (produit['variants'][0]['discounted_price'] == "" ||
-          produit['variants'][0]['discounted_price'] == "0") {
+      if (produit['discounted_price'] == "" ||
+          produit['discounted_price'] == "0") {
         prix = prix + (prix * double.parse(produit['tax_percentage']) / 100);
-        prix = prix * int.parse(produit['nombre']);
+        prix = prix * int.parse(produit['quantity']);
         p.value = (p.value + prix.round());
         //p.value = p.value *
-        //  int.parse(panierController.listeDeElement[index]
+        //  int.parse(widget.listeC[index]
         //    ["nombre"]);
       } else {
-        prix = double.parse(produit['variants'][0]['discounted_price']) +
-            (double.parse(produit['variants'][0]['discounted_price']) *
+        prix = double.parse(produit['discounted_price']) +
+            (double.parse(produit['discounted_price']) *
                 double.parse(produit['tax_percentage']) /
                 100);
         //p.value = p.value + prix.round();

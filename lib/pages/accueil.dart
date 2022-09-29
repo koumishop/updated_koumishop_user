@@ -76,70 +76,92 @@ class Accueil extends GetView<AccueilController> {
                   (state) {
                     List menus = state!;
                     return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(menus.length, (index) {
-                        return SizedBox(
-                          height: 90,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Card(
+                        //   elevation: 1,
+                        //   child: SizedBox(
+                        //     height: Get.size.height / 4,
+                        //   ),
+                        // ),
+                        // Container(
+                        //   height: 10,
+                        //   color: Colors.red,
+                        // ),
+                        Expanded(
+                          flex: 1,
                           child: Column(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  var connectivityResult = await (Connectivity()
-                                      .checkConnectivity());
-                                  print(menus[index]['is_available']);
-                                  if (int.parse(menus[index]['is_available']) ==
-                                      1) {
-                                    if (connectivityResult ==
-                                            ConnectivityResult.mobile ||
-                                        connectivityResult ==
-                                            ConnectivityResult.wifi) {
-                                      // I am connected to a mobile network.
-                                      // I am connected to a wifi network.
-                                      Get.dialog(
-                                        const Material(
-                                          color: Colors.transparent,
-                                          child: Center(
-                                            child: SizedBox(
-                                              height: 50,
-                                              width: 50,
-                                              child: CircularProgressIndicator(
-                                                backgroundColor: Colors.red,
-                                                strokeWidth: 7,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(menus.length, (index) {
+                              return SizedBox(
+                                height: 90,
+                                child: Column(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        var connectivityResult =
+                                            await (Connectivity()
+                                                .checkConnectivity());
+                                        print(menus[index]['is_available']);
+                                        if (int.parse(
+                                                menus[index]['is_available']) ==
+                                            1) {
+                                          if (connectivityResult ==
+                                                  ConnectivityResult.mobile ||
+                                              connectivityResult ==
+                                                  ConnectivityResult.wifi) {
+                                            // I am connected to a mobile network.
+                                            // I am connected to a wifi network.
+                                            Get.dialog(
+                                              const Material(
+                                                color: Colors.transparent,
+                                                child: Center(
+                                                  child: SizedBox(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      strokeWidth: 7,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                      //
-                                      //Get.to(MenuPrincipal(service));
-                                      accueilController.getService2(
-                                          menus[index],
-                                          "${menus[index]['id']}");
-                                      //
-                                    } else {
-                                      Get.snackbar("Connexion",
-                                          "Veuillez vous connecter à internet svp!");
-                                    }
-                                  } else {
-                                    Get.snackbar("Oups",
-                                        "Le service n'est pas disponible");
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                      EdgeInsets.zero),
+                                            );
+                                            //
+                                            //Get.to(MenuPrincipal(service));
+                                            accueilController.getService2(
+                                                menus[index],
+                                                "${menus[index]['id']}");
+                                            //
+                                          } else {
+                                            Get.snackbar("Connexion",
+                                                "Veuillez vous connecter à internet svp!");
+                                          }
+                                        } else {
+                                          Get.snackbar("Oups",
+                                              "Le service n'est pas disponible");
+                                        }
+                                      },
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            EdgeInsets.zero),
+                                      ),
+                                      child: Categorie(
+                                        "${menus[index]['name']}",
+                                        "${menus[index]['service_description']}",
+                                        listeData[index],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
                                 ),
-                                child: Categorie(
-                                  "${menus[index]['name']}",
-                                  "${menus[index]['service_description']}",
-                                  listeData[index],
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                            ],
+                              );
+                            }),
                           ),
-                        );
-                      }),
+                        )
+                      ],
                     );
                   },
                   onEmpty: Center(

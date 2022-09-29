@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'details.dart';
@@ -13,6 +15,7 @@ import 'details.dart';
 class Menu extends GetView<MenuController> {
   //String subcategory_id;
   PanierController panierController = Get.find();
+  ProfilController profilController = Get.find();
   MenuController menuController = Get.find();
   RxString epuise = "Epuisé".obs;
   List listeProduit;
@@ -175,7 +178,7 @@ class Menu extends GetView<MenuController> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      flex: 8,
+                      flex: 7,
                       child: Container(
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
@@ -216,42 +219,41 @@ class Menu extends GetView<MenuController> {
                       ),
                     ),
                     Expanded(
-                      flex: 4,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: [
-                            Text(
-                              "${produit['name']}",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900,
-                              ),
+                      flex: 5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          Text(
+                            "${produit['name']}",
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
                             ),
-                            Text(
-                              "${produit['variants'][0]['measurement']} ${produit['variants'][0]['measurement_unit_name']}",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 10,
-                              ),
-                            ), //"${produit['price']} FC",
-                            Text(
-                              "$p FC",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                          Text(
+                            "${produit['variants'][0]['measurement']} ${produit['variants'][0]['measurement_unit_name']}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ), //"${produit['price']} FC",
+                          Text(
+                            "$p FC",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     Expanded(
@@ -271,6 +273,7 @@ class Menu extends GetView<MenuController> {
                           children: [
                             InkWell(
                               onTap: () {
+                                menuController.showMiniPanier.value = true;
                                 if (nombre.value > 0) {
                                   nombre.value--;
                                   produit["nombre"] = "${nombre.value}";
@@ -295,13 +298,13 @@ class Menu extends GetView<MenuController> {
                                 }
                               },
                               child: Container(
-                                height: 30,
-                                width: 30,
+                                height: 28,
+                                width: 28,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(
-                                    15,
+                                    14,
                                   ),
                                   border: Border.all(
                                     color: Colors.grey.shade300,
@@ -322,13 +325,14 @@ class Menu extends GetView<MenuController> {
                                       : Text(
                                           " $epuise ",
                                           style: TextStyle(
-                                            fontSize: 9,
+                                            fontSize: 6,
                                             color: Colors.red.shade700,
                                           ),
                                         ),
                             ),
                             InkWell(
                               onTap: () {
+                                menuController.showMiniPanier.value = true;
                                 if (int.parse(
                                         produit['variants'][0]['stock']) ==
                                     0) {
@@ -367,13 +371,13 @@ class Menu extends GetView<MenuController> {
                                 }
                               },
                               child: Container(
-                                height: 30,
-                                width: 30,
+                                height: 28,
+                                width: 28,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: Colors.red.shade700,
                                   borderRadius: BorderRadius.circular(
-                                    15,
+                                    14,
                                   ),
                                 ),
                                 child: const Icon(
@@ -475,7 +479,7 @@ class Menu extends GetView<MenuController> {
                 ),
                 builder: (c) {
                   return Container(
-                    height: Get.size.height / 4.5,
+                    height: Get.size.height / 4,
                     decoration: const BoxDecoration(
                       //color: Colors.black,
                       borderRadius: BorderRadius.only(
@@ -485,12 +489,20 @@ class Menu extends GetView<MenuController> {
                     ),
                     child: Stack(
                       children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 0,
+                            right: 0,
+                            bottom: 50,
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
                             child: Obx(
                               () => ListView(
-                                padding: const EdgeInsets.only(top: 5, left: 5),
+                                padding: const EdgeInsets.only(
+                                  top: 5,
+                                  left: 5,
+                                ),
                                 children: List.generate(
                                   panierController.listeDeElement.length,
                                   (index) {
@@ -563,6 +575,40 @@ class Menu extends GetView<MenuController> {
                                   Icons.close,
                                   size: 20,
                                   color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 30,
+                            left: 25,
+                            right: 25,
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: InkWell(
+                              onTap: () {
+                                menuController.showMiniPanier.value = false;
+                                Get.to(Panier());
+                              },
+                              child: Container(
+                                height: 35,
+                                //width: 30,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade700,
+                                  borderRadius: BorderRadius.circular(
+                                    15,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Passer la commande",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),

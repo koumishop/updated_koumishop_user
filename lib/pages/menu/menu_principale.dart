@@ -233,17 +233,11 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                         child: Container(
                                           height: 50,
                                           width: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            image: const DecorationImage(
-                                              image: ExactAssetImage(
-                                                "assets/Group 86panier-icon.png",
-                                              ),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
                                           alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.shopping_cart,
+                                            color: Colors.red,
+                                          ),
                                         ),
                                       ),
                                       Align(

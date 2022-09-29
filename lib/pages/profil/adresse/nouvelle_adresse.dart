@@ -57,7 +57,7 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
       //
-      Get.back();
+
       //
       Get.snackbar("Adresse", "Enregistrement éffectué");
       //
@@ -70,6 +70,7 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
 
       Timer(const Duration(milliseconds: 500), () {
         //
+        Get.back();
         Get.back();
         widget.state.setState(() {});
       });
@@ -469,6 +470,10 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                             onPressed: () {
                               //
                               final box = GetStorage();
+                              /**
+                               * {
+}
+                               */
                               Map<String, String> adresse = {
                                 'accesskey': '90336',
                                 'add_address': '1',

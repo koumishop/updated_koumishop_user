@@ -160,8 +160,10 @@ class _Favorit extends State<Favorit> {
                                   onPressed: () {
                                     //
                                     setState(() {
-                                      favoritController.listeDeElement
-                                          .removeAt(index);
+                                      RxList l =
+                                          favoritController.listeDeElement;
+                                      l.removeAt(index);
+                                      favoritController.listeDeElement = l;
                                       box.write("favoris",
                                           favoritController.listeDeElement);
                                     });

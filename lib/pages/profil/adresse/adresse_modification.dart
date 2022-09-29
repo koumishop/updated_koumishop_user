@@ -61,7 +61,6 @@ class _ModificationAdresse extends State<ModificationAdresse> {
       //
       Get.back();
       //
-      Get.snackbar("Adresse", "Enregistrement éffectué");
       //
       //nomC.clear();
       //tel1C.clear();
@@ -73,6 +72,7 @@ class _ModificationAdresse extends State<ModificationAdresse> {
       Timer(const Duration(milliseconds: 500), () {
         //
         Get.back();
+        Get.snackbar("Adresse", "Enregistrement éffectué");
         widget.state.setState(() {});
       });
     } else {
@@ -496,7 +496,7 @@ class _ModificationAdresse extends State<ModificationAdresse> {
                               final box = GetStorage();
                               Map<String, String> adresse = {
                                 'accesskey': '90336',
-                                'add_address': '1',
+                                'update_address': '1',
                                 'user_id': profilController.infos['user_id'],
                                 'name': nomC.text,
                                 'mobile': tel1C.text,
@@ -548,7 +548,7 @@ class _ModificationAdresse extends State<ModificationAdresse> {
                               height: 50,
                               alignment: Alignment.center,
                               child: const Text(
-                                "AJOUTER UNE NOUVELLE ADRESSE",
+                                "MODIFIER ADRESSE",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,

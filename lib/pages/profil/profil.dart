@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import 'package:koumishop/pages/profil/commande/commande.dart';
 import 'package:koumishop/pages/profil/log/miseajour.dart';
 import 'package:koumishop/pages/profil/notifications/notifications.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
+import 'package:koumishop/utils/notification_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'adresse/adresse.dart';
 import 'autres/apropos.dart';
@@ -42,11 +44,12 @@ class _Profil extends State<Profil> {
   }
   //
 
+  NotificationService ns = NotificationService();
   //
   @override
   void initState() {
     //
-    initializeDefault();
+    //initializeDefault();
     //
     super.initState();
   }
@@ -619,39 +622,31 @@ class _Profil extends State<Profil> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               //
-              //profilController.infos
-              //
-              final fcmToken = await FirebaseMessaging.instance.getToken();
-              //
+              ns.initializePlatformNotifications();
               // var headers = {
               //   'Authorization':
-              //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+              //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+              //   'Cookie': 'PHPSESSID=3d673c385319a7c1570963dcb99ee8f8'
               // };
-              var headers = {
-                'Authorization':
-                    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-              };
-              var request = http.MultipartRequest(
-                  'POST',
-                  Uri.parse(
-                      'https://webadmin.koumishop.com/api-firebase/get-products.php'));
-              request.fields.addAll({
-                'accesskey': '90336',
-                'category_id': '26',
-                'user_id': profilController.infos['user_id'],
-                'limit': '2',
-                'offset': '0',
-              });
+              // var request = http.MultipartRequest(
+              //     'POST',
+              //     Uri.parse(
+              //         'https://webadmin.koumishop.com/api-firebase/get-user-data.php'));
+              // request.fields.addAll({
+              //   'get_user_data': '1',
+              //   'accesskey': '90336',
+              //   'user_id': '${profilController.infos['user_id']}'
+              // });
 
-              request.headers.addAll(headers);
+              // request.headers.addAll(headers);
 
-              http.StreamedResponse response = await request.send();
+              // http.StreamedResponse response = await request.send();
 
-              if (response.statusCode == 200) {
-                print(await response.stream.bytesToString());
-              } else {
-                print(response.reasonPhrase);
-              }
+              // if (response.statusCode == 200) {
+              //   print(await response.stream.bytesToString());
+              // } else {
+              //   print(response.reasonPhrase);
+              // }
             },
             child: const Icon(Icons.query_builder),
           ),
@@ -661,7 +656,7 @@ class _Profil extends State<Profil> {
   }
 
   TextStyle styleDeMenu() {
-    return TextStyle(
+    return const TextStyle(
       color: Colors.grey,
       fontSize: 13,
       fontWeight: FontWeight.normal,

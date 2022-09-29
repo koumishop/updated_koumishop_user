@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koumishop/pages/favorits/favorit_controller.dart';
+import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -834,7 +835,10 @@ class Details extends GetView<DetailsController> {
                 Colors.red.shade100,
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.back();
+              Get.to(Panier());
+            },
             child: Container(
               width: Get.size.width / 1.2,
               child: Row(

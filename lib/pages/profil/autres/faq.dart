@@ -47,41 +47,29 @@ class _Faq extends State<Faq> {
         return Container();
       } else {
         List faqs = mapFaqs["data"];
-        return ListView(
-          controller: ScrollController(),
-          shrinkWrap: true,
-          children: List.generate(
-            faqs.length,
-            (index) {
-              Map faq = faqs[index];
-              return Accordion(
-                maxOpenSections: 2,
-                headerBackgroundColorOpened: Colors.black54,
-                scaleWhenAnimating: true,
-                openAndCloseAnimation: true,
-                headerPadding:
-                    const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-                children: [
-                  AccordionSection(
-                    isOpen: false,
+        return Accordion(
+          maxOpenSections: 2,
+          headerBackgroundColorOpened: Colors.black54,
+          scaleWhenAnimating: true,
+          openAndCloseAnimation: true,
+          headerPadding:
+              const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+          children: List.generate(faqs.length, (index) {
+            Map faq = faqs[index];
+            return AccordionSection(
+              isOpen: false,
 
-                    leftIcon:
-                        const Icon(Icons.insights_rounded, color: Colors.white),
-                    headerBackgroundColor: Colors.black,
-                    headerBackgroundColorOpened: Colors.red,
-                    header: Text('${faq['question']}', style: _headerStyle),
-                    content: Text("${faq['answer']}", style: _contentStyle),
-                    contentHorizontalPadding: 20,
-                    contentBorderWidth: 1,
-                    // onOpenSection: () => print('onOpenSection ...'),
-                    // onCloseSection: () => print('onCloseSection ...'),
-                  ),
-                ],
-                //sectionOpeningHapticFeedback: SectionHapticFeedback,
-                //sectionClosingHapticFeedback: SectionHapticFeedback.light,
-              );
-            },
-          ),
+              leftIcon: const Icon(Icons.insights_rounded, color: Colors.white),
+              headerBackgroundColor: Colors.black,
+              headerBackgroundColorOpened: Colors.red,
+              header: Text('${faq['question']}', style: _headerStyle),
+              content: Text("${faq['answer']}", style: _contentStyle),
+              contentHorizontalPadding: 20,
+              contentBorderWidth: 1,
+              // onOpenSection: () => print('onOpenSection ...'),
+              // onCloseSection: () => print('onCloseSection ...'),
+            );
+          }),
         );
       }
     } else {
@@ -147,7 +135,7 @@ class _Faq extends State<Faq> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "A propos de nous",
+                                "FAQ",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
@@ -232,35 +220,6 @@ class _Faq extends State<Faq> {
                 )
               ],
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              //
-              var headers = {
-                'Authorization':
-                    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-              };
-              var request = http.MultipartRequest(
-                  'POST',
-                  Uri.parse(
-                      'https://webadmin.koumishop.com/api-firebase/get-products.php'));
-              request.fields.addAll({
-                'accesskey': '90336',
-                'get_all_products': '1',
-                'service_id': '3'
-              });
-
-              request.headers.addAll(headers);
-
-              http.StreamedResponse response = await request.send();
-
-              if (response.statusCode == 200) {
-                print(await response.stream.bytesToString());
-              } else {
-                print(response.reasonPhrase);
-              }
-            },
-            child: const Icon(Icons.add),
           ),
         ),
       ),

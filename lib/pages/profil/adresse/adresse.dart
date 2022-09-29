@@ -96,95 +96,99 @@ class _Adresse extends State<Adresse> {
                   flex: 1,
                   child: Card(
                     elevation: 1,
-                    child: Container(
-                      height: 120,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(
-                              flex: 7,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    child: Checkbox(
-                                      value: v,
-                                      checkColor: Colors.red.shade700,
-                                      onChanged: (e) {
-                                        //
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: ListTile(
-                                      onTap: () {
-                                        Get.to(
-                                            ModificationAdresse(this, adresse));
-                                      },
-                                      title: Text("${adresse["landmark"]}"),
-                                      subtitle: Text(
-                                          "${adresse["address"]} / ${adresse["city"]}"),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          Get.dialog(
-                                            const Center(
-                                              child: SizedBox(
-                                                height: 50,
-                                                width: 50,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  backgroundColor: Colors.red,
-                                                  strokeWidth: 7,
+                    child: InkWell(
+                      onTap: () {
+                        Get.to(ModificationAdresse(this, adresse));
+                      },
+                      child: Container(
+                        height: 120,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                                flex: 7,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Container(
+                                    //   width: 50,
+                                    //   child: Checkbox(
+                                    //     value: v,
+                                    //     checkColor: Colors.red.shade700,
+                                    //     onChanged: (e) {
+                                    //       //
+                                    //     },
+                                    //   ),
+                                    // ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: ListTile(
+                                        // onTap: () {
+
+                                        // },
+                                        title: Text("${adresse["landmark"]}"),
+                                        subtitle: Text(
+                                            "${adresse["address"]} / ${adresse["city"]}"),
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            Get.dialog(
+                                              const Center(
+                                                child: SizedBox(
+                                                  height: 50,
+                                                  width: 50,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    backgroundColor: Colors.red,
+                                                    strokeWidth: 7,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                          //
-                                          setState(() {
+                                            );
                                             //
-                                            supprimerAddresse(
-                                                "${adresse["id"]}");
-                                            //
-                                          });
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
+                                            setState(() {
+                                              //
+                                              supprimerAddresse(
+                                                  "${adresse["id"]}");
+                                              //
+                                            });
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
                                         ),
                                       ),
+                                    )
+                                  ],
+                                )),
+                            Expanded(
+                              flex: 4,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 50,
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    width: 40,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.shade700,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                      size: 30,
                                     ),
                                   )
                                 ],
-                              )),
-                          Expanded(
-                            flex: 4,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.shade700,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

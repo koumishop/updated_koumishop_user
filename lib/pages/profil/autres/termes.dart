@@ -147,7 +147,7 @@ class _Termes extends State<Termes> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "A propos de nous",
+                                "Termes et conditions",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
