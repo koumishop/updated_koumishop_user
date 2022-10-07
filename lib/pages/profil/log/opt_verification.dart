@@ -59,7 +59,7 @@ class OptVerification extends StatelessWidget {
                     auth.signInWithCredential(_credential).then((result) {
                       //
                       if (ins) {
-                        Get.to(Inscription("$code$number")); //
+                        Get.to(Inscription(number, code)); //
                       } else {
                         Get.to(MdpOublie()); //
                       }

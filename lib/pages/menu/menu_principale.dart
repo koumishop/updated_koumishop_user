@@ -29,7 +29,7 @@ class MenuPrincipal extends StatefulWidget {
 class _MenuPrincipal extends State<MenuPrincipal> {
   RxInt i = 0.obs;
   int n = 2;
-  RxList listeProduit = [].obs;
+  //MenuController menuController = Get.find();
   RxBool load = true.obs;
   //
   MenuController menuController = Get.find();
@@ -88,7 +88,8 @@ class _MenuPrincipal extends State<MenuPrincipal> {
     sousCat.value =
         await sousCategorieController.getMenu("${widget.data[0]['id']}");
     //
-    listeProduit.value = await menuController.getMenu("${sousCat[0]['id']}");
+    menuController.listeProduit.value =
+        await menuController.getMenu("${sousCat[0]['id']}");
     load.value = false;
   }
 
@@ -312,8 +313,9 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                   print("${sousCatIndex.value}");
                                   //
                                   load.value = true;
-                                  listeProduit.value = await menuController
-                                      .getMenu("${sousCat[index]['id']}");
+                                  menuController.listeProduit.value =
+                                      await menuController
+                                          .getMenu("${sousCat[index]['id']}");
 
                                   load.value = false;
                                   // sousCat.value = menuController.getMenu(
@@ -402,11 +404,18 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                                     .getMenu(
                                                         "${widget.data[index]['id']}");
                                             //
-                                            listeProduit.value =
-                                                await menuController.getMenu(
-                                                    "${sousCat[0]['id']}");
-                                            load.value = false;
-                                            print(sousCat[0]);
+                                            if (sousCat.isNotEmpty) {
+                                              menuController
+                                                      .listeProduit.value =
+                                                  await menuController.getMenu(
+                                                      "${sousCat[0]['id']}");
+                                              load.value = false;
+                                              print(sousCat[0]);
+                                            } else {
+                                              menuController
+                                                  .listeProduit.value = [];
+                                              load.value = false;
+                                            }
                                             //
                                             // listeProduit.value =
                                             //     await menuController.getMenu(
@@ -521,9 +530,16 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                             ],
                                           ),
                                         )
-                                      : listeProduit.value.isEmpty
-                                          ? Container()
-                                          : Menu(listeProduit),
+                                      : menuController
+                                              .listeProduit.value.isEmpty
+                                          ? Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Aucun produit trouver",
+                                              ),
+                                            )
+                                          //menuController.listeProduit
+                                          : Menu(),
                                 ),
                               ),
                             ],

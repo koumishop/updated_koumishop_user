@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   //
+  //Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
   Firebase.initializeApp();
   //
 

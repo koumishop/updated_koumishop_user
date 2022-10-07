@@ -6,46 +6,50 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koumishop/pages/favorits/favorit_controller.dart';
+import 'package:koumishop/pages/menu/menu_controller.dart';
 import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'details_controller.dart';
 
-class Details extends GetView<DetailsController> {
+class Details extends StatefulWidget {
+  //
+  State st;
   //
   Map produit;
+  int idx;
+  //
+  Details(this.produit, this.st, this.idx);
+  @override
+  State<StatefulWidget> createState() {
+    return _Details();
+  }
+}
+
+class _Details extends State<Details> {
   RxBool contient = false.obs;
   //
   PanierController panierController = Get.find();
   FavoritController favoritController = Get.find();
+  DetailsController controller = Get.find();
+  MenuController menuController = Get.find();
   //
-  List produitS = [
-    {"nom": "Soupe", "logo": "cuisine2.jpg"},
-    {"nom": "Poisson", "logo": "poisson1.jpeg"},
-    {"nom": "Cuisine", "logo": "cuisine1.png"},
-    {"nom": "Produit menager", "logo": "menage1.png"},
-    {"nom": "Scnack", "logo": "pain1.png"},
-    {"nom": "Fruit & légume", "logo": "cuisine3.jpeg"},
-  ];
   //
   RxInt nombre = 0.obs;
   int x = 0;
   //final box = GetStorage();
   //List paniers = [];
   //
-  List produitC = [
-    {"nom": "Produit menager", "logo": "menage1.png"},
-    {"nom": "Viande", "logo": "viande1.jpeg"},
-    {"nom": "Pain", "logo": "pain1.png"},
-    {"nom": "Produit laitié", "logo": "lait.jpeg"},
-    {"nom": "Charcuteir", "logo": "saucisse1.jpeg"},
-  ];
   //
-  Details(this.produit) {
+  Map produit = {};
+  //
+
+  @override
+  void initState() {
     //
-    //panierController.listeDeElement.value = box.read('paniers') ?? [];
     try {
+      produit = widget.produit;
       //
       Timer(Duration(seconds: 1), () {
         contient.value = favoritController.listeDeElement.contains(produit);
@@ -66,6 +70,7 @@ class Details extends GetView<DetailsController> {
     print("la liste: ${panierController.listeDeElement.value}");
     //paniers.add(produit);
     //box.write('paniers', paniers);
+    nombre.value = int.parse(widget.produit['nombre'] ?? "0");
     //
     for (var i = 0; i < panierController.listeDeElement.length; i++) {
       Map e = panierController.listeDeElement.elementAt(i);
@@ -74,20 +79,19 @@ class Details extends GetView<DetailsController> {
         // Map p = box.read('${produit["id"]}');
         //print("le produit: $p");
         //produit["nombre"] = p["nombre"];
-        nombre.value = int.parse(produit["nombre"] ?? "0");
+        //nombre.value = int.parse(widget.produit['nombre'] ?? "0");
         //
         break;
       } else {
         //
-        nombre.value = 0;
-        produit["nombre"] = "0";
+        //nombre.value = 0;
+        //produit["nombre"] = "0";
       }
       x++;
     }
     //
-    //
+    super.initState();
   }
-  //
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +199,24 @@ class Details extends GetView<DetailsController> {
                                             nombre.value--;
                                             produit["nombre"] =
                                                 "${nombre.value}";
+                                            panierController
+                                                    .listeDeElement[widget.idx]
+                                                ['nombre'] = "${nombre.value}";
+                                            //
+                                            for (int x = 0;
+                                                x <
+                                                    menuController
+                                                        .listeProduit.length;
+                                                x++) {
+                                              if (menuController.listeProduit
+                                                      .value[x]['id'] ==
+                                                  produit['id']) {
+                                                menuController.listeProduit
+                                                        .value[x]['nombre'] =
+                                                    "${nombre.value}";
+                                              }
+                                            }
+                                            //
                                             //box.write(
                                             //  '${produit["id"]}', produit);
                                           }
@@ -253,7 +275,8 @@ class Details extends GetView<DetailsController> {
                                                 "${nombre.value}";
                                             //box.write('${produit["id"]}',
                                             //  jsonEncode(produit));
-                                            bool v = false;
+                                            //bool v = false;
+
                                             panierController.listeDeElement
                                                 .add(produit);
                                             panierController
@@ -263,6 +286,43 @@ class Details extends GetView<DetailsController> {
                                                     .toList()
                                                     .obs;
                                             //
+
+                                            for (int x = 0;
+                                                x <
+                                                    menuController
+                                                        .listeProduit.length;
+                                                x++) {
+                                              if (menuController.listeProduit
+                                                      .value[x]['id'] ==
+                                                  produit['id']) {
+                                                menuController.listeProduit
+                                                        .value[x]['nombre'] =
+                                                    "${nombre.value}";
+                                                print(
+                                                    "nombre: ${menuController.listeProduit.value[x]['nombre']}");
+                                              }
+                                            }
+                                            //
+                                            // for (var i = 0;
+                                            //     i <
+                                            //         panierController
+                                            //             .listeDeElement.length;
+                                            //     i++) {
+                                            //   if (panierController
+                                            //               .listeDeElement[i]
+                                            //           ["id"] ==
+                                            //       produit['id']) {
+                                            //     print(
+                                            //         "avent: ${panierController.listeDeElement[i]["nombre"]}");
+                                            //     panierController
+                                            //                 .listeDeElement[i]
+                                            //             ["nombre"] =
+                                            //         "${nombre.value}";
+                                            //     print(
+                                            //         "apres: ${panierController.listeDeElement[i]["nombre"]}");
+                                            //   }
+                                            // }
+
                                             var box = GetStorage();
                                             box.write(
                                                 "panier",
@@ -484,7 +544,8 @@ class Details extends GetView<DetailsController> {
                                                           padding:
                                                               EdgeInsets.all(
                                                                   10),
-                                                          child: Details(p1),
+                                                          child: Details(p1,
+                                                              widget.st, index),
                                                         ),
                                                       )
                                                     ],
@@ -700,7 +761,7 @@ class Details extends GetView<DetailsController> {
                                                               onPressed: () {
                                                                 Get.back();
                                                               },
-                                                              icon: Icon(
+                                                              icon: const Icon(
                                                                 Icons
                                                                     .arrow_back_ios,
                                                                 color: Colors
@@ -714,9 +775,10 @@ class Details extends GetView<DetailsController> {
                                                         flex: 1,
                                                         child: Padding(
                                                           padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          child: Details(p1),
+                                                              const EdgeInsets
+                                                                  .all(10),
+                                                          child: Details(p1,
+                                                              widget.st, index),
                                                         ),
                                                       )
                                                     ],
@@ -886,5 +948,16 @@ class Details extends GetView<DetailsController> {
         )
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    //
+    Timer(Duration(milliseconds: 500), () {
+      print("J'ai quitté l'interface détails");
+      widget.st.setState(() {});
+    });
+    //
+    super.dispose();
   }
 }

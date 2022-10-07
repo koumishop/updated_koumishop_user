@@ -346,7 +346,13 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                     ),
                     onPressed: () {
                       //
-                      Get.to(RefaireCommande(commande['items']));
+                      List l = commande['items'];
+                      Get.to(
+                        RefaireCommande(
+                          l,
+                          key: UniqueKey(),
+                        ),
+                      );
                       //
                     },
                     child: Container(

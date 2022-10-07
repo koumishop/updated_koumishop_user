@@ -45,10 +45,12 @@ class _AdresseShow extends State<AdresseShow> {
       String rep = await response.stream.bytesToString();
       print("reponse pour la supp: $rep");
       Get.back();
+      Get.back();
       Get.snackbar("Succès", "Adresse supprimé");
     } else {
       //print(response.reasonPhrase);
       Get.snackbar("Erreur", response.reasonPhrase!);
+      Get.back();
       Get.back();
     }
   }
@@ -103,7 +105,7 @@ class _AdresseShow extends State<AdresseShow> {
                         panierController.adresse.value = adresse;
                         Get.back();
                       },
-                      child: Container(
+                      child: SizedBox(
                         height: 120,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -121,6 +123,9 @@ class _AdresseShow extends State<AdresseShow> {
                                       checkColor: Colors.red.shade700,
                                       onChanged: (e) {
                                         //
+                                        panierController.adresse.value =
+                                            adresse;
+                                        Get.back();
                                       },
                                     ),
                                   ),
@@ -130,34 +135,34 @@ class _AdresseShow extends State<AdresseShow> {
                                       title: Text("${adresse["landmark"]}"),
                                       subtitle: Text(
                                           "${adresse["address"]} / ${adresse["city"]}"),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          Get.dialog(
-                                            const Center(
-                                              child: SizedBox(
-                                                height: 50,
-                                                width: 50,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  backgroundColor: Colors.red,
-                                                  strokeWidth: 7,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                          //
-                                          setState(() {
-                                            //
-                                            //supprimerAddresse(
-                                            //  "${adresse["id"]}");
-                                            //
-                                          });
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
-                                      ),
+                                      // trailing: IconButton(
+                                      //   onPressed: () {
+                                      //     Get.dialog(
+                                      //       const Center(
+                                      //         child: SizedBox(
+                                      //           height: 50,
+                                      //           width: 50,
+                                      //           child:
+                                      //               CircularProgressIndicator(
+                                      //             backgroundColor: Colors.red,
+                                      //             strokeWidth: 7,
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //     );
+                                      //     //
+                                      //     setState(() {
+                                      //       //
+                                      //       supprimerAddresse(
+                                      //           "${adresse["id"]}");
+                                      //       //
+                                      //     });
+                                      //   },
+                                      //   icon: const Icon(
+                                      //     Icons.delete,
+                                      //     color: Colors.red,
+                                      //   ),
+                                      // ),
                                     ),
                                   )
                                 ],

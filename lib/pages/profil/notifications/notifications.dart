@@ -1,7 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
+import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:koumishop/pages/accueil.dart';
+import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -11,6 +14,73 @@ class Notifications extends StatefulWidget {
 }
 
 class _Notifications extends State<Notifications> {
+  Future<Widget> getFaq() async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=ee65a021e19e60dc198d082ab96806ba'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://webadmin.koumishop.com/api-firebase/sections.php'));
+    request.fields.addAll({
+      'offset': '0',
+      'limit': '10',
+      'get-notifications': '1',
+      'accesskey': '90336'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var _headerStyle = const TextStyle(
+          color: Color(0xffffffff), fontSize: 15, fontWeight: FontWeight.bold);
+      var _contentStyleHeader = const TextStyle(
+          color: Color(0xff999999), fontSize: 14, fontWeight: FontWeight.w700);
+      var _contentStyle = const TextStyle(
+          color: Color(0xff999999),
+          fontSize: 14,
+          fontWeight: FontWeight.normal);
+      //print(await response.stream.bytesToString());
+      Map mapFaqs = jsonDecode(await response.stream.bytesToString());
+      print(mapFaqs);
+      if (mapFaqs["error"]) {
+        return Container();
+      } else {
+        List faqs = mapFaqs["data"];
+
+        return Accordion(
+          maxOpenSections: 2,
+          headerBackgroundColorOpened: Colors.black54,
+          scaleWhenAnimating: true,
+          openAndCloseAnimation: true,
+          headerPadding:
+              const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+          children: List.generate(faqs.length, (index) {
+            Map faq = faqs[index];
+            return AccordionSection(
+              isOpen: false,
+
+              leftIcon: const Icon(Icons.insights_rounded, color: Colors.white),
+              headerBackgroundColor: Colors.black,
+              headerBackgroundColorOpened: Colors.red,
+              header: Text('${faq['name']}', style: _headerStyle),
+              content: Text("${faq['subtitle']}", style: _contentStyle),
+              contentHorizontalPadding: 20,
+              contentBorderWidth: 1,
+              // onOpenSection: () => print('onOpenSection ...'),
+              // onCloseSection: () => print('onCloseSection ...'),
+            );
+          }),
+        );
+      }
+    } else {
+      print(response.reasonPhrase);
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,99 +92,187 @@ class _Notifications extends State<Notifications> {
         child: Scaffold(
           backgroundColor: const Color.fromARGB(255, 255, 232, 235),
           //appBar: AppBar(),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 55,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        //
-                        Get.back();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 10),
-                        width: 200,
-                        height: 40,
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios,
-                              size: 20,
-                              color: Colors.red,
-                            ),
-                            Text(
-                              "Notifications",
-                              style: TextStyle(
-                                fontSize: 15,
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(255, 137, 147, 1),
+                  Color(0xFFFFFFFF),
+                ],
+                begin: FractionalOffset(0.0, 0.0),
+                end: FractionalOffset(1.0, 1.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 10),
+                          //width: 100,
+                          height: 40,
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.arrow_back_ios,
+                                size: 20,
                                 color: Colors.red,
-                                fontWeight: FontWeight.w500,
                               ),
-                            )
-                          ],
+                              Text(
+                                "Notifications",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  // ignore: sort_child_properties_last
-                  child: ListView(
-                    children: List.generate(5, (index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                            child: Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    // ignore: sort_child_properties_last
+                    child: FutureBuilder(
+                      future: getFaq(),
+                      builder: (context, t) {
+                        if (t.hasData) {
+                          return t.data as Widget;
+                        } else if (t.hasError) {
+                          return Container();
+                        }
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          direction: ShimmerDirection.ttb,
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 5,
                               ),
-                            ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 4, child: Shimm()),
+                                  Expanded(flex: 4, child: Shimm()),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 4, child: Shimm()),
+                                  Expanded(flex: 4, child: Shimm()),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(flex: 4, child: Shimm()),
+                                  Expanded(flex: 4, child: Shimm()),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: ListTile(
-                              title: Text("UDHlui hdui"),
-                              subtitle: Text("7700 FC"),
-                              trailing: IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  )),
-                            ),
-                          )
-                        ],
-                      );
-                    }),
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+                        );
+                      },
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  //
+  Widget Shimm() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Card(
+          elevation: 1,
+          color: Colors.grey,
+          child: Container(
+            height: 100,
+            width: 100,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          child: Card(
+            elevation: 1,
+            child: Container(
+              height: 10,
+              width: 100,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          child: Card(
+            elevation: 1,
+            child: Container(
+              height: 10,
+              width: 100,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          child: Card(
+            elevation: 1,
+            child: Container(
+              height: 10,
+              width: 100,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

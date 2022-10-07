@@ -288,22 +288,20 @@ class _MdpOublie extends State<MdpOublie> {
                             infos["mdp"] = pwC.text;
                             print("$infos");
                             //
-
                             //
-                            profilController.infos.value = infos;
+                            //profilController.infos.value = infos;
                             //
-                            box.write("profile", infos);
+                            //box.write("profile", infos);
                             //
                             // Get.back();
                             // Get.back();
                             // Get.snackbar("Succès", "Mot de passe changé");
                             Get.back();
                             if (infos['error']) {
-                              Get.snackbar("Erreur d'authentification",
-                                  "${infos['message']}");
+                              Get.snackbar("Erreur", "${infos['message']}");
                             } else {
                               Get.back();
-                              Get.snackbar("Succès", "Mot de passe changé");
+                              Get.snackbar("Succès", "${infos['message']}");
                             }
                             //Timer(Duration(seconds: 1), () {
                             //

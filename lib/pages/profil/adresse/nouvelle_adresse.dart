@@ -57,7 +57,8 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
       //
-
+      Get.back();
+      Get.back();
       //
       Get.snackbar("Adresse", "Enregistrement éffectué");
       //
@@ -68,10 +69,8 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
       pointRepC.clear();
       //
 
-      Timer(const Duration(milliseconds: 500), () {
+      Timer(const Duration(seconds: 1), () {
         //
-        Get.back();
-        Get.back();
         widget.state.setState(() {});
       });
     } else {
@@ -305,6 +304,7 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                                           c2 = lq.isNotEmpty
                                               ? lq[0]['name']
                                               : "";
+                                          idQuart = lq[0]['id'];
                                           //
                                           idComm = element['id'];
                                           //

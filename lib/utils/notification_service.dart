@@ -12,51 +12,44 @@ import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   //
-
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   //
   NotificationService();
 
   final _localNotifications = FlutterLocalNotificationsPlugin();
   final BehaviorSubject<String> behaviorSubject = BehaviorSubject();
 
-  Future<void> initializePlatformNotifications() async {
+  Future<void> initializePlatformNotifications(
+      String titre, String body) async {
+    int id = 1;
     //
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('your channel id', 'your channel name',
+            channelDescription: 'your channel description',
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker');
 
-    //
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('launcher_icon');
-
-    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
             requestSoundPermission: true,
             requestBadgePermission: true,
             requestAlertPermission: true,
             onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
+    IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
     );
 
-    await _localNotifications.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
-    //
-    const IOSNotificationDetails iosNotificationDetails =
-        IOSNotificationDetails();
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-      'repeating channel id',
-      'repeating channel name',
-      playSound: true,
-      color: Color(0xff2196f3),
-      channelDescription: 'repeating description',
+    NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: iosNotificationDetails,
     );
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await _localNotifications.periodicallyShow(0, 'repeating title',
-        'repeating body', RepeatInterval.everyMinute, notificationDetails,
-        androidAllowWhileIdle: true);
+    await flutterLocalNotificationsPlugin
+        .show(id++, titre, body, notificationDetails, payload: '');
     //
   }
 

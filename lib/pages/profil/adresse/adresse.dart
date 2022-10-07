@@ -44,6 +44,9 @@ class _Adresse extends State<Adresse> {
       print("reponse pour la supp: $rep");
       Get.back();
       Get.snackbar("Succès", "Adresse supprimé");
+      setState(() {
+        //
+      });
     } else {
       //print(response.reasonPhrase);
       Get.snackbar("Erreur", response.reasonPhrase!);
@@ -106,62 +109,63 @@ class _Adresse extends State<Adresse> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Expanded(
-                                flex: 7,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Container(
-                                    //   width: 50,
-                                    //   child: Checkbox(
-                                    //     value: v,
-                                    //     checkColor: Colors.red.shade700,
-                                    //     onChanged: (e) {
-                                    //       //
-                                    //     },
-                                    //   ),
-                                    // ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: ListTile(
-                                        // onTap: () {
+                              flex: 7,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Container(
+                                  //   width: 50,
+                                  //   child: Checkbox(
+                                  //     value: v,
+                                  //     checkColor: Colors.red.shade700,
+                                  //     onChanged: (e) {
+                                  //       //
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: ListTile(
+                                      // onTap: () {
 
-                                        // },
-                                        title: Text("${adresse["landmark"]}"),
-                                        subtitle: Text(
-                                            "${adresse["address"]} / ${adresse["city"]}"),
-                                        trailing: IconButton(
-                                          onPressed: () {
-                                            Get.dialog(
-                                              const Center(
-                                                child: SizedBox(
-                                                  height: 50,
-                                                  width: 50,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    backgroundColor: Colors.red,
-                                                    strokeWidth: 7,
-                                                  ),
+                                      // },
+                                      title: Text("${adresse["landmark"]}"),
+                                      subtitle: Text(
+                                          "${adresse["address"]} / ${adresse["city"]}"),
+                                      trailing: IconButton(
+                                        onPressed: () {
+                                          Get.dialog(
+                                            const Center(
+                                              child: SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  backgroundColor: Colors.red,
+                                                  strokeWidth: 7,
                                                 ),
                                               ),
-                                            );
+                                            ),
+                                          );
+                                          //
+                                          setState(() {
                                             //
-                                            setState(() {
-                                              //
-                                              supprimerAddresse(
-                                                  "${adresse["id"]}");
-                                              //
-                                            });
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                          ),
+                                            supprimerAddresse(
+                                                "${adresse["id"]}");
+                                            //
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
                                         ),
                                       ),
-                                    )
-                                  ],
-                                )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                             Expanded(
                               flex: 4,
                               child: Row(

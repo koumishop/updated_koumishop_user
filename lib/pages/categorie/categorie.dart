@@ -6,10 +6,12 @@ class Categorie extends StatelessWidget {
   String titre;
   String sousTitre;
   IconData icon;
+  String image;
   Categorie(
     this.titre,
     this.sousTitre,
     this.icon,
+    this.image,
   );
 
   @override
@@ -29,11 +31,7 @@ class Categorie extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Icon(
-                icon,
-                color: Colors.red,
-                size: 60,
-              ),
+              child: Image.network("$image"),
             ),
           ),
           Expanded(

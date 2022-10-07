@@ -118,7 +118,7 @@ class _Log extends State<Log> {
                           ),
                         ),
                         const Text(
-                          "KOUMISHOPE",
+                          "KOUMI SHOP",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -340,225 +340,238 @@ class _Log extends State<Log> {
                       TextButton(
                         onPressed: () {
                           //
-                          showDialog(
-                            context: context,
-                            builder: (c) {
-                              return AlertDialog(
-                                title: Text("Vérification du numéro"),
-                                content: Container(
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        flex: 4,
-                                        child: GestureDetector(
-                                          onTap: () async {
-                                            final code = await countryPicker
-                                                .showPicker(context: context);
-                                            if (code != null) {
-                                              cd.value = code.dialCode;
-                                              print(code);
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0, vertical: 4.0),
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            decoration: const BoxDecoration(
-                                                color: Colors.blue,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0))),
-                                            child: Obx(
-                                              () => Text(
-                                                cd.value,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
+                          ProfilController profilController = Get.find();
+                          if (profilController.infos['user_id'] == null) {
+                            //
+                            Get.snackbar("Erreur", "Pas de compte");
+                          } else {
+                            //
+                            showDialog(
+                              context: context,
+                              builder: (c) {
+                                return AlertDialog(
+                                  title: Text("Vérification du numéro"),
+                                  content: Container(
+                                    height: 50,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 4,
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              final code = await countryPicker
+                                                  .showPicker(context: context);
+                                              if (code != null) {
+                                                cd.value = code.dialCode;
+                                                print(code);
+                                              }
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 4.0),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.blue,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              child: Obx(
+                                                () => Text(
+                                                  cd.value,
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 8,
-                                        child: TextField(
-                                          controller: phone,
-                                          decoration: InputDecoration(
-                                              hintText: "ex: 820011111"),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      elevation: MaterialStateProperty.all(0),
-                                      padding: MaterialStateProperty.all(
-                                        const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                        ),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        Colors.red,
-                                      ),
-                                      overlayColor: MaterialStateProperty.all(
-                                        Colors.red.shade100,
-                                      ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: TextField(
+                                            controller: phone,
+                                            decoration: InputDecoration(
+                                                hintText: "ex: 820011111"),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    onPressed: () async {
-                                      //
-                                      if (phone.text.isNotEmpty) {
-                                        final fcmToken = await FirebaseMessaging
-                                            .instance
-                                            .getToken();
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                        elevation: MaterialStateProperty.all(0),
+                                        padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                        ),
+                                        shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                          Colors.red,
+                                        ),
+                                        overlayColor: MaterialStateProperty.all(
+                                          Colors.red.shade100,
+                                        ),
+                                      ),
+                                      onPressed: () async {
                                         //
-                                        Get.dialog(
-                                          const Center(
-                                            child: SizedBox(
-                                              height: 50,
-                                              width: 50,
-                                              child: CircularProgressIndicator(
-                                                backgroundColor: Colors.red,
-                                                strokeWidth: 7,
+                                        if (phone.text.isNotEmpty) {
+                                          final fcmToken =
+                                              await FirebaseMessaging.instance
+                                                  .getToken();
+                                          //
+                                          Get.dialog(
+                                            const Center(
+                                              child: SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  backgroundColor: Colors.red,
+                                                  strokeWidth: 7,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                        //
-                                        var headers = {
-                                          'Authorization':
-                                              'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                                        };
-                                        var request = http.MultipartRequest(
-                                            'POST',
-                                            Uri.parse(
-                                                'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
-                                        request.fields.addAll({
-                                          'accesskey': '90336',
-                                          'mobile': phone.text,
-                                          'type': 'verify-user'
-                                        });
+                                          );
+                                          //
+                                          var headers = {
+                                            'Authorization':
+                                                'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                          };
+                                          var request = http.MultipartRequest(
+                                              'POST',
+                                              Uri.parse(
+                                                  'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                                          request.fields.addAll({
+                                            'accesskey': '90336',
+                                            'mobile': phone.text,
+                                            'type': 'verify-user'
+                                          });
 
-                                        request.headers.addAll(headers);
+                                          request.headers.addAll(headers);
 
-                                        http.StreamedResponse response =
-                                            await request.send();
+                                          http.StreamedResponse response =
+                                              await request.send();
 
-                                        if (response.statusCode == 200) {
-                                          String rep = await response.stream
-                                              .bytesToString();
-                                          Map map = json.decode(rep);
-                                          if ("${map['message']}"
-                                              .contains("l'OTP !")) {
-                                            //
-                                            // ConfirmationResult
-                                            //     confirmationResult =
-                                            //     await FirebaseAuth.instance
-                                            //         .signInWithPhoneNumber("");
-                                            FirebaseAuth.instance
-                                                .verifyPhoneNumber(
-                                              phoneNumber:
-                                                  "${cd.value}${phone.text}",
-                                              timeout:
-                                                  const Duration(minutes: 2),
-                                              verificationCompleted: (v) {
-                                                print(
-                                                    "auth: verificationCompleted: $v");
-                                              },
-                                              verificationFailed: (v) {
-                                                print(
-                                                    "auth: verificationFailed: $v");
-                                                Get.back();
-                                                Get.back();
-                                                Get.back();
-                                                Get.snackbar("Echec", "$v");
-                                                //Get.to(Inscription());
-                                              },
-                                              codeSent: (s, i) {
-                                                print(
-                                                    "auth: codeSent: $s :--: $i");
-                                                Get.back();
-                                                Get.back();
-                                                Get.back();
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (c) {
-                                                    return OptVerification(
-                                                      cd.value,
-                                                      phone.text,
-                                                      '$i',
-                                                      false,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              codeAutoRetrievalTimeout: (c) {
-                                                print(
-                                                    "auth: codeAutoRetrievalTimeout: $c");
-                                              },
-                                            );
-                                            // Get.back();
-                                            // Get.back();
-                                            // Get.back();
-                                            // showDialog(
-                                            //     context: context,
-                                            //     builder: (c) {
-                                            //       return OptVerification("","");
-                                            //     });
-                                            //Get.to(Inscription());
-                                            //
+                                          if (response.statusCode == 200) {
+                                            String rep = await response.stream
+                                                .bytesToString();
+                                            Map map = json.decode(rep);
+                                            if ("${map['message']}"
+                                                .contains("l'OTP !")) {
+                                              //
+                                              // ConfirmationResult
+                                              //     confirmationResult =
+                                              //     await FirebaseAuth.instance
+                                              //         .signInWithPhoneNumber("");
+                                              FirebaseAuth.instance
+                                                  .verifyPhoneNumber(
+                                                phoneNumber:
+                                                    "${cd.value}${phone.text}",
+                                                timeout:
+                                                    const Duration(minutes: 2),
+                                                verificationCompleted: (v) {
+                                                  print(
+                                                      "auth: verificationCompleted: $v");
+                                                },
+                                                verificationFailed: (v) {
+                                                  print(
+                                                      "auth: verificationFailed: $v");
+                                                  Get.back();
+                                                  Get.back();
+                                                  Get.back();
+                                                  Get.snackbar("Echec", "$v");
+                                                  //Get.to(Inscription());
+                                                },
+                                                codeSent: (s, i) {
+                                                  print(
+                                                      "auth: codeSent: $s :--: $i");
+                                                  Get.back();
+                                                  Get.back();
+                                                  Get.back();
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (c) {
+                                                      return OptVerification(
+                                                        cd.value,
+                                                        phone.text,
+                                                        '$i',
+                                                        false,
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                codeAutoRetrievalTimeout: (c) {
+                                                  print(
+                                                      "auth: codeAutoRetrievalTimeout: $c");
+                                                },
+                                              );
+                                              // Get.back();
+                                              // Get.back();
+                                              // Get.back();
+                                              // showDialog(
+                                              //     context: context,
+                                              //     builder: (c) {
+                                              //       return OptVerification("","");
+                                              //     });
+                                              //Get.to(Inscription());
+                                              //
+                                            } else {
+                                              Get.back();
+                                              Get.back();
+                                              Get.snackbar(
+                                                "Téléphone",
+                                                "${map['message']}",
+                                                duration: const Duration(
+                                                  seconds: 7,
+                                                ),
+                                              );
+                                            }
                                           } else {
-                                            Get.back();
-                                            Get.back();
-                                            Get.snackbar(
-                                              "Téléphone",
-                                              "${map['message']}",
-                                              duration: const Duration(
-                                                seconds: 7,
-                                              ),
-                                            );
+                                            print(response.reasonPhrase);
                                           }
                                         } else {
-                                          print(response.reasonPhrase);
+                                          Get.snackbar("Téléphone",
+                                              "Numéro de téléphone vide.");
                                         }
-                                      } else {
-                                        Get.snackbar("Téléphone",
-                                            "Numéro de téléphone vide.");
-                                      }
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: const Text(
-                                        "Vérifier OTP",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w400,
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: const Text(
+                                          "Vérifier OTP",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                                  ],
+                                );
+                              },
+                            );
+                          }
                           //
                         },
-                        child: Text(
+                        child: const Text(
                           "Mot de passe oublié ?",
                           style: TextStyle(
                             textBaseline: TextBaseline.alphabetic,
@@ -568,7 +581,7 @@ class _Log extends State<Log> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       ElevatedButton(

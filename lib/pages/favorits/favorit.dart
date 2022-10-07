@@ -20,6 +20,8 @@ class _Favorit extends State<Favorit> {
   //favoritController
   var box = GetStorage();
   //
+  List listeE = [];
+  //
   @override
   void initState() {
     Timer(Duration(seconds: 1), () {
@@ -31,7 +33,7 @@ class _Favorit extends State<Favorit> {
 
   loading() async {
     //
-    favoritController.listeDeElement.value = box.read("favoris") ?? [];
+    listeE = box.read("favoris") ?? [];
     //
   }
 
@@ -109,75 +111,77 @@ class _Favorit extends State<Favorit> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
                     // ignore: sort_child_properties_last
-                    child: ListView(
-                      children: List.generate(
-                          favoritController.listeDeElement.length, (index) {
-                        Map favoris = favoritController.listeDeElement[index];
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Card(
-                              elevation: 1,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40),
-                              ),
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
+                    child: Obx(
+                      () => ListView(
+                        children: List.generate(
+                            favoritController.listeDeElement.length, (index) {
+                          Map favoris = favoritController.listeDeElement[index];
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Card(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(40),
-                                  image: DecorationImage(
-                                    image: NetworkImage("${favoris['image']}"),
-                                    fit: BoxFit.cover,
+                                ),
+                                child: Container(
+                                  height: 80,
+                                  width: 80,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    image: DecorationImage(
+                                      image:
+                                          NetworkImage("${favoris['image']}"),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: ListTile(
-                                title: Text(
-                                  "${favoris['name']}",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
+                              Expanded(
+                                flex: 1,
+                                child: ListTile(
+                                  title: Text(
+                                    "${favoris['name']}",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "${favoris['price']} FC",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      //
+                                      setState(() {
+                                        //RxList l =
+                                        listeE.removeAt(index);
+                                        //l.removeAt(index);
+                                        //favoritController.listeDeElement = l;
+                                        box.write("favoris", listeE);
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
-                                subtitle: Text(
-                                  "${favoris['price']} FC",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: Colors.grey.shade700,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    //
-                                    setState(() {
-                                      RxList l =
-                                          favoritController.listeDeElement;
-                                      l.removeAt(index);
-                                      favoritController.listeDeElement = l;
-                                      box.write("favoris",
-                                          favoritController.listeDeElement);
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      }),
+                              )
+                            ],
+                          );
+                        }),
+                      ),
                     ),
                     decoration: const BoxDecoration(
                       color: Colors.transparent,

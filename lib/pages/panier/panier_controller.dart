@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:koumishop/pages/profil/commande/commande.dart';
 
 import 'paiement_mobile.dart';
 
@@ -120,6 +121,7 @@ class PanierController extends GetxController {
                                   ),
                                   onPressed: () {
                                     //
+                                    Get.to(Commande());
                                   },
                                   child: SizedBox(
                                     height: 50,
@@ -127,7 +129,7 @@ class PanierController extends GetxController {
                                       height: 50,
                                       alignment: Alignment.center,
                                       child: const Text(
-                                        "Détails",
+                                        "Voir vos commandes",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,

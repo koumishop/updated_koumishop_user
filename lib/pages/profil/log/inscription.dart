@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:koumishop/pages/accueil.dart';
+import 'package:koumishop/pages/profil/autres/politique.dart';
+import 'package:koumishop/pages/profil/autres/termes.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -12,7 +14,8 @@ import 'package:koumishop/pages/profil/profil_controller.dart';
 
 class Inscription extends StatefulWidget {
   String phoneN;
-  Inscription(this.phoneN);
+  String code;
+  Inscription(this.phoneN, this.code);
   @override
   State<StatefulWidget> createState() {
     return _Inscription();
@@ -40,6 +43,8 @@ class _Inscription extends State<Inscription> {
   final code_ref = TextEditingController();
 
   RxString cd = "+243".obs;
+  String sexe = "F";
+  String dateNaissance = "";
   //
   final countryPicker = const FlCountryCodePicker();
   //
@@ -189,6 +194,95 @@ class _Inscription extends State<Inscription> {
                                 const SizedBox(
                                   height: 20,
                                 ),
+                                SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 5,
+                                        child: Text("Sexe"),
+                                      ),
+                                      Expanded(
+                                        flex: 5,
+                                        child: DropdownButton<String>(
+                                          onChanged: (e) {
+                                            //
+                                            setState(() {
+                                              sexe = e as String;
+                                            });
+                                          },
+                                          value: sexe,
+                                          items: [
+                                            DropdownMenuItem(
+                                                value: "F",
+                                                child: Text("Femme")),
+                                            DropdownMenuItem(
+                                                value: "M",
+                                                child: Text("Homme")),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Expanded(
+                                        flex: 5,
+                                        child: Text("Date de naissance"),
+                                      ),
+                                      Expanded(
+                                        flex: 5,
+                                        child: InkWell(
+                                          onTap: () {
+                                            showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(1940),
+                                              lastDate: DateTime(2030),
+                                            ).then((value) {
+                                              //
+                                              setState(() {
+                                                dateNaissance =
+                                                    "${value!.year}-${value.month}-${value.day}";
+                                              });
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 50,
+                                            padding: const EdgeInsets.all(
+                                              5,
+                                            ),
+                                            alignment: Alignment.centerLeft,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.red,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              dateNaissance,
+                                              style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
                                 TextFormField(
                                   obscureText: showCode1,
                                   keyboardType: TextInputType.emailAddress,
@@ -304,7 +398,7 @@ class _Inscription extends State<Inscription> {
                                             WidgetSpan(
                                               child: InkWell(
                                                 onTap: () {
-                                                  //
+                                                  Get.to(Politique());
                                                 },
                                                 child: Text(
                                                   "Politique de confidencialité ",
@@ -325,13 +419,19 @@ class _Inscription extends State<Inscription> {
                                                 onTap: () {
                                                   //
                                                 },
-                                                child: Text(
-                                                  "Conditions générales ",
-                                                  style: TextStyle(
-                                                    color: Colors.red.shade700,
-                                                    fontSize: 17,
-                                                    decoration: TextDecoration
-                                                        .underline,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Get.to(Termes());
+                                                  },
+                                                  child: Text(
+                                                    "Conditions générales ",
+                                                    style: TextStyle(
+                                                      color:
+                                                          Colors.red.shade700,
+                                                      fontSize: 17,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -342,7 +442,7 @@ class _Inscription extends State<Inscription> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 ElevatedButton(
@@ -406,6 +506,9 @@ class _Inscription extends State<Inscription> {
                                             'type': 'register',
                                             'email': email.text,
                                             'fcm_id': "$fcmToken",
+                                            'sex': sexe,
+                                            'date_of_birth': dateNaissance,
+                                            //'1990-10-25'
                                           },
                                         );
 

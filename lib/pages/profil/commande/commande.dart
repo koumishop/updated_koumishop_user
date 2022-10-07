@@ -144,7 +144,7 @@ else {
                                       "Commande placée",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 0
                                                   ? commande['status'][0][0]
                                                   : "") ==
@@ -159,7 +159,7 @@ else {
                                       "Commande en traitemant",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 1
                                                   ? commande['status'][1][0]
                                                   : "") ==
@@ -174,7 +174,7 @@ else {
                                       "Commande en cours de livraison",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 2
                                                   ? commande['status'][2][0]
                                                   : "") ==
@@ -189,7 +189,7 @@ else {
                                       "Commande livrée",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 3
                                                   ? commande['status'][3][0]
                                                   : "") ==
@@ -288,7 +288,7 @@ else {
                                       "${commande['status'].length > 0 ? commande['status'][0][1] : ''}",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 0
                                                   ? commande['status'][0][0]
                                                   : "") ==
@@ -303,7 +303,7 @@ else {
                                       "${commande['status'].length > 1 ? commande['status'][1][1] : ''}",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 1
                                                   ? commande['status'][1][0]
                                                   : "") ==
@@ -318,7 +318,7 @@ else {
                                       "${commande['status'].length > 2 ? commande['status'][2][1] : ''}",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 2
                                                   ? commande['status'][2][0]
                                                   : "") ==
@@ -333,7 +333,7 @@ else {
                                       "${commande['status'].length > 3 ? commande['status'][3][1] : ''}",
                                       textAlign: TextAlign.center,
                                       style: tx2(
-                                          10,
+                                          9,
                                           (commande['status'].length > 3
                                                   ? commande['status'][3][0]
                                                   : "") ==

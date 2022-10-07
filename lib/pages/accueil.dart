@@ -1,3 +1,4 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,27 +75,93 @@ class Accueil extends GetView<AccueilController> {
               children: [
                 controller.obx(
                   (state) {
-                    List menus = state!;
+                    Map m = state!;
+                    List menus = m['data'];
+                    print(menus);
+                    List pubs = m['pub'];
+                    RxInt id = 0.obs;
+
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Card(
-                        //   elevation: 1,
-                        //   child: SizedBox(
-                        //     height: Get.size.height / 4,
-                        //   ),
-                        // ),
-                        // Container(
-                        //   height: 10,
-                        //   color: Colors.red,
-                        // ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: Get.size.height / 4,
+                          child: Swiper(
+                            itemBuilder: (BuildContext context, int index) {
+                              return Image.network(
+                                "${pubs[index]['image']}",
+                                fit: BoxFit.fill,
+                              );
+                            },
+                            onIndexChanged: (e) {
+                              print("$e:------");
+                              id.value = e;
+                            },
+                            autoplay: true,
+                            //autoplayDelay: 2,
+                            itemCount: pubs.length,
+                            viewportFraction: 0.8,
+                            scale: 0.9,
+                          ),
+                          // child: PageView(
+                          //   onPageChanged: (e) {
+                          //     print("$e:------");
+                          //     id.value = e;
+                          //   },
+                          //   children: List.generate(
+                          //     pubs.length,
+                          //     (index) {
+                          //       return Container(
+                          //         alignment: Alignment.center,
+                          //         decoration: BoxDecoration(
+                          //           image: DecorationImage(
+                          //             image: NetworkImage(
+                          //               "${pubs[index]['image']}",
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         //child: Text("$index"),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: 10,
+                          //color: Colors.blue,
+                          alignment: Alignment.center,
+                          child: Obx(
+                            () => Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                pubs.length,
+                                (index) => Container(
+                                  height: 8,
+                                  width: 8,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: id.value == index
+                                        ? Colors.red
+                                        : Colors.yellow,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         Expanded(
                           flex: 1,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(menus.length, (index) {
                               return SizedBox(
-                                height: 90,
+                                height: 100,
                                 child: Column(
                                   children: [
                                     ElevatedButton(
@@ -152,6 +219,7 @@ class Accueil extends GetView<AccueilController> {
                                         "${menus[index]['name']}",
                                         "${menus[index]['service_description']}",
                                         listeData[index],
+                                        "${menus[index]['illustration']}",
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -170,11 +238,7 @@ class Accueil extends GetView<AccueilController> {
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.zero),
                       ),
-                      child: Categorie(
-                        "Reessayez",
-                        "Pas d'information",
-                        Icons.cloud_off_outlined,
-                      ),
+                      child: Text("Pas de connexion"),
                     ),
                   ),
                   onError: (e) {
@@ -185,11 +249,7 @@ class Accueil extends GetView<AccueilController> {
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all(EdgeInsets.zero),
                           ),
-                          child: Categorie(
-                            "Erreur au serveur",
-                            "Un problème est survenu veuillez reessayer",
-                            Icons.cloud_off_outlined,
-                          ),
+                          child: Text("Serveur erreur"),
                         ),
                       );
                     } else {
@@ -199,11 +259,7 @@ class Accueil extends GetView<AccueilController> {
                           style: ButtonStyle(
                             padding: MaterialStateProperty.all(EdgeInsets.zero),
                           ),
-                          child: Categorie(
-                            "Connexion internet",
-                            "Connectez-vous et reessayer",
-                            Icons.cloud_off_outlined,
-                          ),
+                          child: Text(""),
                         ),
                       );
                     }

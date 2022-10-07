@@ -4,11 +4,28 @@ import 'package:koumishop/pages/menu/recherche_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class Recherche extends GetView<RechercheController> {
+class Recherche extends StatefulWidget {
   String text;
-  Recherche(this.text) {
-    controller.getRecherche(text);
+  Recherche(this.text);
+  @override
+  State<StatefulWidget> createState() {
+    return _Recherche();
   }
+}
+
+class _Recherche extends State<Recherche> {
+  //
+  RechercheController controller = Get.find();
+
+  @override
+  void initState() {
+    //
+
+    controller.getRecherche(widget.text);
+    //
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -238,7 +255,9 @@ class Recherche extends GetView<RechercheController> {
                                                                           .all(
                                                                               10),
                                                                   child: Details(
-                                                                      produit),
+                                                                      produit,
+                                                                      this,
+                                                                      index),
                                                                 ),
                                                               )
                                                             ],
