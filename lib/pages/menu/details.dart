@@ -207,6 +207,11 @@ class _Details extends State<Details> {
                                     children: [
                                       InkWell(
                                         onTap: () {
+                                          if (panierController
+                                              .listeDeElement.isNotEmpty) {
+                                            menuController
+                                                .showMiniPanier.value = true;
+                                          }
                                           if (nombre.value > 0) {
                                             nombre.value--;
                                             produit["nombre"] =
@@ -214,6 +219,22 @@ class _Details extends State<Details> {
                                             panierController
                                                     .listeDeElement[widget.idx]
                                                 ['nombre'] = "${nombre.value}";
+                                            //
+                                            for (var i = 0;
+                                                i <
+                                                    panierController
+                                                        .listeDeElement.length;
+                                                i++) {
+                                              if (panierController
+                                                          .listeDeElement[i]
+                                                      ['id'] ==
+                                                  produit["id"]) {
+                                                panierController
+                                                        .listeDeElement[i] =
+                                                    produit;
+                                                break;
+                                              }
+                                            }
                                             //
                                             for (int x = 0;
                                                 x <
@@ -276,6 +297,9 @@ class _Details extends State<Details> {
                                       ),
                                       InkWell(
                                         onTap: () {
+                                          menuController.showMiniPanier.value =
+                                              true;
+
                                           if (int.parse(produit['variants'][0]
                                                   ['stock']) ==
                                               0) {
@@ -297,6 +321,22 @@ class _Details extends State<Details> {
                                                     .toSet()
                                                     .toList()
                                                     .obs;
+                                            //
+                                            for (var i = 0;
+                                                i <
+                                                    panierController
+                                                        .listeDeElement.length;
+                                                i++) {
+                                              if (panierController
+                                                          .listeDeElement[i]
+                                                      ['id'] ==
+                                                  produit["id"]) {
+                                                panierController
+                                                        .listeDeElement[i] =
+                                                    produit;
+                                                break;
+                                              }
+                                            }
                                             //
 
                                             for (int x = 0;

@@ -240,84 +240,86 @@ class _MiseaJour extends State<MiseaJour> {
                                   ),
                                   onPressed: () async {
                                     //
-                                    ProfilController profilController =
-                                        Get.find();
-                                    //
-                                    Get.dialog(
-                                      const Center(
-                                        child: SizedBox(
-                                          height: 50,
-                                          width: 50,
-                                          child: CircularProgressIndicator(
-                                            backgroundColor: Colors.red,
-                                            strokeWidth: 7,
+                                    if (_formKey.currentState!.validate()) {
+                                      //
+                                      ProfilController profilController =
+                                          Get.find();
+                                      //
+                                      Get.dialog(
+                                        const Center(
+                                          child: SizedBox(
+                                            height: 50,
+                                            width: 50,
+                                            child: CircularProgressIndicator(
+                                              backgroundColor: Colors.red,
+                                              strokeWidth: 7,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                    //
-                                    final fcmToken = await FirebaseMessaging
-                                        .instance
-                                        .getToken();
-                                    //
-                                    var headers = {
-                                      'Authorization':
-                                          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
-                                      'Cookie':
-                                          'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
-                                    };
-                                    var request = http.MultipartRequest(
-                                        'POST',
-                                        Uri.parse(
-                                            'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
-                                    request.fields.addAll(
-                                      {
-                                        'accesskey': '90336',
-                                        'user_id':
-                                            '${profilController.infos['user_id']}',
-                                        'latitude': '0',
-                                        ' name': name.text,
-                                        ' mobile': mobile.text,
-                                        ' type': 'edit-profile',
-                                        'fcm_id': '$fcmToken',
-                                        ' longitude': '0',
-                                        ' email': email.text,
-                                      },
-                                    );
+                                      );
+                                      //
+                                      final fcmToken = await FirebaseMessaging
+                                          .instance
+                                          .getToken();
+                                      //
+                                      var headers = {
+                                        'Authorization':
+                                            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+                                        'Cookie':
+                                            'PHPSESSID=e18e7b41c806a6fdd8d326ffe8750851'
+                                      };
+                                      var request = http.MultipartRequest(
+                                          'POST',
+                                          Uri.parse(
+                                              'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                                      request.fields.addAll(
+                                        {
+                                          'accesskey': '90336',
+                                          'user_id':
+                                              '${profilController.infos['user_id']}',
+                                          'latitude': '0',
+                                          ' name': name.text,
+                                          ' mobile': mobile.text,
+                                          ' type': 'edit-profile',
+                                          'fcm_id': '$fcmToken',
+                                          ' longitude': '0',
+                                          ' email': email.text,
+                                        },
+                                      );
 
-                                    request.headers.addAll(headers);
+                                      request.headers.addAll(headers);
 
-                                    http.StreamedResponse response =
-                                        await request.send();
-
-                                    if (response.statusCode == 200) {
-                                      String rep =
-                                          await response.stream.bytesToString();
-                                      print(rep);
-                                      Map map = json.decode(rep);
-                                      if (map['error']) {
-                                        Get.back();
-                                        Get.back();
-                                        Get.snackbar(
-                                          "Téléphone",
-                                          "${map['message']}",
-                                          duration: const Duration(
-                                            seconds: 7,
-                                          ),
-                                        );
-                                        //
+                                      http.StreamedResponse response =
+                                          await request.send();
+                                      if (response.statusCode == 200) {
+                                        String rep = await response.stream
+                                            .bytesToString();
+                                        print(rep);
+                                        Map map = json.decode(rep);
+                                        if (map['error']) {
+                                          Get.back();
+                                          Get.back();
+                                          Get.snackbar(
+                                            "Téléphone",
+                                            "${map['message']}",
+                                            duration: const Duration(
+                                              seconds: 7,
+                                            ),
+                                          );
+                                          //
+                                        } else {
+                                          //Get.back();
+                                          load("${map['message']}");
+                                        }
                                       } else {
-                                        //Get.back();
-                                        load("${map['message']}");
+                                        print(response.reasonPhrase);
                                       }
-                                    } else {
-                                      print(response.reasonPhrase);
                                     }
                                   },
                                   child: Container(
                                     height: 50,
                                     alignment: Alignment.center,
-                                    child: Text(
+                                    child: const Text(
                                       "Enregistrer",
                                       style: TextStyle(
                                         color: Colors.white,

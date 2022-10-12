@@ -57,6 +57,10 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
       //
+      tel2C.clear();
+      avenueNumC.clear();
+      pointRepC.clear();
+      //
       Get.back();
       Get.back();
       //
@@ -64,15 +68,11 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
       //
       //nomC.clear();
       //tel1C.clear();
-      tel2C.clear();
-      avenueNumC.clear();
-      pointRepC.clear();
       //
 
-      Timer(const Duration(seconds: 1), () {
-        //
-        widget.state.setState(() {});
-      });
+      //Timer(const Duration(seconds: 1), () {
+      widget.state.setState(() {});
+      //});
     } else {
       Get.snackbar("Erreur", "Un problème est survenu");
       print(response.reasonPhrase);

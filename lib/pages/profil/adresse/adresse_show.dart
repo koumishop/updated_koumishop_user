@@ -116,7 +116,7 @@ class _AdresseShow extends State<AdresseShow> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 50,
                                     child: Checkbox(
                                       value: v,
@@ -173,7 +173,7 @@ class _AdresseShow extends State<AdresseShow> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 50,
                                   ),
                                   Container(
@@ -315,10 +315,18 @@ class _AdresseShow extends State<AdresseShow> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //
-            Get.to(NouvelleAdresse(this));
+            //Get.back();
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Material(
+                    child: NouvelleAdresse(this),
+                  );
+                });
+            //Get.to(NouvelleAdresse(this));
           },
           backgroundColor: Colors.red,
-          child: Icon(
+          child: const Icon(
             Icons.add,
             color: Colors.white,
           ),

@@ -577,11 +577,15 @@ class _Profil extends State<Profil> {
                                                 ),
                                                 IconButton(
                                                   onPressed: () {
-                                                    //ar box
+                                                    //
+                                                    _logout();
+                                                    //
                                                     profilController
                                                         .infos.value = {};
                                                     box.write("profile", null);
-                                                    Timer(Duration(seconds: 1),
+                                                    Timer(
+                                                        Duration(
+                                                            microseconds: 500),
                                                         () {
                                                       setState(() {
                                                         Get.back();
@@ -609,7 +613,7 @@ class _Profil extends State<Profil> {
                                       () => Text(
                                         profilController.infos['mobile'] == null
                                             ? "Se connecter"
-                                            : "Se déconnexion",
+                                            : "Se déconneter",
                                         style: styleDeMenu(),
                                       ),
                                     ),
@@ -644,6 +648,16 @@ class _Profil extends State<Profil> {
       ),
     );
   }
+
+  //
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  //
 
   TextStyle styleDeMenu() {
     return const TextStyle(

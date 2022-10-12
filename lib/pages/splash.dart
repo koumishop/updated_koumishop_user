@@ -70,7 +70,7 @@ class SplashtScreen extends StatelessWidget {
       print("---------------------------- ${profilController.infos}");
       //
       //Get.off(PaiementMobile("", {})); //PaiementMobile
-      Get.off(Accueil(true)); //PaiementMobile
+      Get.off(Accueil(true)); //PaiementMobile//true
       //
       //Get.off(Inscription("815381693", "+243"));
       //

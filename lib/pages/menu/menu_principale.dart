@@ -107,7 +107,11 @@ class _MenuPrincipal extends State<MenuPrincipal> {
             onRefresh: () async {
               print("refresh");
               //
-              menuController.showMiniPanier.value = true;
+              if (panierController.listeDeElement.isNotEmpty) {
+                menuController.showMiniPanier.value = true;
+              }
+              //
+              //
               return Future<void>.delayed(const Duration(seconds: 1));
             },
             color: Colors.red,

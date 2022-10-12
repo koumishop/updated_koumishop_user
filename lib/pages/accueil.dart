@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/categorie/categorie.dart';
 import 'package:koumishop/pages/favorits/favorit.dart';
 import 'package:koumishop/pages/menu/menu_principale.dart';
+import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/profil.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -20,10 +22,15 @@ class Accueil extends GetView<AccueilController> {
   AccueilController accueilController = Get.find();
   BuildContext? c;
   bool show;
+  PanierController panierController = Get.find();
   //
   Accueil(this.show) {
     controllerP = PageController();
     controller.getService1(1);
+    //
+    var box = GetStorage();
+    panierController.listeDeElement.value = box.read("panier") ?? [];
+    //
     Timer(Duration(seconds: 1), () {
       BuildContext? context;
       showPopup(c!);

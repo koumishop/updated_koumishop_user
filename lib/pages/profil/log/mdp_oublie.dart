@@ -252,6 +252,20 @@ class _MdpOublie extends State<MdpOublie> {
 
                       //spacing: 5,
                       children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.red,
+                              ),
+                            )
+                          ],
+                        ),
                         const Text(
                           "Modifier le mot de passe ?",
                           style: TextStyle(
@@ -367,78 +381,81 @@ class _MdpOublie extends State<MdpOublie> {
                               //
                               ProfilController profilController = Get.find();
                               //
-                              Get.dialog(
-                                const Center(
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Colors.red,
-                                      strokeWidth: 7,
+                              if (_formKey.currentState!.validate()) {
+                                //
+                                Get.dialog(
+                                  const Center(
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Colors.red,
+                                        strokeWidth: 7,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                              //
-                              final fcmToken =
-                                  await FirebaseMessaging.instance.getToken();
-                              //
-                              Get.dialog(
-                                const Center(
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Colors.red,
-                                      strokeWidth: 7,
+                                );
+                                //
+                                final fcmToken =
+                                    await FirebaseMessaging.instance.getToken();
+                                //
+                                Get.dialog(
+                                  const Center(
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Colors.red,
+                                        strokeWidth: 7,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                              //
-                              var headers = {
-                                'Authorization':
-                                    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                              };
-                              var request = http.MultipartRequest(
-                                  'POST',
-                                  Uri.parse(
-                                      'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
-                              request.fields.addAll({
-                                'accesskey': '90336',
-                                'mobile': phone.text,
-                                'type': 'verify-user'
-                              });
+                                );
+                                //
+                                var headers = {
+                                  'Authorization':
+                                      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                };
+                                var request = http.MultipartRequest(
+                                    'POST',
+                                    Uri.parse(
+                                        'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                                request.fields.addAll({
+                                  'accesskey': '90336',
+                                  'mobile': phone.text,
+                                  'type': 'verify-user'
+                                });
 
-                              request.headers.addAll(headers);
+                                request.headers.addAll(headers);
 
-                              http.StreamedResponse response =
-                                  await request.send();
+                                http.StreamedResponse response =
+                                    await request.send();
 
-                              if (response.statusCode == 200) {
-                                String rep =
-                                    await response.stream.bytesToString();
-                                Map map = json.decode(rep);
-                                if ("${map['message']}".contains("l'OTP !")) {
-                                  //
-                                  Get.back();
-                                  Get.back();
-                                  Get.snackbar(
-                                    "Téléphone",
-                                    "${map['message']}",
-                                    duration: const Duration(
-                                      seconds: 7,
-                                    ),
-                                  );
-                                  //
+                                if (response.statusCode == 200) {
+                                  String rep =
+                                      await response.stream.bytesToString();
+                                  Map map = json.decode(rep);
+                                  if ("${map['message']}".contains("l'OTP !")) {
+                                    //
+                                    Get.back();
+                                    Get.back();
+                                    Get.snackbar(
+                                      "Téléphone",
+                                      "${map['message']}",
+                                      duration: const Duration(
+                                        seconds: 7,
+                                      ),
+                                    );
+                                    //
+                                  } else {
+                                    changeMDP(
+                                      pwC.text,
+                                      widget.telephone,
+                                    );
+                                  }
                                 } else {
-                                  changeMDP(
-                                    pwC.text,
-                                    widget.telephone,
-                                  );
+                                  print(response.reasonPhrase);
                                 }
-                              } else {
-                                print(response.reasonPhrase);
                               }
                             },
                             child: Container(

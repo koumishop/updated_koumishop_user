@@ -559,14 +559,34 @@ class _Recherche extends State<Recherche> {
                                               children: [
                                                 InkWell(
                                                   onTap: () {
-                                                    menuController
-                                                        .showMiniPanier
-                                                        .value = true;
+                                                    if (panierController
+                                                        .listeDeElement
+                                                        .isNotEmpty) {
+                                                      menuController
+                                                          .showMiniPanier
+                                                          .value = true;
+                                                    }
                                                     if (nombre.value > 0) {
                                                       nombre.value--;
                                                       produit["nombre"] =
                                                           "${nombre.value}";
                                                       //
+                                                      for (var i = 0;
+                                                          i <
+                                                              panierController
+                                                                  .listeDeElement
+                                                                  .length;
+                                                          i++) {
+                                                        if (panierController
+                                                                    .listeDeElement[
+                                                                i]['id'] ==
+                                                            produit["id"]) {
+                                                          panierController
+                                                                  .listeDeElement[
+                                                              i] = produit;
+                                                          break;
+                                                        }
+                                                      }
                                                       panierController
                                                           .listeDeElement
                                                           .add(produit);
@@ -654,6 +674,23 @@ class _Recherche extends State<Recherche> {
                                                       //box.write('${produit["id"]}',
                                                       //  jsonEncode(produit));
                                                       bool v = false;
+                                                      //panierController.listeDeElement.
+                                                      for (var i = 0;
+                                                          i <
+                                                              panierController
+                                                                  .listeDeElement
+                                                                  .length;
+                                                          i++) {
+                                                        if (panierController
+                                                                    .listeDeElement[
+                                                                i]['id'] ==
+                                                            produit["id"]) {
+                                                          panierController
+                                                                  .listeDeElement[
+                                                              i] = produit;
+                                                          break;
+                                                        }
+                                                      }
                                                       panierController
                                                           .listeDeElement
                                                           .add(produit);

@@ -10,6 +10,7 @@ import 'package:koumishop/pages/accueil.dart';
 import 'package:http/http.dart' as http;
 import 'package:koumishop/pages/profil/log/inscription.dart';
 import 'package:koumishop/pages/profil/log/miseajour.dart';
+import 'package:koumishop/pages/profil/log/otp_mdp_change.dart';
 import 'dart:convert';
 
 import 'package:koumishop/pages/profil/profil_controller.dart';
@@ -153,7 +154,7 @@ class _Log extends State<Log> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Form(
@@ -162,7 +163,7 @@ class _Log extends State<Log> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Numéro ex: 822221111",
                                 // border: OutlineInputBorder(
                                 //   borderRadius: BorderRadius.circular(10),
@@ -196,7 +197,7 @@ class _Log extends State<Log> {
                                       showPw ? showPw = false : showPw = true;
                                     });
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.remove_red_eye,
                                     color: Colors.grey,
                                   ),
@@ -233,89 +234,94 @@ class _Log extends State<Log> {
                                 ),
                                 onPressed: () async {
                                   //
-                                  final fcmToken = await FirebaseMessaging
-                                      .instance
-                                      .getToken();
-                                  //
-                                  Get.dialog(
-                                    const Center(
-                                      child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: CircularProgressIndicator(
-                                          backgroundColor: Colors.red,
-                                          strokeWidth: 7,
+                                  if (_formKey.currentState!.validate()) {
+                                    //
+                                    final fcmToken = await FirebaseMessaging
+                                        .instance
+                                        .getToken();
+                                    //
+                                    Get.dialog(
+                                      const Center(
+                                        child: SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircularProgressIndicator(
+                                            backgroundColor: Colors.red,
+                                            strokeWidth: 7,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                  //
-                                  var headers = {
-                                    'Authorization':
-                                        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                                  };
-                                  var request = http.MultipartRequest(
-                                      'POST',
-                                      Uri.parse(
-                                          'https://webadmin.koumishop.com/api-firebase/login.php'));
-                                  request.fields.addAll({
-                                    'accesskey': '90336',
-                                    'login': '1',
-                                    'mobile': numeroC.text,
-                                    'password': pwC.text,
-                                    'fcm_id': '$fcmToken',
-                                  });
-
-                                  request.headers.addAll(headers);
-
-                                  http.StreamedResponse response =
-                                      await request.send();
-
-                                  if (response.statusCode == 200) {
-                                    Map infos = jsonDecode(
-                                        await response.stream.bytesToString());
-                                    infos["mdp"] = pwC.text;
-                                    print("$infos");
+                                    );
                                     //
+                                    var headers = {
+                                      'Authorization':
+                                          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                                    };
+                                    var request = http.MultipartRequest(
+                                        'POST',
+                                        Uri.parse(
+                                            'https://webadmin.koumishop.com/api-firebase/login.php'));
+                                    request.fields.addAll({
+                                      'accesskey': '90336',
+                                      'login': '1',
+                                      'mobile': numeroC.text,
+                                      'password': pwC.text,
+                                      'fcm_id': '$fcmToken',
+                                    });
 
-                                    Get.back();
-                                    if (infos['error']) {
-                                      Get.snackbar("Erreur d'authentification",
-                                          "${infos['message']}");
-                                    } else {
+                                    request.headers.addAll(headers);
+
+                                    http.StreamedResponse response =
+                                        await request.send();
+
+                                    if (response.statusCode == 200) {
+                                      Map infos = jsonDecode(await response
+                                          .stream
+                                          .bytesToString());
+                                      infos["mdp"] = pwC.text;
+                                      print("$infos");
                                       //
-                                      ProfilController profilController =
-                                          Get.find();
-                                      //
-                                      profilController.infos.value = infos;
-                                      //
-                                      box.write("profile", infos);
-                                      //
+
                                       Get.back();
-                                      Get.snackbar("Succès",
-                                          "Bienvenu ${infos['name']}");
-                                      Timer(Duration(seconds: 1), () {
+                                      if (infos['error']) {
+                                        Get.snackbar(
+                                            "Erreur d'authentification",
+                                            "${infos['message']}");
+                                      } else {
                                         //
-                                        //widget.state!.setState(() {});
-                                      });
-                                    }
-                                    // showDialog(
-                                    //     context: context,
-                                    //     builder: (c) {
-                                    //       return Material(
-                                    //         child: ListView(
-                                    //           children: [
-                                    //             Text("$infos"),
-                                    //           ],
-                                    //         ),
-                                    //       );
-                                    //     });
+                                        ProfilController profilController =
+                                            Get.find();
+                                        //
+                                        profilController.infos.value = infos;
+                                        //
+                                        box.write("profile", infos);
+                                        //
+                                        Get.back();
+                                        Get.snackbar("Succès",
+                                            "Bienvenu ${infos['name']}");
+                                        Timer(Duration(seconds: 1), () {
+                                          //
+                                          //widget.state!.setState(() {});
+                                        });
+                                      }
+                                      // showDialog(
+                                      //     context: context,
+                                      //     builder: (c) {
+                                      //       return Material(
+                                      //         child: ListView(
+                                      //           children: [
+                                      //             Text("$infos"),
+                                      //           ],
+                                      //         ),
+                                      //       );
+                                      //     });
 
-                                  } else {
-                                    print(response.reasonPhrase);
-                                    Get.back();
-                                    Get.snackbar("Erreur d'authentification",
-                                        "${response.reasonPhrase}. Code: ${response.statusCode}");
+                                    } else {
+                                      print(response.reasonPhrase);
+                                      Get.back();
+                                      Get.snackbar("Erreur d'authentification",
+                                          "${response.reasonPhrase}. Code: ${response.statusCode}");
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -342,6 +348,7 @@ class _Log extends State<Log> {
                         onPressed: () {
                           //
                           ProfilController profilController = Get.find();
+
                           showDialog(
                             context: context,
                             builder: (c) {
@@ -387,6 +394,7 @@ class _Log extends State<Log> {
                                         flex: 8,
                                         child: TextField(
                                           controller: phone,
+                                          keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
                                               hintText: "ex: 820011111"),
                                         ),
@@ -460,18 +468,20 @@ class _Log extends State<Log> {
                                           String rep = await response.stream
                                               .bytesToString();
                                           Map map = json.decode(rep);
-                                          if ("${map['message']}"
-                                              .contains("l'OTP !")) {
+                                          print("le message: $map");
+                                          if ("${map['message']}".contains(
+                                              "Ce numéro de téléphone est déjà enregistré")) {
                                             //
-                                            Get.back();
-                                            Get.back();
-                                            Get.snackbar(
-                                              "Téléphone",
-                                              "Veuillez d'abord céer un compte",
-                                              duration: const Duration(
-                                                seconds: 7,
-                                              ),
-                                            );
+                                            // Get.back();
+                                            // Get.back();
+                                            // Get.snackbar(
+                                            //   "Téléphone",
+                                            //   "Veuillez d'abord céer un compte",
+                                            //   duration: const Duration(
+                                            //     seconds: 7,
+                                            //   ),
+                                            // );
+
                                             // ConfirmationResult
                                             //     confirmationResult =
                                             //     await FirebaseAuth.instance
@@ -482,15 +492,64 @@ class _Log extends State<Log> {
                                             // showDialog(
                                             //     context: context,
                                             //     builder: (c) {
-                                            //       return OptVerification("","");
+                                            //       return OptMdpChange(phone.text,"");
                                             //     });
                                             //Get.to(Inscription());
                                             //
+                                            FirebaseAuth.instance
+                                                .verifyPhoneNumber(
+                                              phoneNumber:
+                                                  "${cd.value}${phone.text}",
+                                              timeout:
+                                                  const Duration(minutes: 2),
+                                              verificationCompleted: (v) {
+                                                print(
+                                                    "auth: verificationCompleted: $v");
+                                              },
+                                              verificationFailed: (v) {
+                                                print(
+                                                    "auth: verificationFailed: $v");
+                                                Get.back();
+                                                Get.back();
+                                                Get.back();
+                                                Get.snackbar("Echec", "$v");
+                                                //Get.to(Inscription());
+                                              },
+                                              codeSent: (String verificationId,
+                                                  int? resendToken) {
+                                                print(
+                                                    "auth: codeSent: $verificationId :--: $resendToken");
+                                                Get.back();
+                                                Get.back();
+                                                Get.back();
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (c) {
+                                                    return OptMdpChange(
+                                                      cd.value,
+                                                      phone.text,
+                                                      verificationId,
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              codeAutoRetrievalTimeout: (c) {
+                                                print(
+                                                    "auth: codeAutoRetrievalTimeout: $c");
+                                              },
+                                            );
                                           } else {
                                             //
                                             Get.back();
                                             Get.back();
-                                            Get.to(MdpOublie(phone.text));
+                                            Get.snackbar(
+                                              "Téléphone",
+                                              "${map['message']}",
+                                              duration: const Duration(
+                                                seconds: 7,
+                                              ),
+                                            );
+                                            //
                                             // Get.back();
                                             // Get.back();
                                             // Get.snackbar(
@@ -529,15 +588,7 @@ class _Log extends State<Log> {
                               );
                             },
                           );
-                          // if (profilController.infos['user_id'] == null) {
-                          //   //
-                          //   //Get.snackbar("Erreur", "Pas de compte");
-                          //   Get.to(MdpOublie());
-                          //   //
-                          // } else {
-                          //   //
 
-                          // }
                           //
                         },
                         child: const Text(
@@ -616,6 +667,7 @@ class _Log extends State<Log> {
                                         flex: 8,
                                         child: TextField(
                                           controller: phone,
+                                          keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
                                               hintText: "ex: 820011111"),
                                         ),

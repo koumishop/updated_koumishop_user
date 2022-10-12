@@ -244,86 +244,92 @@ class _ChangeMdp extends State<ChangeMdp> {
                 ),
                 onPressed: () async {
                   //
-                  final fcmToken = await FirebaseMessaging.instance.getToken();
-                  //
-                  ProfilController profilController = Get.find();
-                  //
-                  Get.dialog(
-                    const Center(
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.red,
-                          strokeWidth: 7,
+                  //print(profilController.infos['mdp']);
+                  if (_formKey.currentState!.validate()) {
+                    //
+                    final fcmToken =
+                        await FirebaseMessaging.instance.getToken();
+                    //
+                    ProfilController profilController = Get.find();
+                    //
+                    Get.dialog(
+                      const Center(
+                        child: SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.red,
+                            strokeWidth: 7,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                  //
-                  var headers = {
-                    'Authorization':
-                        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                  };
-                  var request = http.MultipartRequest(
-                      'POST',
-                      Uri.parse(
-                          'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
-                  request.fields.addAll({
-                    'accesskey': '90336',
-                    'type': 'change-password',
-                    'password': pwC.text,
-                    'user_id': '${profilController.infos['user_id']}',
-                  });
-
-                  request.headers.addAll(headers);
-
-                  http.StreamedResponse response = await request.send();
-
-                  if (response.statusCode == 200) {
-                    Map infos =
-                        jsonDecode(await response.stream.bytesToString());
-                    infos["mdp"] = pwC.text;
-                    print("$infos");
+                    );
                     //
+                    var headers = {
+                      'Authorization':
+                          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                    };
+                    var request = http.MultipartRequest(
+                        'POST',
+                        Uri.parse(
+                            'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+                    request.fields.addAll({
+                      'accesskey': '90336',
+                      'type': 'change-password',
+                      'password': pwC.text,
+                      'user_id': '${profilController.infos['user_id']}',
+                    });
 
-                    //
-                    profilController.infos.value = infos;
-                    //
-                    box.write("profile", infos);
-                    //
-                    // Get.back();
-                    // Get.back();
-                    // Get.snackbar("Succès", "Mot de passe changé");
-                    Get.back();
-                    if (infos['error']) {
-                      Get.snackbar(
-                          "Erreur d'authentification", "${infos['message']}");
-                    } else {
+                    request.headers.addAll(headers);
+
+                    http.StreamedResponse response = await request.send();
+
+                    if (response.statusCode == 200) {
+                      Map infos =
+                          jsonDecode(await response.stream.bytesToString());
+                      infos["mdp"] = pwC.text;
+                      print("$infos");
+                      //
+                      //
+                      //profilController.infos.value = infos;
+                      //
+                      profilController.infos['mdp'] = infos["mdp"];
+                      print(profilController.infos['mdp']);
+                      //box.write("profile", infos);
+                      //
+                      // Get.back();
+                      // Get.back();
+                      // Get.snackbar("Succès", "Mot de passe changé");
                       Get.back();
-                      Get.snackbar("Succès", "Mot de passe changé");
-                    }
-                    //Timer(Duration(seconds: 1), () {
-                    //
-                    //widget.state!.setState(() {});
-                    //});
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (c) {
-                    //       return Material(
-                    //         child: ListView(
-                    //           children: [
-                    //             Text("$infos"),
-                    //           ],
-                    //         ),
-                    //       );
-                    //     });
+                      if (infos['error']) {
+                        Get.snackbar(
+                            "Erreur d'authentification", "${infos['message']}");
+                      } else {
+                        Get.back();
+                        Get.snackbar("Succès", "Mot de passe changé");
+                      }
+                      //Timer(Duration(seconds: 1), () {
+                      //
+                      //widget.state!.setState(() {});
+                      //});
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (c) {
+                      //       return Material(
+                      //         child: ListView(
+                      //           children: [
+                      //             Text("$infos"),
+                      //           ],
+                      //         ),
+                      //       );
+                      //     });
 
-                  } else {
-                    print(response.reasonPhrase);
-                    Get.back();
-                    Get.snackbar("Erreur d'authentification",
-                        "${response.reasonPhrase}. Code: ${response.statusCode}");
+                    } else {
+                      print(response.reasonPhrase);
+                      Get.back();
+                      Get.snackbar("Erreur d'authentification",
+                          "${response.reasonPhrase}. Code: ${response.statusCode}");
+                    }
                   }
                 },
                 child: Container(

@@ -418,12 +418,28 @@ class _Menu extends State<Menu> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      menuController.showMiniPanier.value =
-                                          true;
+                                      if (panierController
+                                          .listeDeElement.isNotEmpty) {
+                                        menuController.showMiniPanier.value =
+                                            true;
+                                      }
                                       if (nombre.value > 0) {
                                         nombre.value--;
                                         produit["nombre"] = "${nombre.value}";
                                         //
+                                        for (var i = 0;
+                                            i <
+                                                panierController
+                                                    .listeDeElement.length;
+                                            i++) {
+                                          if (panierController.listeDeElement[i]
+                                                  ['id'] ==
+                                              produit["id"]) {
+                                            panierController.listeDeElement[i] =
+                                                produit;
+                                            break;
+                                          }
+                                        }
                                         panierController.listeDeElement
                                             .add(produit);
                                         panierController.listeDeElement.value =
@@ -497,6 +513,20 @@ class _Menu extends State<Menu> {
                                         //box.write('${produit["id"]}',
                                         //  jsonEncode(produit));
                                         bool v = false;
+                                        //panierController.listeDeElement.
+                                        for (var i = 0;
+                                            i <
+                                                panierController
+                                                    .listeDeElement.length;
+                                            i++) {
+                                          if (panierController.listeDeElement[i]
+                                                  ['id'] ==
+                                              produit["id"]) {
+                                            panierController.listeDeElement[i] =
+                                                produit;
+                                            break;
+                                          }
+                                        }
                                         panierController.listeDeElement
                                             .add(produit);
                                         panierController.listeDeElement.value =
@@ -637,7 +667,7 @@ class _Menu extends State<Menu> {
                 //constraints: BoxConstraints.expand(width: 10, height: 10),
                 clipBehavior: Clip.none,
                 //backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),

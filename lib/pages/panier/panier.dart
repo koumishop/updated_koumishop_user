@@ -438,34 +438,34 @@ class _Panier extends State<Panier> {
                                     ),
                                   ),
                                 ),
-                                // Expanded(
-                                //   flex: 2,
-                                //   child: Column(
-                                //     mainAxisAlignment: MainAxisAlignment.start,
-                                //     children: [
-                                //       IconButton(
-                                //         onPressed: () {
-                                //           setState(() {
-                                //             panierController.listeDeElement
-                                //                 .removeAt(index);
-                                //             //
-                                //             r = getTo1();
-                                //             //panierController.listeDeElement.value = box.read("panier");
-                                //             box.write(
-                                //                 "panier",
-                                //                 panierController
-                                //                     .listeDeElement);
-                                //           });
-                                //         },
-                                //         icon: const Icon(
-                                //           Icons.delete_forever,
-                                //           size: 30,
-                                //           color: Colors.red,
-                                //         ),
-                                //       )
-                                //     ],
-                                //   ),
-                                // )
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            panierController.listeDeElement
+                                                .removeAt(index);
+                                            //
+                                            r = getTo1();
+                                            //panierController.listeDeElement.value = box.read("panier");
+                                            box.write(
+                                                "panier",
+                                                panierController
+                                                    .listeDeElement);
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete_forever,
+                                          size: 30,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           );
