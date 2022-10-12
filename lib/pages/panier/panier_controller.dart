@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/profil/commande/commande.dart';
 
 import 'paiement_mobile.dart';
@@ -12,7 +13,7 @@ class PanierController extends GetxController {
   RxMap adresse = {}.obs;
   RxMap dateL = {}.obs;
   RxString modeP = "".obs;
-  paiement_livraison(Map<String, String> commande, BuildContext context) async {
+  paiement(Map<String, String> commande, BuildContext context) async {
     //
     var headers = {
       'Authorization':
@@ -50,105 +51,11 @@ class PanierController extends GetxController {
         //
         Get.back();
         Get.back();
+        Get.off(Accueil(false));
         showDialog(
           context: context,
           builder: (c) {
-            return Material(
-              color: Colors.transparent,
-              child: Center(
-                  child: Card(
-                elevation: 1,
-                child: SizedBox(
-                  height: Get.size.height / 3,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            IconButton(
-                              color: Colors.red.shade700,
-                              icon: const Icon(
-                                Icons.close,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                                Get.back();
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                  text: "Félicitation\n",
-                                  children: [
-                                    TextSpan(text: '${map['message']}\n')
-                                  ],
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                    elevation: MaterialStateProperty.all(0),
-                                    shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                    backgroundColor: MaterialStateProperty.all(
-                                      Colors.red,
-                                    ),
-                                    overlayColor: MaterialStateProperty.all(
-                                      Colors.red.shade100,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    //
-                                    Get.to(Commande());
-                                  },
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: Container(
-                                      height: 50,
-                                      alignment: Alignment.center,
-                                      child: const Text(
-                                        "Voir vos commandes",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )),
-            );
+            return MessageFinal(map);
           },
         );
         //
@@ -157,26 +64,114 @@ class PanierController extends GetxController {
     } else {
       print(response.reasonPhrase);
     }
-
     //
   }
-
   //
-  paiement_mobile(Map<String, String> commande, BuildContext context) async {
-    //
 
-    //
-    Get.to(
-      PaiementMobile(
-        "https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=35000&currency=CDF",
-        commande,
-      ),
+}
+
+class MessageFinal extends StatelessWidget {
+  PanierController panierController = Get.find();
+  Map map;
+  MessageFinal(this.map) {
+    panierController.listeDeElement = RxList();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+          child: Card(
+        elevation: 1,
+        child: SizedBox(
+          height: Get.size.height / 3,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      color: Colors.red.shade700,
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                        Get.back();
+                      },
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: "Félicitation\n",
+                          children: [TextSpan(text: '${map['message']}\n')],
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(0),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.red,
+                            ),
+                            overlayColor: MaterialStateProperty.all(
+                              Colors.red.shade100,
+                            ),
+                          ),
+                          onPressed: () {
+                            //
+                            Get.back();
+                            Get.to(Commande());
+                          },
+                          child: SizedBox(
+                            height: 50,
+                            child: Container(
+                              height: 50,
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "Voir vos commandes",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      )),
     );
-    //
-  }
-
-  //
-  paiement_visa(Map commande) async {
-    //
   }
 }

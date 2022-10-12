@@ -70,7 +70,7 @@ class SplashtScreen extends StatelessWidget {
       print("---------------------------- ${profilController.infos}");
       //
       //Get.off(PaiementMobile("", {})); //PaiementMobile
-      Get.off(Accueil()); //PaiementMobile
+      Get.off(Accueil(true)); //PaiementMobile
       //
       //Get.off(Inscription("815381693", "+243"));
       //
@@ -106,8 +106,13 @@ class SplashtScreen extends StatelessWidget {
         print("Message message: ${m['message']}");
         print("Message réçu: ${message.from}");
         //
-        ns.initializePlatformNotifications("${m['title']}", "${m['message']}");
-        //print("Message réçu: ${message.notification!.body}");
+        ns.setup(
+            id: 1,
+            title: "${m['title']}",
+            body: "${m['message']}",
+            payload: "");
+        //("${m['title']}", "${m['message']}");
+        print("Message réçu: ${message.notification!.body}");
       });
       //
     } else {
@@ -132,7 +137,7 @@ class SplashtScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
-                fontSize: 40,
+                fontSize: 35,
                 fontWeight: FontWeight.bold,
               ),
             ),

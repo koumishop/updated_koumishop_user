@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,10 +29,35 @@ class _Panier extends State<Panier> {
   ProfilController profilController = Get.find();
   //
   RxDouble r = 0.0.obs;
+  RxDouble taux = 1.0.obs;
+  var x = 0.0;
   //
   List adresses = [];
   final box = GetStorage();
   //
+  getTaux() async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://webadmin.koumishop.com/api-firebase/settings.php'));
+    request.fields.addAll(
+        {'settings': '1', 'get_payment_methods': '1', 'accesskey': '90336'});
+
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rep = await response.stream.bytesToString();
+      Map r = jsonDecode(rep);
+      taux.value = double.parse(r['daily_rate']);
+      print(taux.value);
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
   //
   @override
   void initState() {
@@ -40,6 +66,7 @@ class _Panier extends State<Panier> {
     //
     Timer(Duration(seconds: 1), () {
       loading();
+      getTaux();
     });
     //
     super.initState();
@@ -214,7 +241,7 @@ class _Panier extends State<Panier> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 20,
+                                                  fontSize: 18,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -448,7 +475,7 @@ class _Panier extends State<Panier> {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Container(
                     height: Get.size.height / 2,
                     width: Get.size.width,
@@ -666,7 +693,7 @@ class _Panier extends State<Panier> {
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 15,
+                                  height: 5,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -687,7 +714,31 @@ class _Panier extends State<Panier> {
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Obx(
+                                      () {
+                                        double t = double.parse(panierController
+                                                .adresse
+                                                .value['delivery_charges'] ??
+                                            "0");
+                                        x = (t + r.value) / taux.value;
+                                        return Text(
+                                          "\$ ${taux.value != 1 ? x : ''}"
+                                              .characters
+                                              .getRange(0, 4)
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -825,7 +876,7 @@ class _Panier extends State<Panier> {
                                         };
                                         //
                                         // ignore: use_build_context_synchronously
-                                        panierController.paiement_livraison(
+                                        panierController.paiement(
                                             commande, context);
                                         //
                                       } else if (panierController.modeP.value
@@ -841,8 +892,8 @@ class _Panier extends State<Panier> {
                                               '${panierController.adresse.value['delivery_charges']}',
                                           'user_id':
                                               '${profilController.infos['user_id']}',
-                                          'final_total':
-                                              '${int.parse(panierController.adresse.value['delivery_charges']) + r.value}',
+                                          'final_total': '$x',
+                                          //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
                                           'address_id':
                                               '${panierController.adresse.value['id']}',
                                           'place_order': '1',
@@ -850,12 +901,22 @@ class _Panier extends State<Panier> {
                                           'delivery_time':
                                               '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
                                           'product_variant_id': '$l',
-                                          'payment_method':
-                                              panierController.modeP.value,
+                                          'payment_method': "mobile money",
                                           'accesskey': '90336'
                                         };
+                                        /*
+                                        panierController
+                                              .modeP.value
+                                              .toLowerCase()
+                                        */
                                         //
-                                        sendPaiement(commande);
+                                        sendPaiementMobile(
+                                            commande,
+                                            double.parse(
+                                                commande['final_total']!),
+                                            panierController.modeP.value
+                                                .split("/")[1],
+                                            false);
                                         // Get.to(
                                         //   PaiementMobile(
                                         //     "https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF",
@@ -875,8 +936,8 @@ class _Panier extends State<Panier> {
                                               '${panierController.adresse.value['delivery_charges']}',
                                           'user_id':
                                               '${profilController.infos['user_id']}',
-                                          'final_total':
-                                              '${int.parse(panierController.adresse.value['delivery_charges']) + r.value}',
+                                          'final_total': '$x',
+                                          //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
                                           'address_id':
                                               '${panierController.adresse.value['id']}',
                                           'place_order': '1',
@@ -884,21 +945,26 @@ class _Panier extends State<Panier> {
                                           'delivery_time':
                                               '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
                                           'product_variant_id': '$l',
-                                          'payment_method':
-                                              panierController.modeP.value,
+                                          'payment_method': "visa",
                                           'accesskey': '90336'
                                         };
                                         //
-                                        Get.to(
-                                          PaiementMobile(
-                                            "https://koumishop.com/pay/getAwayCard.php?phone=+243815824641&reference=1664189374560271&amount=20&description=payement par visa",
-                                            {},
-                                          ),
-                                        );
+
+                                        sendPaiementMobile(
+                                            commande,
+                                            double.parse(
+                                                commande['final_total']!),
+                                            "visa",
+                                            true);
+
+                                        // Get.to(
+                                        //   PaiementMobile(
+                                        //     "https://koumishop.com/pay/getAwayCard.php?phone=+243815824641&reference=1664189374560271&amount=20&description=payement par visa",
+                                        //     {},
+                                        //   ),
+                                        // );
                                       }
-
                                       // ignore: use_build_context_synchronously
-
                                     } else {
                                       Get.back();
                                       Get.snackbar(
@@ -955,49 +1021,81 @@ class _Panier extends State<Panier> {
     super.dispose();
   }
 
-  sendPaiement(Map<String, String> commande) async {
-    //
+  sendPaiementMobile(Map<String, String> commande, double montant,
+      String devise, bool visa) async {
     var uuid = Uuid();
     //
-    var ux = uuid.v1();
+    //var ux = uuid.v1();
+
+    //uuid.v5(Uuid.NAMESPACE_DNS, 'www.google.com');
     //
     var headers = {
       'Authorization':
           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
     };
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://koumishop.com/pay/?phone=+243815824641&reference=$ux&amount=500&currency=CDF'));
-    request.fields.addAll({
-      'promotion': '1',
-      'accesskey': '90336',
-      'mobile': '813999922',
-      ' type': 'verify-user'
-    });
+    //
+    var numero = profilController.infos['mobile'];
+    //
+    var request;
+    if (visa) {
+      var uxx = getCode();
+      Get.to(
+        PaiementMobileVisa(
+          "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx}",
+          commande,
+          visa,
+          'https://koumishop.com/pay/getAwayCard.php?phone=+243$numero&reference=$uxx&amount=$montant&description=nom',
+        ),
+      );
+    } else {
+      request = http.MultipartRequest('POST', Uri.parse(//815824641
+          'https://koumishop.com/pay/?phone=+243$numero&reference=${getCode()}&amount=$montant&currency=$devise'));
+      //
+      request.fields.addAll({
+        'promotion': '1',
+        'accesskey': '90336',
+        'mobile': '813999922',
+        ' type': 'verify-user'
+      });
 
-    request.headers.addAll(headers);
+      request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      String rep = await response.stream.bytesToString();
-      Map r = json.decode(rep);
-      print(r);
-      if (r['error']) {
-        Get.back();
-        Get.snackbar("Erreur", "${r['data']['message']}");
+      if (response.statusCode == 200) {
+        String rep = await response.stream.bytesToString();
+        Map r = json.decode(rep);
+        print(r);
+        if (r['error']) {
+          Get.back();
+          Get.snackbar("Erreur", "${r['data']['message']}");
+        } else {
+          Get.back();
+          Get.to(
+            PaiementMobileVisa(
+              "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=${r['data']['orderNumber']}}",
+              commande,
+              visa,
+              "",
+            ),
+          );
+        }
       } else {
         Get.back();
-        Get.to(PaiementMobile(
-            "https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=${r['data']['orderNumber']}}",
-            commande));
+        Get.snackbar("Erreur", '${response.reasonPhrase}');
+        print(response.reasonPhrase);
       }
-    } else {
-      Get.back();
-      Get.snackbar("Erreur", '${response.reasonPhrase}');
-      print(response.reasonPhrase);
     }
+  }
+
+  String getCode() {
+    String n = "";
+    var rng = Random();
+    for (var i = 0; i < 17; i++) {
+      n = "$n${rng.nextInt(9)}";
+      print(n);
+    }
+    return n;
   }
 
   RxDouble getTo1() {
@@ -1034,7 +1132,7 @@ class _Panier extends State<Panier> {
   TextStyle styleDeMenu() {
     return const TextStyle(
       color: Colors.grey,
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: FontWeight.normal,
     );
   }
@@ -1042,7 +1140,7 @@ class _Panier extends State<Panier> {
   TextStyle styleDeMenu2() {
     return const TextStyle(
       color: Colors.black,
-      fontSize: 17,
+      fontSize: 15,
       fontWeight: FontWeight.normal,
     );
   }

@@ -37,6 +37,7 @@ class _Details extends State<Details> {
   //
   //
   RxInt nombre = 0.obs;
+  var box = GetStorage();
   int x = 0;
   //final box = GetStorage();
   //List paniers = [];
@@ -52,10 +53,21 @@ class _Details extends State<Details> {
       produit = widget.produit;
       //
       Timer(Duration(seconds: 1), () {
-        contient.value = favoritController.listeDeElement.contains(produit);
+        List lf = box.read("favoris") ?? [];
+        print(lf.length);
+        // for (var i = 0; i < favoritController.listeDeElement.length; i++) {
+        //   if(favoritController.listeDeElement[i]['id'] == ){
+        //     contient.value = true;
+        //   }
+        // }
+        //contient.value = favoritController.listeDeElement.contains(produit);
         print(contient.value);
-        for (var i = 0; i < panierController.listeDeElement.value.length; i++) {
-          if (panierController.listeDeElement[i]['id'] == produit["id"]) {
+        for (var i = 0; i < lf.length; i++) {
+          print(lf[i]['id']);
+          print(produit["id"]);
+          print(lf[i]['id'] == produit["id"]);
+
+          if (lf[i]['id'] == produit["id"]) {
             contient.value = true;
           }
         }
@@ -67,14 +79,14 @@ class _Details extends State<Details> {
       print(e);
     }
     //
-    print("la liste: ${panierController.listeDeElement.value}");
+    //print("la liste: ${panierController.listeDeElement.value}");
     //paniers.add(produit);
     //box.write('paniers', paniers);
     nombre.value = int.parse(widget.produit['nombre'] ?? "0");
     //
     for (var i = 0; i < panierController.listeDeElement.length; i++) {
       Map e = panierController.listeDeElement.elementAt(i);
-      print("le produit: $e");
+      //print("le produit: $e");
       if (e["id"] == produit["id"]) {
         // Map p = box.read('${produit["id"]}');
         //print("le produit: $p");
@@ -100,7 +112,7 @@ class _Details extends State<Details> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          height: 170,
+          height: Get.size.height / 5,
           decoration: BoxDecoration(
             color: Colors.grey.shade200,
             borderRadius: BorderRadius.circular(25),
@@ -146,7 +158,7 @@ class _Details extends State<Details> {
                           child: Text(
                             "${produit['name']}",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 30,
                               fontWeight: FontWeight.w500,
@@ -176,7 +188,7 @@ class _Details extends State<Details> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 3,
                                 child: SizedBox(),
                               ),
@@ -387,25 +399,27 @@ class _Details extends State<Details> {
                     IconButton(
                       onPressed: () async {
                         if (!contient.value) {
-                          favoritController.listeDeElement.add(produit);
-                          favoritController.listeDeElement = favoritController
-                              .listeDeElement
-                              .toSet()
-                              .toList()
-                              .obs; //
+                          //var box = GetStorage();
+                          List lf = box.read("favoris") ?? [];
+                          lf.add(produit);
+                          lf = lf.toSet().toList().obs; //
                           contient.value = true;
                           //
-                          var box = GetStorage();
-                          box.write(
-                              "favoris", favoritController.listeDeElement);
+
+                          box.write("favoris", lf);
                           //
                         } else {
-                          favoritController.listeDeElement.remove(produit); //
+                          List lf = box.read("favoris") ?? [];
+
+                          for (var i = 0; i < lf.length; i++) {
+                            if (lf[i]["id"] == produit['id']) {
+                              lf.removeAt(i);
+                            }
+                          }
+                          lf = lf.toSet().toList().obs; //
                           contient.value = false;
                           //
-                          var box = GetStorage();
-                          box.write(
-                              "favoris", favoritController.listeDeElement);
+                          box.write("favoris", lf);
                           //
                         }
                         //print(favoritController.listeDeElement);
@@ -954,7 +968,7 @@ class _Details extends State<Details> {
   void dispose() {
     //
     Timer(Duration(milliseconds: 500), () {
-      print("J'ai quitté l'interface détails");
+      //print("J'ai quitté l'interface détails");
       widget.st.setState(() {});
     });
     //

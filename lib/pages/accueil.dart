@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +18,16 @@ PageController? controllerP;
 class Accueil extends GetView<AccueilController> {
   //
   AccueilController accueilController = Get.find();
+  BuildContext? c;
+  bool show;
   //
-  Accueil() {
+  Accueil(this.show) {
     controllerP = PageController();
     controller.getService1(1);
+    Timer(Duration(seconds: 1), () {
+      BuildContext? context;
+      showPopup(c!);
+    });
   }
   //
   List listeData = [
@@ -43,9 +52,13 @@ class Accueil extends GetView<AccueilController> {
 
   //
   Widget? vue;
+  int t = 0;
   //
   @override
   Widget build(BuildContext context) {
+    c = context;
+    t++;
+    print("cool $t");
     return Container(
       color: Colors.red, // Status bar color
       child: SafeArea(
@@ -75,12 +88,15 @@ class Accueil extends GetView<AccueilController> {
               children: [
                 controller.obx(
                   (state) {
+                    //
+
+                    //
                     Map m = state!;
                     List menus = m['data'];
-                    print(menus);
+                    ////print(menus);
                     List pubs = m['pub'];
                     RxInt id = 0.obs;
-
+                    //print("show truc...");
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -97,7 +113,7 @@ class Accueil extends GetView<AccueilController> {
                               );
                             },
                             onIndexChanged: (e) {
-                              print("$e:------");
+                              //print("$e:------");
                               id.value = e;
                             },
                             autoplay: true,
@@ -169,7 +185,7 @@ class Accueil extends GetView<AccueilController> {
                                         var connectivityResult =
                                             await (Connectivity()
                                                 .checkConnectivity());
-                                        print(menus[index]['is_available']);
+                                        //print(menus[index]['is_available']);
                                         if (int.parse(
                                                 menus[index]['is_available']) ==
                                             1) {
@@ -309,7 +325,7 @@ class Accueil extends GetView<AccueilController> {
                 //   duration: Duration(seconds: 1),
                 //   curve: Curves.ease,
                 // );
-                print(double.parse("$e"));
+                //print(double.parse("$e"));
                 //
               },
               //fixedColor: Colors.grey,
@@ -326,7 +342,7 @@ class Accueil extends GetView<AccueilController> {
                 BottomNavigationBarItem(
                     activeIcon: Icon(Icons.favorite),
                     icon: Icon(Icons.favorite_outline),
-                    label: "Favorit"),
+                    label: "Favoris"),
                 BottomNavigationBarItem(
                     activeIcon: Icon(Icons.person),
                     icon: Icon(Icons.person_outline),
@@ -337,5 +353,125 @@ class Accueil extends GetView<AccueilController> {
         ),
       ),
     );
+  }
+
+  showPopup(BuildContext context) async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=c21f5aeb60575afdffbe8739b0a6722d'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/get-promotion.php'));
+    request.fields.addAll({'promotion': '1', 'accesskey': '90336'});
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rep = await response.stream.bytesToString();
+      var r = jsonDecode(rep);
+      print(rep);
+      if ("${r['data'][0]['is_available']}" == "1" && show) {
+        showDialog(
+          context: context,
+          builder: (c) {
+            return Material(
+              color: Colors.transparent,
+              child: Center(
+                child: Container(
+                  height: Get.size.height / 2,
+                  width: Get.size.width / 1.15,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            //color: Colors.blue,
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                "${r['data'][0]['illustration']}",
+                              ),
+                              fit: BoxFit.fill,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 35,
+                                      width: 35,
+                                      decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(17)),
+                                      child: const Icon(
+                                        Icons.close_sharp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Text(
+                            "${r['data'][0]['service_description']}",
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 }

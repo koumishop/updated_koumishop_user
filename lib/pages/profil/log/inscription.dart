@@ -291,13 +291,13 @@ class _Inscription extends State<Inscription> {
                                     // border: OutlineInputBorder(
                                     //   borderRadius: BorderRadius.circular(10),
                                     // ),
-                                    suffix: IconButton(
-                                      onPressed: () {
+                                    suffix: InkWell(
+                                      onTap: () {
                                         setState(() {
                                           showCode1 = !showCode1;
                                         });
                                       },
-                                      icon: const Icon(
+                                      child: const Icon(
                                         Icons.remove_red_eye,
                                       ),
                                     ),
@@ -324,13 +324,13 @@ class _Inscription extends State<Inscription> {
                                     // border: OutlineInputBorder(
                                     //   borderRadius: BorderRadius.circular(10),
                                     // ),
-                                    suffix: IconButton(
-                                      onPressed: () {
+                                    suffix: InkWell(
+                                      onTap: () {
                                         setState(() {
                                           showCode2 = !showCode2;
                                         });
                                       },
-                                      icon: const Icon(
+                                      child: const Icon(
                                         Icons.remove_red_eye,
                                       ),
                                     ),
@@ -363,7 +363,7 @@ class _Inscription extends State<Inscription> {
                                 //   controller: code_ref,
                                 // ),
                                 const SizedBox(
-                                  height: 40,
+                                  height: 30,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -537,7 +537,7 @@ class _Inscription extends State<Inscription> {
                                             //
                                             box.write("profile", map);
                                             Get.back();
-                                            Get.off(Accueil());
+                                            Get.off(Accueil(false));
                                             Get.snackbar(
                                               "Téléphone",
                                               "${map['message']}",

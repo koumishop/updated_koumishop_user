@@ -65,7 +65,7 @@ class _ChangeMdp extends State<ChangeMdp> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
       alignment: Alignment.bottomCenter,
       height: MediaQuery.of(context).viewInsets.bottom == 0
           ? Get.size.height / 1.8
@@ -86,13 +86,19 @@ class _ChangeMdp extends State<ChangeMdp> {
 
           spacing: 5,
           children: <Widget>[
-            const Text(
-              "Modifier le mot de passe ?",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w300,
-                fontSize: 25,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Modifier le mot de passe ?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                )
+              ],
             ),
             const SizedBox(
               height: 10,

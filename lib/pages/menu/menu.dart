@@ -64,11 +64,15 @@ class _Menu extends State<Menu> {
               child: Obx(
                 () => GridView.count(
                   controller: ScrollController(),
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  padding: const EdgeInsets.only(
+                    left: 1.5,
+                    right: 1.5,
+                    bottom: 30,
+                  ),
                   crossAxisCount: 2,
                   mainAxisSpacing: 0.1,
                   crossAxisSpacing: 0.1,
-                  childAspectRatio: 0.6,
+                  childAspectRatio: 0.55,
                   children: List.generate(menuController.listeProduit.length,
                       (index) {
                     //
@@ -79,7 +83,8 @@ class _Menu extends State<Menu> {
                     //print("le produit: $e");
                     // Map p = box.read('${produit["id"]}');
                     //produit["nombre"] = p["nombre"];
-                    nombre.value = int.parse(produit["nombre"] ?? "0");
+                    nombre.value = getNombreProduitByListePanier(produit["id"]);
+                    //int.parse(produit["nombre"] ?? "0");
                     //print("execution de truc... ${e["id"]}");
                     print("execution de truc... ${produit["id"]}");
                     //print(
@@ -541,7 +546,7 @@ class _Menu extends State<Menu> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           // Expanded(
@@ -573,7 +578,6 @@ class _Menu extends State<Menu> {
                           //         //     ),
                           //         //   ),
                           //         // ),
-
                           //         Text(
                           //           "En stock",
                           //           style: TextStyle(
@@ -662,8 +666,10 @@ class _Menu extends State<Menu> {
                             child: Obx(
                               () => ListView(
                                 padding: const EdgeInsets.only(
-                                  top: 5,
-                                  left: 5,
+                                  top: 13,
+                                  left: 10,
+                                  right: 10,
+                                  bottom: 10,
                                 ),
                                 children: List.generate(
                                   panierController.listeDeElement.length,
@@ -671,7 +677,7 @@ class _Menu extends State<Menu> {
                                     Map produit =
                                         panierController.listeDeElement[index];
                                     return Container(
-                                      margin: const EdgeInsets.only(bottom: 15),
+                                      margin: const EdgeInsets.only(bottom: 5),
                                       //height: 70,
                                       child: Row(
                                         mainAxisAlignment:
@@ -688,7 +694,13 @@ class _Menu extends State<Menu> {
                                             ),
                                           ),
                                           Text(
-                                            "${produit['name']}",
+                                            "${produit['name']}".length >= 10
+                                                ? "${produit['name']}"
+                                                        .characters
+                                                        .getRange(0, 8)
+                                                        .string +
+                                                    "..."
+                                                : "${produit['name']}",
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -787,6 +799,19 @@ class _Menu extends State<Menu> {
               ),
       ),
     );
+  }
+
+  //
+  int getNombreProduitByListePanier(String id) {
+    //
+    int n = 0;
+    panierController.listeDeElement.forEach((element) {
+      //
+      if (element['id'] == id) {
+        n = int.parse("${element['nombre']}");
+      }
+    });
+    return n;
   }
 }
 

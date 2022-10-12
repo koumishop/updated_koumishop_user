@@ -61,7 +61,7 @@ class OptVerification extends StatelessWidget {
                       if (ins) {
                         Get.to(Inscription(number, code)); //
                       } else {
-                        Get.to(MdpOublie()); //
+                        Get.to(MdpOublie(number)); //
                       }
                       //
                     }).catchError((e) {

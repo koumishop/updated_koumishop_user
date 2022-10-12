@@ -30,7 +30,7 @@ class CrenoHoraire extends GetView<CrenoHoraireController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          flex: 6,
+          flex: 7,
           child: Obx(
             () => TableCalendar(
               calendarFormat: CalendarFormat.month,

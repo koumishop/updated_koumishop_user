@@ -31,7 +31,7 @@ class DetailsController extends GetxController {
       String rep = await response.stream.bytesToString();
       Map map = jsonDecode(rep);
       List l = map["data"] ?? [];
-      print("-------:$l");
+      //print("-------:$l");
       if (l.isEmpty) {
         return [];
       } else {
@@ -71,7 +71,7 @@ class DetailsController extends GetxController {
       String rep = await response.stream.bytesToString();
       Map map = jsonDecode(rep);
       List l = map["data"] ?? [];
-      print("-------:$l");
+      //print("-------:$l");
       if (l.isEmpty) {
         return [];
       } else {

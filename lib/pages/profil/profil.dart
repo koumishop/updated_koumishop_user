@@ -632,29 +632,11 @@ class _Profil extends State<Profil> {
           ),
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () async {
-          //     //
-          //     //ns.initializePlatformNotifications();
-          //     // var headers = {
-          //     //   'Authorization':
-          //     //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
-          //     //   'Cookie': 'PHPSESSID=3d673c385319a7c1570963dcb99ee8f8'
-          //     // };
-          //     // var request = http.MultipartRequest(
-          //     //     'POST',
-          //     //     Uri.parse(
-          //     //         'https://webadmin.koumishop.com/api-firebase/get-user-data.php'));
-          //     // request.fields.addAll({
-          //     //   'get_user_data': '1',
-          //     //   'accesskey': '90336',
-          //     //   'user_id': '${profilController.infos['user_id']}'
-          //     // });
-          //     // request.headers.addAll(headers);
-          //     // http.StreamedResponse response = await request.send();
-          //     // if (response.statusCode == 200) {
-          //     //   print(await response.stream.bytesToString());
-          //     // } else {
-          //     //   print(response.reasonPhrase);
-          //     // }
+          //     ns.setup(
+          //         id: 1,
+          //         title: "Salut tata",
+          //         body: "Comment tu vas toi ?",
+          //         payload: "");
           //   },
           //   child: const Icon(Icons.query_builder),
           // ),

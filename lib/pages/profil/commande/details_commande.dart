@@ -19,7 +19,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
   final box = GetStorage();
   //
   DetailsCommande(this.commande) {
-    print(commande);
+    //print(commande['address']);
   }
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,12 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text("Date: "),
-                                    Text("${commande['delivery_time']}"),
+                                    Text(
+                                      "${commande['delivery_time']}",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -135,9 +140,10 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                               //
                               Map produit = commande['items'][index];
                               //
+                              //print(produit);
                               return Container(
                                 margin: const EdgeInsets.only(bottom: 15),
-                                height: 100,
+                                height: 90,
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -146,11 +152,14 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                       flex: 3,
                                       child: Container(
                                         decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                             image: DecorationImage(
-                                          image: NetworkImage(
-                                              "${produit['image']}"),
-                                          fit: BoxFit.contain,
-                                        )),
+                                              image: NetworkImage(
+                                                  "${produit['image']}"),
+                                              fit: BoxFit.contain,
+                                            )),
                                       ),
                                     ),
                                     SizedBox(
@@ -162,7 +171,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                         alignment: Alignment.centerLeft,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.start,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
@@ -177,7 +186,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                                         TextOverflow.ellipsis,
                                                     style: const TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 20,
+                                                      fontSize: 15,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
@@ -185,29 +194,26 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                                 )
                                               ],
                                             ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Qte:  ${1}",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Colors.grey.shade700,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                                Text(
                                                   "Qte: ${produit['quantity']}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: Colors.grey.shade700,
-                                                    fontSize: 15,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
                                               ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
                                             ),
                                             Row(
                                               mainAxisAlignment:
@@ -218,7 +224,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: Colors.grey.shade700,
-                                                    fontSize: 15,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
@@ -308,14 +314,19 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text("Adresse: "),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        "${commande['address']}",
-                                        textAlign: TextAlign.right,
-                                      ),
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    width: 250,
+                                    child: Text(
+                                      "${commande['address']}"
+                                          .split(",")
+                                          .getRange(
+                                              0,
+                                              "${commande['address']}"
+                                                  .split(",")
+                                                  .length)
+                                          .toString(),
+                                      textAlign: TextAlign.left,
                                     ),
                                   )
                                 ],

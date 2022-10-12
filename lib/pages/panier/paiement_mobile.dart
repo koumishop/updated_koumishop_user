@@ -1,31 +1,80 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class PaiementMobile extends StatefulWidget {
+class PaiementMobileVisa extends StatefulWidget {
   //
   String lien;
+  bool visa;
+  String lienVisa;
   //
-  Map<String, String> params;
+  Map<String, String> commande;
   //
-  PaiementMobile(this.lien, this.params);
+  PaiementMobileVisa(this.lien, this.commande, this.visa, this.lienVisa);
   //
   @override
-  _PaiementMobile createState() => _PaiementMobile();
+  _PaiementMobileVisa createState() => _PaiementMobileVisa();
 }
 
-class _PaiementMobile extends State<PaiementMobile> {
+class _PaiementMobileVisa extends State<PaiementMobileVisa> {
   //
   WebViewController? webViewController;
   //
   Timer? tm;
-  RxInt temps = 30.obs;
+  RxInt temps = 0.obs;
   //
   @override
   void initState() {
+    //
+    // Enable virtual display.
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+
+    //
+    temps = widget.visa ? 180.obs : 30.obs;
+    if (widget.visa) {
+      Timer(
+        const Duration(seconds: 1),
+        () {
+          //
+          //Get.snackbar("Test", "Salut!");
+          showDialog(
+            context: context,
+            builder: (c) {
+              return Material(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          //
+                          Get.back();
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: WebView(
+                        initialUrl: widget.lienVisa,
+                        javascriptMode: JavascriptMode.unrestricted,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+          //
+        },
+      );
+    }
     //
     conter();
     //
@@ -39,11 +88,55 @@ class _PaiementMobile extends State<PaiementMobile> {
       //
       temps.value = temps.value - 1;
       if (temps.value == 0) {
+        sendTest();
         tm!.cancel();
         //Get.snackbar("Ecoulé", "Salut comment ?");
       }
       print("la valeur: ${t.tick}");
     });
+  }
+
+  sendTest() async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+    };
+    //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
+    var request = http.MultipartRequest('POST', Uri.parse(widget.lien));
+    request.fields.addAll({
+      'promotion': '1',
+      'accesskey': '90336',
+      'mobile': '813999922',
+      ' type': 'verify-user'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rep = await response.stream.bytesToString();
+      Map r = jsonDecode(rep);
+      if ("${r['status']}" == "1") {
+        //
+        Get.snackbar("Erreur", "${r['message']}");
+      } else {
+        //
+        PanierController panierController = Get.find();
+        //
+        if (widget.visa) {
+          // ignore: use_build_context_synchronously
+          panierController.paiement(widget.commande, context);
+        } else {
+          // ignore: use_build_context_synchronously
+          panierController.paiement(widget.commande, context);
+        }
+        //Get.snackbar("Erreur", "${r['message']}");
+      }
+      print(rep);
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   @override
@@ -93,6 +186,7 @@ class _PaiementMobile extends State<PaiementMobile> {
                         onTap: () {
                           //
                           Get.back();
+                          Get.back();
                           //
                         },
                         child: Container(
@@ -127,7 +221,7 @@ class _PaiementMobile extends State<PaiementMobile> {
                   flex: 3,
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(
+                    child: const Text(
                       "La vérification de votre paiement se fera dans ",
                       style: TextStyle(
                         fontSize: 17,
@@ -141,11 +235,11 @@ class _PaiementMobile extends State<PaiementMobile> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Obx(
                           () => Text(
-                            "${temps.value}",
+                            "${temps.value} s",
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
@@ -188,30 +282,50 @@ class _PaiementMobile extends State<PaiementMobile> {
                       ),
                       onPressed: () async {
                         //HYYNbQAs1OOt243815824641
-                        var headers = {
-                          'Authorization':
-                              'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                        };
-                        var request = http.MultipartRequest(
-                            'POST',
-                            Uri.parse(
-                                'https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641'));
-                        request.fields.addAll({
-                          'promotion': '1',
-                          'accesskey': '90336',
-                          'mobile': '813999922',
-                          ' type': 'verify-user'
-                        });
+                        sendTest();
+                        // var headers = {
+                        //   'Authorization':
+                        //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                        // };
+                        // //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
+                        // var request = http.MultipartRequest(
+                        //     'POST', Uri.parse(widget.lien));
+                        // request.fields.addAll({
+                        //   'promotion': '1',
+                        //   'accesskey': '90336',
+                        //   'mobile': '813999922',
+                        //   ' type': 'verify-user'
+                        // });
 
-                        request.headers.addAll(headers);
+                        // request.headers.addAll(headers);
 
-                        http.StreamedResponse response = await request.send();
+                        // http.StreamedResponse response = await request.send();
 
-                        if (response.statusCode == 200) {
-                          print(await response.stream.bytesToString());
-                        } else {
-                          print(response.reasonPhrase);
-                        }
+                        // if (response.statusCode == 200) {
+                        //   String rep = await response.stream.bytesToString();
+                        //   Map r = jsonDecode(rep);
+                        //   if ("${r['status']}" == "1") {
+                        //     //
+                        //     Get.snackbar("Erreur", "${r['message']}");
+                        //   } else {
+                        //     //
+                        //     PanierController panierController = Get.find();
+                        //     //
+                        //     if (widget.visa) {
+                        //       // ignore: use_build_context_synchronously
+                        //       panierController.paiement(
+                        //           widget.commande, context);
+                        //     } else {
+                        //       // ignore: use_build_context_synchronously
+                        //       panierController.paiement(
+                        //           widget.commande, context);
+                        //     }
+                        //     //Get.snackbar("Erreur", "${r['message']}");
+                        //   }
+                        //   print(rep);
+                        // } else {
+                        //   print(response.reasonPhrase);
+                        // }
                       },
                       child: Container(
                         height: 50,

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class MenuController extends GetxController with StateMixin<List> {
   Rx vue = Rx(Container());
-  RxBool showMiniPanier = RxBool(true);
+  RxBool showMiniPanier = RxBool(false);
   RxList listeProduit = [].obs;
 
   Future<List> getMenu(String subcategory_id) async {

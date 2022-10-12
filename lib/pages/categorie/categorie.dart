@@ -17,7 +17,7 @@ class Categorie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
+      height: 75,
       width: Get.size.width / 1.2,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: Row(
