@@ -15,7 +15,7 @@ import 'package:koumishop/pages/profil/profil.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 RxInt index = 0.obs;
-PageController? controllerP;
+PageController? controllerP = PageController();
 
 class Accueil extends GetView<AccueilController> {
   //
@@ -24,8 +24,8 @@ class Accueil extends GetView<AccueilController> {
   bool show;
   PanierController panierController = Get.find();
   //
+  //controllerP = PageController();
   Accueil(this.show) {
-    controllerP = PageController();
     controller.getService1(1);
     //
     var box = GetStorage();

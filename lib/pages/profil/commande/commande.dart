@@ -286,62 +286,62 @@ else {
                                   flex: 3,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    child: Text(
-                                      "${commande['status'].length > 0 ? commande['status'][0][1] : ''}",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 0
-                                                  ? commande['status'][0][0]
-                                                  : "") ==
-                                              "received"),
-                                    ),
+                                    // child: Text(
+                                    //   "${commande['status'].length > 0 ? commande['status'][0][1] : ''}",
+                                    //   textAlign: TextAlign.center,
+                                    //   style: tx2(
+                                    //       txl,
+                                    //       (commande['status'].length > 0
+                                    //               ? commande['status'][0][0]
+                                    //               : "") ==
+                                    //           "received"),
+                                    // ),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    child: Text(
-                                      "${commande['status'].length > 1 ? commande['status'][1][1] : ''}",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 1
-                                                  ? commande['status'][1][0]
-                                                  : "") ==
-                                              "processed"),
-                                    ),
-                                  ),
+                                      // child: Text(
+                                      //   "${commande['status'].length > 1 ? commande['status'][1][1] : ''}",
+                                      //   textAlign: TextAlign.center,
+                                      //   style: tx2(
+                                      //       txl,
+                                      //       (commande['status'].length > 1
+                                      //               ? commande['status'][1][0]
+                                      //               : "") ==
+                                      //           "processed"),
+                                      // ),
+                                      ),
                                 ),
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    child: Text(
-                                      "${commande['status'].length > 2 ? commande['status'][2][1] : ''}",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 2
-                                                  ? commande['status'][2][0]
-                                                  : "") ==
-                                              "shipped"),
-                                    ),
-                                  ),
+                                      // child: Text(
+                                      //   "${commande['status'].length > 2 ? commande['status'][2][1] : ''}",
+                                      //   textAlign: TextAlign.center,
+                                      //   style: tx2(
+                                      //       txl,
+                                      //       (commande['status'].length > 2
+                                      //               ? commande['status'][2][0]
+                                      //               : "") ==
+                                      //           "shipped"),
+                                      // ),
+                                      ),
                                 ),
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    child: Text(
-                                      "${commande['status'].length > 3 ? commande['status'][3][1] : ''}",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 3
-                                                  ? commande['status'][3][0]
-                                                  : "") ==
-                                              "delivered"),
-                                    ),
-                                  ),
+                                      // child: Text(
+                                      //   "${commande['status'].length > 3 ? commande['status'][3][1] : ''}",
+                                      //   textAlign: TextAlign.center,
+                                      //   style: tx2(
+                                      //       txl,
+                                      //       (commande['status'].length > 3
+                                      //               ? commande['status'][3][0]
+                                      //               : "") ==
+                                      //           "delivered"),
+                                      // ),
+                                      ),
                                 ),
                               ],
                             ),
@@ -451,19 +451,19 @@ else {
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
-                          width: 150,
+                          //width: 150,
                           height: 40,
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
+                            children: const [
                               Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,
                                 color: Colors.red,
                               ),
                               Text(
-                                "Vos commande",
+                                "Vos commandes",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,

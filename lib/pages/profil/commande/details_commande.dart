@@ -361,6 +361,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                       Get.to(
                         RefaireCommande(
                           l,
+                          false,
                           key: UniqueKey(),
                         ),
                       );

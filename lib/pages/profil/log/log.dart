@@ -295,6 +295,7 @@ class _Log extends State<Log> {
                                         profilController.infos.value = infos;
                                         //
                                         box.write("profile", infos);
+                                        box.write("mdp", pwC.text);
                                         //
                                         Get.back();
                                         Get.snackbar("Succès",

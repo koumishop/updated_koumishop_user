@@ -29,6 +29,7 @@ class Details extends StatefulWidget {
 
 class _Details extends State<Details> {
   RxBool contient = false.obs;
+  RxString epuise = "epuise".obs;
   //
   PanierController panierController = Get.find();
   FavoritController favoritController = Get.find();
@@ -293,109 +294,137 @@ class _Details extends State<Details> {
                                         ),
                                       ),
                                       Obx(
-                                        () => Text("${nombre.value}"),
+                                        () => (int.parse(produit['variants'][0]
+                                                        ['stock']) <=
+                                                    0 ||
+                                                produit['variants'][0]
+                                                        ['serve_for'] ==
+                                                    "Sold Out")
+                                            ? Text(
+                                                " $epuise ",
+                                                style: TextStyle(
+                                                  fontSize: 6,
+                                                  color: Colors.red.shade700,
+                                                ),
+                                              )
+                                            : Text("${nombre.value}"),
                                       ),
+                                      // Obx(
+                                      //   () => Text("${nombre.value}"),
+                                      // ),
                                       InkWell(
                                         onTap: () {
                                           menuController.showMiniPanier.value =
                                               true;
 
                                           if (int.parse(produit['variants'][0]
-                                                  ['stock']) ==
-                                              0) {
+                                                      ['stock']) <=
+                                                  0 ||
+                                              produit['variants'][0]
+                                                      ['serve_for'] ==
+                                                  "Sold Out") {
                                             Get.snackbar(
                                                 "Oups!", "stock épuisé");
                                           } else {
-                                            nombre.value++;
-                                            produit["nombre"] =
-                                                "${nombre.value}";
-                                            //box.write('${produit["id"]}',
-                                            //  jsonEncode(produit));
-                                            //bool v = false;
+                                            if (int.parse(produit['variants'][0]
+                                                    ['stock']) <=
+                                                nombre.value) {
+                                              Get.snackbar("Oups!",
+                                                  "Le stock est épuisé");
+                                            } else {
+                                              nombre.value++;
+                                              produit["nombre"] =
+                                                  "${nombre.value}";
+                                              //box.write('${produit["id"]}',
+                                              //  jsonEncode(produit));
+                                              //bool v = false;
 
-                                            panierController.listeDeElement
-                                                .add(produit);
-                                            panierController
-                                                    .listeDeElement.value =
-                                                panierController.listeDeElement
-                                                    .toSet()
-                                                    .toList()
-                                                    .obs;
-                                            //
-                                            for (var i = 0;
-                                                i <
-                                                    panierController
-                                                        .listeDeElement.length;
-                                                i++) {
-                                              if (panierController
-                                                          .listeDeElement[i]
-                                                      ['id'] ==
-                                                  produit["id"]) {
-                                                panierController
-                                                        .listeDeElement[i] =
-                                                    produit;
-                                                break;
+                                              panierController.listeDeElement
+                                                  .add(produit);
+                                              panierController
+                                                      .listeDeElement.value =
+                                                  panierController
+                                                      .listeDeElement
+                                                      .toSet()
+                                                      .toList()
+                                                      .obs;
+                                              //
+                                              for (var i = 0;
+                                                  i <
+                                                      panierController
+                                                          .listeDeElement
+                                                          .length;
+                                                  i++) {
+                                                if (panierController
+                                                            .listeDeElement[i]
+                                                        ['id'] ==
+                                                    produit["id"]) {
+                                                  panierController
+                                                          .listeDeElement[i] =
+                                                      produit;
+                                                  break;
+                                                }
                                               }
-                                            }
-                                            //
+                                              //
 
-                                            for (int x = 0;
-                                                x <
-                                                    menuController
-                                                        .listeProduit.length;
-                                                x++) {
-                                              if (menuController.listeProduit
-                                                      .value[x]['id'] ==
-                                                  produit['id']) {
-                                                menuController.listeProduit
-                                                        .value[x]['nombre'] =
-                                                    "${nombre.value}";
-                                                print(
-                                                    "nombre: ${menuController.listeProduit.value[x]['nombre']}");
+                                              for (int x = 0;
+                                                  x <
+                                                      menuController
+                                                          .listeProduit.length;
+                                                  x++) {
+                                                if (menuController.listeProduit
+                                                        .value[x]['id'] ==
+                                                    produit['id']) {
+                                                  menuController.listeProduit
+                                                          .value[x]['nombre'] =
+                                                      "${nombre.value}";
+                                                  print(
+                                                      "nombre: ${menuController.listeProduit.value[x]['nombre']}");
+                                                }
                                               }
+                                              //
+                                              // for (var i = 0;
+                                              //     i <
+                                              //         panierController
+                                              //             .listeDeElement.length;
+                                              //     i++) {
+                                              //   if (panierController
+                                              //               .listeDeElement[i]
+                                              //           ["id"] ==
+                                              //       produit['id']) {
+                                              //     print(
+                                              //         "avent: ${panierController.listeDeElement[i]["nombre"]}");
+                                              //     panierController
+                                              //                 .listeDeElement[i]
+                                              //             ["nombre"] =
+                                              //         "${nombre.value}";
+                                              //     print(
+                                              //         "apres: ${panierController.listeDeElement[i]["nombre"]}");
+                                              //   }
+                                              // }
+
+                                              var box = GetStorage();
+                                              box.write(
+                                                  "panier",
+                                                  panierController
+                                                      .listeDeElement);
+                                              // panierController.listeDeElement
+                                              //     .forEach((element) {});
+
+                                              //
+                                              // if (!v) {
+                                              //   panierController.listeDeElement
+                                              //       .add('${produit["id"]}');
+                                              //   box.write(
+                                              //       'paniers',
+                                              //       panierController
+                                              //           .listeDeElement.value);
+                                              //   //panierController.listeDeElement
+                                              //   //  .clear();
+                                              //   //panierController
+                                              //   //  .listeDeElement.value = paniers;
+                                              // }
                                             }
-                                            //
-                                            // for (var i = 0;
-                                            //     i <
-                                            //         panierController
-                                            //             .listeDeElement.length;
-                                            //     i++) {
-                                            //   if (panierController
-                                            //               .listeDeElement[i]
-                                            //           ["id"] ==
-                                            //       produit['id']) {
-                                            //     print(
-                                            //         "avent: ${panierController.listeDeElement[i]["nombre"]}");
-                                            //     panierController
-                                            //                 .listeDeElement[i]
-                                            //             ["nombre"] =
-                                            //         "${nombre.value}";
-                                            //     print(
-                                            //         "apres: ${panierController.listeDeElement[i]["nombre"]}");
-                                            //   }
-                                            // }
-
-                                            var box = GetStorage();
-                                            box.write(
-                                                "panier",
-                                                panierController
-                                                    .listeDeElement);
-                                            // panierController.listeDeElement
-                                            //     .forEach((element) {});
-
-                                            //
-                                            // if (!v) {
-                                            //   panierController.listeDeElement
-                                            //       .add('${produit["id"]}');
-                                            //   box.write(
-                                            //       'paniers',
-                                            //       panierController
-                                            //           .listeDeElement.value);
-                                            //   //panierController.listeDeElement
-                                            //   //  .clear();
-                                            //   //panierController
-                                            //   //  .listeDeElement.value = paniers;
-                                            // }
                                           }
                                         },
                                         child: Container(

@@ -613,7 +613,7 @@ class _Profil extends State<Profil> {
                                       () => Text(
                                         profilController.infos['mobile'] == null
                                             ? "Se connecter"
-                                            : "Se déconneter",
+                                            : "Se déconnecter",
                                         style: styleDeMenu(),
                                       ),
                                     ),

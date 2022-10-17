@@ -8,6 +8,7 @@ import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/menu/details.dart';
 import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/pages/profil/commande/refaire_commande.dart';
 
 import 'favorit_controller.dart';
 
@@ -45,6 +46,7 @@ class _Favorit extends State<Favorit> {
 
   //
   PanierController panierController = Get.find();
+  List listeProduit = [];
 
   //
   @override
@@ -124,6 +126,7 @@ class _Favorit extends State<Favorit> {
                       children: List.generate(listeE.length, (index) {
                         Map favoris = listeE[index];
                         favoris['nombre'] = "1";
+                        RxInt nombre = 1.obs;
                         print(favoris);
                         return Card(
                           elevation: 1,
@@ -238,127 +241,135 @@ class _Favorit extends State<Favorit> {
                                           children: [
                                             InkWell(
                                               onTap: () {
-                                                //menuController.showMiniPanier.value = false;
-                                                //Get.to(Panier());
-                                                panierController.listeDeElement
-                                                    .add(favoris);
+                                                //nombre.value++;
+
+                                                setState(() {
+                                                  favoris["quantity"] =
+                                                      "${nombre.value}";
+                                                  print(favoris);
+                                                  //menuController.showMiniPanier.value = false;
+                                                  //Get.to(Panier());
+                                                  listeProduit.add(favoris);
+                                                  //
+
+                                                  listeProduit = listeProduit
+                                                      .toSet()
+                                                      .toList()
+                                                      .obs;
+                                                  //
+                                                });
                                                 //
-                                                panierController
-                                                        .listeDeElement.value =
-                                                    panierController
-                                                        .listeDeElement
-                                                        .toSet()
-                                                        .toList()
-                                                        .obs;
-                                                //
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  builder: (c) {
-                                                    //return Details();
-                                                    return Column(
-                                                      children: [
-                                                        const SizedBox(
-                                                          height: 50,
-                                                        ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Container(
-                                                            decoration:
-                                                                const BoxDecoration(
-                                                              color: Colors
-                                                                  .transparent,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        10),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        10),
-                                                              ),
-                                                            ),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: 50,
-                                                                  child:
-                                                                      Container(),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 1,
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        const BoxDecoration(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .only(
-                                                                        topLeft:
-                                                                            Radius.circular(10),
-                                                                        topRight:
-                                                                            Radius.circular(10),
-                                                                      ),
-                                                                    ),
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          height:
-                                                                              50,
-                                                                          child:
-                                                                              Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              IconButton(
-                                                                                onPressed: () {
-                                                                                  Get.back();
-                                                                                },
-                                                                                icon: Icon(
-                                                                                  Icons.arrow_back_ios,
-                                                                                  color: Colors.black,
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        Expanded(
-                                                                          flex:
-                                                                              1,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.all(10),
-                                                                            child: Details(
-                                                                                favoris,
-                                                                                this,
-                                                                                index),
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    );
-                                                  },
-                                                );
+                                                Get.snackbar("Panier",
+                                                    "Produit ajouté au panier.");
+                                                // showModalBottomSheet(
+                                                //   context: context,
+                                                //   isScrollControlled: true,
+                                                //   backgroundColor:
+                                                //       Colors.transparent,
+                                                //   builder: (c) {
+                                                //     //return Details();
+                                                //     return Column(
+                                                //       children: [
+                                                //         const SizedBox(
+                                                //           height: 50,
+                                                //         ),
+                                                //         Expanded(
+                                                //           flex: 1,
+                                                //           child: Container(
+                                                //             decoration:
+                                                //                 const BoxDecoration(
+                                                //               color: Colors
+                                                //                   .transparent,
+                                                //               borderRadius:
+                                                //                   BorderRadius
+                                                //                       .only(
+                                                //                 topLeft: Radius
+                                                //                     .circular(
+                                                //                         10),
+                                                //                 topRight: Radius
+                                                //                     .circular(
+                                                //                         10),
+                                                //               ),
+                                                //             ),
+                                                //             child: Column(
+                                                //               mainAxisAlignment:
+                                                //                   MainAxisAlignment
+                                                //                       .start,
+                                                //               children: [
+                                                //                 SizedBox(
+                                                //                   height: 50,
+                                                //                   child:
+                                                //                       Container(),
+                                                //                 ),
+                                                //                 Expanded(
+                                                //                   flex: 1,
+                                                //                   child:
+                                                //                       Container(
+                                                //                     decoration:
+                                                //                         const BoxDecoration(
+                                                //                       color: Colors
+                                                //                           .white,
+                                                //                       borderRadius:
+                                                //                           BorderRadius
+                                                //                               .only(
+                                                //                         topLeft:
+                                                //                             Radius.circular(10),
+                                                //                         topRight:
+                                                //                             Radius.circular(10),
+                                                //                       ),
+                                                //                     ),
+                                                //                     child:
+                                                //                         Column(
+                                                //                       mainAxisAlignment:
+                                                //                           MainAxisAlignment
+                                                //                               .start,
+                                                //                       children: [
+                                                //                         SizedBox(
+                                                //                           height:
+                                                //                               50,
+                                                //                           child:
+                                                //                               Row(
+                                                //                             mainAxisAlignment:
+                                                //                                 MainAxisAlignment.start,
+                                                //                             children: [
+                                                //                               IconButton(
+                                                //                                 onPressed: () {
+                                                //                                   Get.back();
+                                                //                                 },
+                                                //                                 icon: Icon(
+                                                //                                   Icons.arrow_back_ios,
+                                                //                                   color: Colors.black,
+                                                //                                 ),
+                                                //                               )
+                                                //                             ],
+                                                //                           ),
+                                                //                         ),
+                                                //                         Expanded(
+                                                //                           flex:
+                                                //                               1,
+                                                //                           child:
+                                                //                               Padding(
+                                                //                             padding:
+                                                //                                 EdgeInsets.all(10),
+                                                //                             child: Details(
+                                                //                                 favoris,
+                                                //                                 this,
+                                                //                                 index),
+                                                //                           ),
+                                                //                         )
+                                                //                       ],
+                                                //                     ),
+                                                //                   ),
+                                                //                 )
+                                                //               ],
+                                                //             ),
+                                                //           ),
+                                                //         )
+                                                //       ],
+                                                //     );
+                                                //   },
+                                                // );
+                                                // //
                                               },
                                               child: Container(
                                                 height: 35,
@@ -405,6 +416,91 @@ class _Favorit extends State<Favorit> {
                 )
               ],
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              //
+              List l = listeProduit;
+              //print(l);
+              if (l.isNotEmpty) {
+                Get.to(
+                  RefaireCommande(
+                    l,
+                    true,
+                    key: UniqueKey(),
+                  ),
+                );
+              } else {
+                Get.snackbar("Panier", "Le panier est vide");
+              }
+              //
+            },
+            backgroundColor: Colors.red.shade700,
+            child: true
+                ? Container(
+                    height: 50,
+                    width: 50,
+                    //color: Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 0),
+                      child: Stack(
+                        children: [
+                          Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.shopping_cart,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            //width: 10,
+                            //height: 20,
+
+                            child: Card(
+                              elevation: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    3,
+                                  ),
+                                  color: Colors.yellow.shade700,
+                                ),
+                                child: Text(
+                                  "${listeProduit.length}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                // child: Obx(
+                                //   () => Text(
+                                //     "${length(panierController.listeDeElement)}",
+                                //     style: const TextStyle(
+                                //       fontSize: 11,
+                                //       fontWeight: FontWeight.bold,
+                                //     ),
+                                //   ),
+                                // ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
           ),
         ),
       ),

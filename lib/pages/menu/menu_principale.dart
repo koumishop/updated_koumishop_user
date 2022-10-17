@@ -69,7 +69,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
   void initState() {
     //
     //sousCat.value = ;
-    print("ààààààààààà:${widget.data[0]}");
+    //print("ààààààààààà:${widget.data[0]}");
     List sc = widget.data[0]["childs"].isNotEmpty
         ? widget.data[0]["childs"].keys.toList()
         : [];
@@ -105,7 +105,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
           backgroundColor: const Color.fromARGB(255, 255, 232, 235),
           body: RefreshIndicator(
             onRefresh: () async {
-              print("refresh");
+              //print("refresh");
               //
               if (panierController.listeDeElement.isNotEmpty) {
                 menuController.showMiniPanier.value = true;
@@ -309,7 +309,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                   //
                                 });
                                 //
-                                print("${sousCatIndex.value}");
+                                //print("${sousCatIndex.value}");
                                 //
                                 load.value = true;
                                 menuController.listeProduit.value =
@@ -407,7 +407,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                                 await menuController.getMenu(
                                                     "${sousCat[0]['id']}");
                                             load.value = false;
-                                            print(sousCat[0]);
+                                            //print(sousCat[0]);
                                           } else {
                                             menuController.listeProduit.value =
                                                 [];

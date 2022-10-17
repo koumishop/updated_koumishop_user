@@ -55,7 +55,8 @@ class _MdpOublie extends State<MdpOublie> {
         //
         profilController.infos.value = infos;
         //
-        box.write("profile", infos);
+        box.write("profile", infos); //
+        box.write("mdp", pwC.text);
         //
         Get.back();
         Get.snackbar("Succès", "Bienvenu ${infos['name']}");
@@ -349,7 +350,7 @@ class _MdpOublie extends State<MdpOublie> {
                                 if (value!.isEmpty) {
                                   return "Veuillez saisir le mot de passe";
                                 } else if (value != pwNC.text) {
-                                  return "Vous n'avez pas saisi le meme mot de passe";
+                                  return "Le mot de passe n'est pas identique";
                                 }
                                 return null;
                               },

@@ -224,7 +224,8 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                           },
                           controller: tel1C,
                         ),
-                        TextFormField(
+                        TextField(
+                          keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: "Numéro de téléphone alternatif",
                             // border: OutlineInputBorder(
@@ -232,12 +233,6 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                             // ),
                             //prefixIcon: Icon(Icons.lock),
                           ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Veuillez saisir le numéro de téléphone alternatif";
-                            }
-                            return null;
-                          },
                           controller: tel2C,
                         ),
                         TextFormField(
@@ -469,57 +464,53 @@ class _NouvelleAdresse extends State<NouvelleAdresse> {
                             ),
                             onPressed: () {
                               //
-                              final box = GetStorage();
-                              /**
-                               * {
-}
+                              if (_formKey.currentState!.validate()) {
+                                final box = GetStorage();
+                                /**
+                               * 
                                */
-                              Map<String, String> adresse = {
-                                'accesskey': '90336',
-                                'add_address': '1',
-                                'user_id': profilController.infos['user_id'],
-                                'name': nomC.text,
-                                'mobile': tel1C.text,
-                                'alternate_mobile': tel2C.text,
-                                'type': choix.name,
-                                'address': avenueNumC.text,
-                                'country_code': '243',
-                                'landmark': pointRepC.text,
-                                'pincode_id': idComm,
-                                'city_id': idQuart,
-                                'is_default': dft ? "0" : "1",
-                              };
-                              //  {
-                              //   "country_code": nomC.text,
-                              //   "tel1": tel1C.text,
-                              //   "tel2": tel2C.text,
-                              //   "avnum": avenueNumC.text,
-                              //   "repere": pointRepC.text,
-                              //   "commune": c1,
-                              //   "quartier": c2,
-                              //   "type": choix.name,
-                              //   "default": dft,
-                              // };
-                              //
-                              Get.dialog(
-                                const Center(
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: Colors.red,
-                                      strokeWidth: 7,
+                                if (idQuart != "") {
+                                  Map<String, String> adresse = {
+                                    'accesskey': '90336',
+                                    'add_address': '1',
+                                    'user_id':
+                                        profilController.infos['user_id'],
+                                    'name': nomC.text,
+                                    'mobile': tel1C.text,
+                                    'alternate_mobile': tel2C.text,
+                                    'type': choix.name,
+                                    'address': avenueNumC.text,
+                                    'country_code': '243',
+                                    'landmark': pointRepC.text,
+                                    'pincode_id': idComm,
+                                    'city_id': idQuart,
+                                    'is_default': dft ? "0" : "1",
+                                  };
+
+                                  Get.dialog(
+                                    const Center(
+                                      child: SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: Colors.red,
+                                          strokeWidth: 7,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                              //
-                              saveAdresse(adresse);
-                              //
-                              //List adresses = box.read('adresses') ?? [];
-                              //
-                              //adresses.add(adresse);
-                              //box.write('adresses', adresses);
+                                  );
+                                  //
+                                  saveAdresse(adresse);
+                                  //
+                                  //List adresses = box.read('adresses') ?? [];
+                                  //
+                                  //adresses.add(adresse);
+                                  //box.write('adresses', adresses);
+                                } else {
+                                  Get.snackbar("Erreur",
+                                      "Veuillez selectionner le Quartier");
+                                }
+                              }
                             },
                             child: Container(
                               height: 50,

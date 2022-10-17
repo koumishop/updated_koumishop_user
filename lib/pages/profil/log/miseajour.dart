@@ -140,8 +140,6 @@ class _MiseaJour extends State<MiseaJour> {
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "Veuillez saisir le Numéro";
-                                  } else if (!value.isNum) {
-                                    return "Un numéro de téléphone valide svp";
                                   }
                                   return null;
                                 },

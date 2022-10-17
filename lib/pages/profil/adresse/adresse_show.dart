@@ -132,67 +132,71 @@ class _AdresseShow extends State<AdresseShow> {
                                   Expanded(
                                     flex: 1,
                                     child: ListTile(
-                                      title: Text("${adresse["landmark"]}"),
-                                      subtitle: Text(
-                                          "${adresse["address"]} / ${adresse["city"]}"),
-                                      // trailing: IconButton(
-                                      //   onPressed: () {
-                                      //     Get.dialog(
-                                      //       const Center(
-                                      //         child: SizedBox(
-                                      //           height: 50,
-                                      //           width: 50,
-                                      //           child:
-                                      //               CircularProgressIndicator(
-                                      //             backgroundColor: Colors.red,
-                                      //             strokeWidth: 7,
-                                      //           ),
-                                      //         ),
-                                      //       ),
-                                      //     );
-                                      //     //
-                                      //     setState(() {
-                                      //       //
-                                      //       supprimerAddresse(
-                                      //           "${adresse["id"]}");
-                                      //       //
-                                      //     });
-                                      //   },
-                                      //   icon: const Icon(
-                                      //     Icons.delete,
-                                      //     color: Colors.red,
-                                      //   ),
-                                      // ),
+                                      // onTap: () {
+
+                                      // },
+                                      title: Text.rich(
+                                        TextSpan(
+                                          text: "",
+                                          children: [
+                                            ////${adresse["landmark"]}
+                                            TextSpan(
+                                                text:
+                                                    "${adresse["pincode"]} / ${adresse["city"]}")
+                                          ],
+                                        ),
+                                      ),
+                                      subtitle: Text.rich(
+                                        TextSpan(
+                                          text: "",
+                                          children: [
+                                            ////
+                                            TextSpan(
+                                              text:
+                                                  "${adresse["address"]} / ${adresse["city"]} \n",
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      "${adresse["landmark"]}",
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      trailing: IconButton(
+                                        onPressed: () {
+                                          Get.dialog(
+                                            const Center(
+                                              child: SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  backgroundColor: Colors.red,
+                                                  strokeWidth: 7,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                          //
+                                          setState(() {
+                                            //
+                                            supprimerAddresse(
+                                                "${adresse["id"]}");
+                                            //
+                                          });
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
                                     ),
                                   )
                                 ],
                               ),
                             ),
-                            Expanded(
-                              flex: 4,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    width: 50,
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red.shade700,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Icon(
-                                      Icons.phone,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),

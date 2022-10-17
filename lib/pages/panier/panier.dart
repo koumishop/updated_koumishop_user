@@ -370,17 +370,27 @@ class _Panier extends State<Panier> {
                                                             //int t = int.parse(
                                                             //  produit[
                                                             //    'nombre']);
-                                                            nombres++;
-                                                            //p.value++;
-                                                            setState(() {
-                                                              panierController.listeDeElement[
-                                                                          index]
-                                                                      [
-                                                                      "nombre"] =
-                                                                  "$nombres";
-                                                            });
-                                                            //
-                                                            r = getTo1();
+                                                            if (int.parse(produit[
+                                                                        'variants'][0]
+                                                                    [
+                                                                    'stock']) <=
+                                                                nombres) {
+                                                              Get.snackbar(
+                                                                  "Oups!",
+                                                                  "Le stock est épuisé");
+                                                            } else {
+                                                              nombres++;
+                                                              //p.value++;
+                                                              setState(() {
+                                                                panierController
+                                                                            .listeDeElement[index]
+                                                                        [
+                                                                        "nombre"] =
+                                                                    "$nombres";
+                                                              });
+                                                              //
+                                                              r = getTo1();
+                                                            }
                                                           },
                                                           child: Container(
                                                             height: 26,

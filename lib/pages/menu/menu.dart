@@ -85,17 +85,16 @@ class _Menu extends State<Menu> {
                     //produit["nombre"] = p["nombre"];
                     nombre.value = getNombreProduitByListePanier(produit["id"]);
                     //int.parse(produit["nombre"] ?? "0");
-                    //print("execution de truc... ${e["id"]}");
-                    print("execution de truc... ${produit["id"]}");
-                    //print(
-                    //  "execution de truc... ${e["id"] == produit["id"]}");
-                    print("execution de truc... ${produit["name"]}");
-                    print("execution de truc... ${produit["nombre"]}");
-                    //print("execution de truc*** ${e}");
-                    print("execution de truc... ${nombre.value}");
-                    //
+                    print("... $produit");
+                    // //print(
+                    // //  "execution de truc... ${e["id"] == produit["id"]}");
+                    // print("execution de truc... ${produit["name"]}");
+                    // print("execution de truc... ${produit["nombre"]}");
+                    // //print("execution de truc*** ${e}");
+                    // print("execution de truc... ${nombre.value}");
+                    // //
 
-                    print('truc:--------');
+                    // print('truc:--------');
                     int p = 0;
                     double prix = double.parse(produit['variants'][0]['price']);
                     //
@@ -418,51 +417,61 @@ class _Menu extends State<Menu> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      if (panierController
-                                          .listeDeElement.isNotEmpty) {
-                                        menuController.showMiniPanier.value =
-                                            true;
-                                      }
-                                      if (nombre.value > 0) {
-                                        nombre.value--;
-                                        produit["nombre"] = "${nombre.value}";
-                                        //
-                                        for (var i = 0;
-                                            i <
-                                                panierController
-                                                    .listeDeElement.length;
-                                            i++) {
-                                          if (panierController.listeDeElement[i]
-                                                  ['id'] ==
-                                              produit["id"]) {
-                                            panierController.listeDeElement[i] =
-                                                produit;
-                                            break;
-                                          }
+                                      if (int.parse(produit['variants'][0]
+                                                  ['stock']) <=
+                                              0 ||
+                                          produit['variants'][0]['serve_for'] ==
+                                              "Sold Out") {
+                                        Get.snackbar(
+                                            "Oups!", "Le stock est épuisé");
+                                      } else {
+                                        if (panierController
+                                            .listeDeElement.isNotEmpty) {
+                                          menuController.showMiniPanier.value =
+                                              true;
                                         }
-                                        panierController.listeDeElement
-                                            .add(produit);
-                                        panierController.listeDeElement.value =
-                                            panierController.listeDeElement
-                                                .toSet()
-                                                .toList()
-                                                .obs;
-                                      }
-                                      if (nombre.value == 0) {
-                                        panierController.listeDeElement
-                                            .remove(produit);
-                                        //
-                                        var box = GetStorage();
-                                        box.write("panier",
-                                            panierController.listeDeElement);
-                                        // box.write(
-                                        //     'paniers',
-                                        //     panierController
-                                        //         .listeDeElement);
-                                        //panierController.listeDeElement
-                                        //  .clear();
-                                        //panierController
-                                        //  .listeDeElement.value = paniers;
+                                        if (nombre.value > 0) {
+                                          nombre.value--;
+                                          produit["nombre"] = "${nombre.value}";
+                                          //
+                                          for (var i = 0;
+                                              i <
+                                                  panierController
+                                                      .listeDeElement.length;
+                                              i++) {
+                                            if (panierController
+                                                    .listeDeElement[i]['id'] ==
+                                                produit["id"]) {
+                                              panierController
+                                                  .listeDeElement[i] = produit;
+                                              break;
+                                            }
+                                          }
+                                          panierController.listeDeElement
+                                              .add(produit);
+                                          panierController
+                                                  .listeDeElement.value =
+                                              panierController.listeDeElement
+                                                  .toSet()
+                                                  .toList()
+                                                  .obs;
+                                        }
+                                        if (nombre.value == 0) {
+                                          panierController.listeDeElement
+                                              .remove(produit);
+                                          //
+                                          var box = GetStorage();
+                                          box.write("panier",
+                                              panierController.listeDeElement);
+                                          // box.write(
+                                          //     'paniers',
+                                          //     panierController
+                                          //         .listeDeElement);
+                                          //panierController.listeDeElement
+                                          //  .clear();
+                                          //panierController
+                                          //  .listeDeElement.value = paniers;
+                                        }
                                       }
                                     },
                                     child: Container(
@@ -487,72 +496,85 @@ class _Menu extends State<Menu> {
                                   ),
                                   Obx(
                                     () => (int.parse(produit['variants'][0]
-                                                ['stock']) !=
-                                            0)
-                                        ? Text("${nombre.value}")
-                                        : Text(
+                                                    ['stock']) <=
+                                                0 ||
+                                            produit['variants'][0]
+                                                    ['serve_for'] ==
+                                                "Sold Out")
+                                        ? Text(
                                             " $epuise ",
                                             style: TextStyle(
                                               fontSize: 6,
                                               color: Colors.red.shade700,
                                             ),
-                                          ),
+                                          )
+                                        : Text("${nombre.value}"),
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      menuController.showMiniPanier.value =
-                                          true;
                                       if (int.parse(produit['variants'][0]
-                                              ['stock']) ==
-                                          0) {
+                                                  ['stock']) <=
+                                              0 ||
+                                          produit['variants'][0]['serve_for'] ==
+                                              "Sold Out") {
                                         Get.snackbar(
                                             "Oups!", "Le stock est épuisé");
                                       } else {
-                                        nombre.value++;
-                                        produit["nombre"] = "${nombre.value}";
-                                        //box.write('${produit["id"]}',
-                                        //  jsonEncode(produit));
-                                        bool v = false;
-                                        //panierController.listeDeElement.
-                                        for (var i = 0;
-                                            i <
-                                                panierController
-                                                    .listeDeElement.length;
-                                            i++) {
-                                          if (panierController.listeDeElement[i]
-                                                  ['id'] ==
-                                              produit["id"]) {
-                                            panierController.listeDeElement[i] =
-                                                produit;
-                                            break;
+                                        if (int.parse(produit['variants'][0]
+                                                ['stock']) <=
+                                            nombre.value) {
+                                          Get.snackbar(
+                                              "Oups!", "Le stock est épuisé");
+                                        } else {
+                                          menuController.showMiniPanier.value =
+                                              true;
+                                          nombre.value++;
+                                          produit["nombre"] = "${nombre.value}";
+                                          //box.write('${produit["id"]}',
+                                          //  jsonEncode(produit));
+                                          bool v = false;
+                                          //panierController.listeDeElement.
+                                          for (var i = 0;
+                                              i <
+                                                  panierController
+                                                      .listeDeElement.length;
+                                              i++) {
+                                            if (panierController
+                                                    .listeDeElement[i]['id'] ==
+                                                produit["id"]) {
+                                              panierController
+                                                  .listeDeElement[i] = produit;
+                                              break;
+                                            }
                                           }
+                                          panierController.listeDeElement
+                                              .add(produit);
+                                          panierController
+                                                  .listeDeElement.value =
+                                              panierController.listeDeElement
+                                                  .toSet()
+                                                  .toList()
+                                                  .obs;
+                                          //
+                                          var box = GetStorage();
+                                          box.write("panier",
+                                              panierController.listeDeElement);
+                                          // panierController.listeDeElement
+                                          //     .forEach((element) {});
+                                          //
+                                          // if (!v) {
+                                          //   panierController.listeDeElement
+                                          //       .add('${produit["id"]}');
+                                          //   box.write(
+                                          //       'paniers',
+                                          //       panierController
+                                          //           .listeDeElement.value);
+                                          //   //panierController.listeDeElement
+                                          //   //  .clear();
+                                          //   //panierController
+                                          //   //  .listeDeElement.value = paniers;
+                                          // }
                                         }
-                                        panierController.listeDeElement
-                                            .add(produit);
-                                        panierController.listeDeElement.value =
-                                            panierController.listeDeElement
-                                                .toSet()
-                                                .toList()
-                                                .obs;
-                                        //
-                                        var box = GetStorage();
-                                        box.write("panier",
-                                            panierController.listeDeElement);
-                                        // panierController.listeDeElement
-                                        //     .forEach((element) {});
-                                        //
-                                        // if (!v) {
-                                        //   panierController.listeDeElement
-                                        //       .add('${produit["id"]}');
-                                        //   box.write(
-                                        //       'paniers',
-                                        //       panierController
-                                        //           .listeDeElement.value);
-                                        //   //panierController.listeDeElement
-                                        //   //  .clear();
-                                        //   //panierController
-                                        //   //  .listeDeElement.value = paniers;
-                                        // }
                                       }
                                     },
                                     child: Container(

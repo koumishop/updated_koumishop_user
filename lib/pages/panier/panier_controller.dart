@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/profil/commande/commande.dart';
@@ -40,6 +41,7 @@ class PanierController extends GetxController {
         //Pas d'erreur
         Get.back();
         Get.back();
+        Get.back();
         Get.snackbar("Erreur", "${map['message']}");
         //
       } else {
@@ -49,15 +51,15 @@ class PanierController extends GetxController {
         dateL = {}.obs;
         modeP = "".obs;
         //
+        var box = GetStorage();
+        box.write("panier", []);
+        //
+        Get.back();
         Get.back();
         Get.back();
         Get.off(Accueil(false));
-        showDialog(
-          context: context,
-          builder: (c) {
-            return MessageFinal(map);
-          },
-        );
+        Get.to(Commande());
+        Get.snackbar("Succès", "${map['message']}");
         //
       }
       //

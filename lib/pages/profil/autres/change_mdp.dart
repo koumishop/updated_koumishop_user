@@ -130,9 +130,10 @@ class _ChangeMdp extends State<ChangeMdp> {
                     ),
                   ),
                   validator: (value) {
+                    String mdp = box.read("mdp");
                     if (value!.isEmpty) {
                       return "Veuillez saisir le mot de passe";
-                    } else if (value != profilController.infos['mdp']) {
+                    } else if (value != mdp) {
                       return "Mot de passe incorrecte";
                     }
                     return null;
@@ -307,6 +308,8 @@ class _ChangeMdp extends State<ChangeMdp> {
                       } else {
                         Get.back();
                         Get.snackbar("Succès", "Mot de passe changé");
+                        //
+                        box.write("mdp", pwC.text);
                       }
                       //Timer(Duration(seconds: 1), () {
                       //

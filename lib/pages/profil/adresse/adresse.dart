@@ -130,9 +130,35 @@ class _Adresse extends State<Adresse> {
                                       // onTap: () {
 
                                       // },
-                                      title: Text("${adresse["landmark"]}"),
-                                      subtitle: Text(
-                                          "${adresse["address"]} / ${adresse["city"]}"),
+                                      title: Text.rich(
+                                        TextSpan(
+                                          text: "",
+                                          children: [
+                                            ////${adresse["landmark"]}
+                                            TextSpan(
+                                                text:
+                                                    "${adresse["pincode"]} / ${adresse["city"]}")
+                                          ],
+                                        ),
+                                      ),
+                                      subtitle: Text.rich(
+                                        TextSpan(
+                                          text: "",
+                                          children: [
+                                            ////
+                                            TextSpan(
+                                              text:
+                                                  "${adresse["address"]} / ${adresse["city"]} \n",
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      "${adresse["landmark"]}",
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                       trailing: IconButton(
                                         onPressed: () {
                                           Get.dialog(
@@ -166,31 +192,6 @@ class _Adresse extends State<Adresse> {
                                 ],
                               ),
                             ),
-                            Expanded(
-                              flex: 4,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 50,
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red.shade700,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Icon(
-                                      Icons.phone,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),

@@ -34,7 +34,7 @@ import 'profil/notifications/notification_controller.dart';
 class SplashtScreen extends StatelessWidget {
   SplashtScreen() {
     //
-    registerNotification();
+    //registerNotification();
     //
     Timer(const Duration(seconds: 3), () {
       //
@@ -69,56 +69,15 @@ class SplashtScreen extends StatelessWidget {
       profilController.infos.value = box.read("profile") ?? RxMap();
       print("---------------------------- ${profilController.infos}");
       //
-      //Get.off(PaiementMobile("", {})); //PaiementMobile
+      //Get.off(Commande()); //PaiementMobile
       Get.off(Accueil(true)); //PaiementMobile//true
+      //Get.off(Commande());
       //
       //Get.off(Inscription("815381693", "+243"));
       //
     });
   }
   //
-  NotificationService ns = NotificationService();
-  //
-  void registerNotification() async {
-    // 1. Initialize the Firebase app
-    await Firebase.initializeApp();
-    // 2. Instantiate Firebase Messaging
-    var _messaging = FirebaseMessaging.instance;
-
-    // 3. On iOS, this helps to take the user permissions
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      provisional: false,
-      sound: true,
-    );
-    //
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      //
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        //message
-        Map m = jsonDecode(message.data['data']);
-        print("Message réçu: ${message}");
-        print("Message réçu: ${message.category}");
-        print("Message réçu: ${message.messageId}");
-        print("Message title: ${m['title']}");
-        print("Message message: ${m['message']}");
-        print("Message réçu: ${message.from}");
-        //
-        ns.setup(
-            id: 1,
-            title: "${m['title']}",
-            body: "${m['message']}",
-            payload: "");
-        //("${m['title']}", "${m['message']}");
-        print("Message réçu: ${message.notification!.body}");
-      });
-      //
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
 
   //
   @override

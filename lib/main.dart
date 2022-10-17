@@ -1,24 +1,97 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/splash.dart';
 
+import 'utils/notification_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   //
+
   //Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
   Firebase.initializeApp();
   //
 
   //
-  runApp(const MyApp());
+  registerNotification();
+  //
+  runApp(MyApp());
+}
+
+NotificationService ns = NotificationService();
+//
+void registerNotification() async {
+  // 1. Initialize the Firebase app
+  await Firebase.initializeApp();
+  // 2. Instantiate Firebase Messaging
+  var _messaging = FirebaseMessaging.instance;
+
+  // 3. On iOS, this helps to take the user permissions
+  NotificationSettings settings = await _messaging.requestPermission(
+    alert: true,
+    badge: true,
+    provisional: false,
+    sound: true,
+  );
+  //
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+    //
+    //FirebaseMessaging.on
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    //
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      //message
+      Map m = jsonDecode(message.data['data']);
+      print("Message réçu: ${message}");
+      print("Message réçu: ${message.category}");
+      print("Message réçu: ${message.messageId}");
+      print("Message title: ${m['title']}");
+      print("Message message: ${m['message']}");
+      print("Message réçu: ${message.from}");
+      //
+      ns.setup(
+          id: 1, title: "${m['title']}", body: "${m['message']}", payload: "");
+      //("${m['title']}", "${m['message']}");
+      print("Message réçu: ${message.notification!.body}");
+    });
+    //
+  } else {
+    print('User declined or has not accepted permission');
+  }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  //
+  Map m = jsonDecode(message.data['data']);
+  print("Message réçu: ${message}");
+  print("Message réçu: ${message.category}");
+  print("Message réçu: ${message.messageId}");
+  print("Message title: ${m['title']}");
+  print("Message message: ${m['message']}");
+  print("Message réçu: ${message.from}");
+  //
+  ns.setup(id: 1, title: "${m['title']}", body: "${m['message']}", payload: "");
+  //("${m['title']}", "${m['message']}");
+  print("Message réçu: ${message.notification!.body}");
+
+  print("Handling a background message: ${message.messageId}");
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key) {}
+  //
+
   //
   @override
   Widget build(BuildContext context) {

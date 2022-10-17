@@ -307,7 +307,7 @@ class _Inscription extends State<Inscription> {
                                     if (value!.isEmpty) {
                                       return "Veuillez saisir votre mot de passe";
                                     } else if (value != mdpC.text) {
-                                      return "Mot de passe pas pareil";
+                                      return "Le mot de passe n'est pas identique";
                                     }
                                     return null;
                                   },
@@ -320,7 +320,7 @@ class _Inscription extends State<Inscription> {
                                   obscureText: showCode2,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
-                                    labelText: "Confirme mot de passe",
+                                    labelText: "Confirmez mot de passe",
                                     // border: OutlineInputBorder(
                                     //   borderRadius: BorderRadius.circular(10),
                                     // ),
@@ -340,7 +340,7 @@ class _Inscription extends State<Inscription> {
                                     if (value!.isEmpty) {
                                       return "Veuillez saisir votre mot de passe pour confirmer";
                                     } else if (value != mdp.text) {
-                                      return "Mot de passe pas pareil";
+                                      return "Le mot de passe n'est pas identique";
                                     }
                                     return null;
                                   },
@@ -467,7 +467,7 @@ class _Inscription extends State<Inscription> {
                                         //
                                         ProfilController profilController =
                                             Get.find();
-                                        //
+
                                         final fcmToken = await FirebaseMessaging
                                             .instance
                                             .getToken();
