@@ -146,14 +146,16 @@ class _RefaireCommande extends State<RefaireCommande> {
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Icon(
+                            children: [
+                              const Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,
                                 color: Colors.red,
                               ),
                               Text(
-                                "Refaire la commande",
+                                widget.f
+                                    ? "Passe la commande"
+                                    : "Refaire la commande",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
