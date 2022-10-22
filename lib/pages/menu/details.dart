@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -9,6 +10,8 @@ import 'package:koumishop/pages/favorits/favorit_controller.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
 import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/pages/profil/log/log.dart';
+import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'details_controller.dart';
@@ -35,6 +38,7 @@ class _Details extends State<Details> {
   FavoritController favoritController = Get.find();
   DetailsController controller = Get.find();
   MenuController menuController = Get.find();
+  ProfilController profilController = Get.find();
   //
   //
   RxInt nombre = 0.obs;
@@ -467,29 +471,39 @@ class _Details extends State<Details> {
                   children: [
                     IconButton(
                       onPressed: () async {
-                        if (!contient.value) {
-                          //var box = GetStorage();
-                          List lf = box.read("favoris") ?? [];
-                          lf.add(produit);
-                          lf = lf.toSet().toList().obs; //
-                          contient.value = true;
-                          //
+                        Map p = box.read("profile") ?? RxMap();
 
-                          box.write("favoris", lf);
-                          //
+                        if (p['name'] == null) {
+                          Get.to(Log(this));
                         } else {
-                          List lf = box.read("favoris") ?? [];
+                          if (!contient.value) {
+                            //var box = GetStorage();
+                            List lf = box.read("favoris") ?? [];
+                            produit["nombre"] = "1";
+                            lf.add(produit);
+                            lf = lf.toSet().toList().obs; //
+                            contient.value = true;
+                            //
+                            //ajouterFavoris(produit["id"]);
+                            //
+                            box.write("favoris", lf);
+                            ajouterFavoris(produit["id"]);
+                            //
+                          } else {
+                            List lf = box.read("favoris") ?? [];
 
-                          for (var i = 0; i < lf.length; i++) {
-                            if (lf[i]["id"] == produit['id']) {
-                              lf.removeAt(i);
+                            for (var i = 0; i < lf.length; i++) {
+                              if (lf[i]["id"] == produit['id']) {
+                                lf.removeAt(i);
+                              }
                             }
+                            lf = lf.toSet().toList().obs; //
+                            contient.value = false;
+                            //
+                            box.write("favoris", lf);
+                            supprimerFavoris(produit["id"]);
+                            //
                           }
-                          lf = lf.toSet().toList().obs; //
-                          contient.value = false;
-                          //
-                          box.write("favoris", lf);
-                          //
                         }
                         //print(favoritController.listeDeElement);
                         print(contient.value);
@@ -1031,6 +1045,56 @@ class _Details extends State<Details> {
         )
       ],
     );
+  }
+
+  supprimerFavoris(String id) async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://webadmin.koumishop.com/api-firebase/favorites.php'));
+    request.fields.addAll({
+      'accesskey': '90336',
+      'remove_from_favorites': '1',
+      'id': id,
+      'user_id ': '${profilController.infos['user_id']}',
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  ajouterFavoris(String id) async {
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('https://webadmin.koumishop.com/api-firebase/favorites.php'));
+    request.fields.addAll({
+      'accesskey': '90336',
+      'user_id': '${profilController.infos['user_id']}',
+      'product_id': id,
+      'add_to_favorites': '1'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   @override

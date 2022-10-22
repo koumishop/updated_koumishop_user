@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/accueil_controller.dart';
+import 'package:koumishop/pages/favorits/favorit.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
 import 'package:koumishop/pages/menu/menu_controller.dart';
 import 'package:koumishop/pages/menu/recherche_controller.dart';
@@ -71,7 +72,7 @@ class SplashtScreen extends StatelessWidget {
       //
       //Get.off(Commande()); //PaiementMobile
       Get.off(Accueil(true)); //PaiementMobile//true
-      //Get.off(Commande());
+      //Get.off(Favorit());
       //
       //Get.off(Inscription("815381693", "+243"));
       //

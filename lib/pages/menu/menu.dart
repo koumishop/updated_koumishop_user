@@ -85,7 +85,7 @@ class _Menu extends State<Menu> {
                     //produit["nombre"] = p["nombre"];
                     nombre.value = getNombreProduitByListePanier(produit["id"]);
                     //int.parse(produit["nombre"] ?? "0");
-                    print("... $produit");
+                    //print("... $produit");
                     // //print(
                     // //  "execution de truc... ${e["id"] == produit["id"]}");
                     // print("execution de truc... ${produit["name"]}");
@@ -859,7 +859,12 @@ class _Menu extends State<Menu> {
     int n = 0;
     panierController.listeDeElement.forEach((element) {
       //
-      if (element['id'] == id) {
+      //print("${element['id']}" == id);
+      //print("$id");
+      //print("$element");
+
+      if ("${element['product_id']}" == id) {
+        //print("-----------------------------------------------------1");
         n = int.parse("${element['nombre']}");
       }
     });

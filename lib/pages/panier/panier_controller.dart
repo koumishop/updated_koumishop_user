@@ -115,13 +115,14 @@ class MessageFinal extends StatelessWidget {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                          text: "Félicitation\n",
-                          children: [TextSpan(text: '${map['message']}\n')],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          )),
+                        text: "Félicitation\n",
+                        children: [TextSpan(text: '${map['message']}\n')],
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 10,

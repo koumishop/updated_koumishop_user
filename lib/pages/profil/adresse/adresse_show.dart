@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
-import 'package:koumishop/pages/profil/adresse/adresse_modification.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'nouvelle_adresse.dart';
 
 class AdresseShow extends StatefulWidget {
+  State st;
+  AdresseShow(this.st);
   @override
   State<StatefulWidget> createState() {
     return _AdresseShow();
@@ -104,6 +103,7 @@ class _AdresseShow extends State<AdresseShow> {
                       onTap: () {
                         panierController.adresse.value = adresse;
                         Get.back();
+                        widget.st.setState(() {});
                       },
                       child: SizedBox(
                         height: 120,
@@ -157,7 +157,11 @@ class _AdresseShow extends State<AdresseShow> {
                                               children: [
                                                 TextSpan(
                                                   text:
-                                                      "${adresse["landmark"]}",
+                                                      "${adresse["landmark"]}\n",
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      "${adresse["delivery_charges"]} Fc",
                                                 ),
                                               ],
                                             )

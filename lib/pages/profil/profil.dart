@@ -584,7 +584,7 @@ class _Profil extends State<Profil> {
                                                         .infos.value = {};
                                                     box.write("profile", null);
                                                     Timer(
-                                                        Duration(
+                                                        const Duration(
                                                             microseconds: 500),
                                                         () {
                                                       setState(() {
@@ -592,7 +592,7 @@ class _Profil extends State<Profil> {
                                                       });
                                                     });
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons.check,
                                                     color: Colors.green,
                                                   ),

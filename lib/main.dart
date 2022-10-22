@@ -22,7 +22,7 @@ void main() async {
   //
   registerNotification();
   //
-  runApp(MyApp());
+  runApp(Koimishope());
 }
 
 NotificationService ns = NotificationService();
@@ -88,10 +88,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {}
+class Koimishope extends StatelessWidget {
   //
-
+  const Koimishope({Key? key}) : super(key: key);
   //
   @override
   Widget build(BuildContext context) {

@@ -63,6 +63,9 @@ class _Panier extends State<Panier> {
   void initState() {
     //
     r = getTo1();
+    panierController.adresse = {}.obs;
+    panierController.dateL = {}.obs;
+    panierController.modeP = "".obs;
     //
     Timer(Duration(seconds: 1), () {
       loading();
@@ -528,7 +531,7 @@ class _Panier extends State<Panier> {
                                                     ),
                                                     Expanded(
                                                       flex: 1,
-                                                      child: AdresseShow(),
+                                                      child: AdresseShow(this),
                                                     ),
                                                   ],
                                                 ),
@@ -550,7 +553,7 @@ class _Panier extends State<Panier> {
                                                   .adresse.value['address'] ==
                                               null
                                           ? "Veuillez sélectionner l'adresse de livraison"
-                                          : "${panierController.adresse.value['landmark']} / ${panierController.adresse.value['pincode']} / ${panierController.adresse.value['city']}",
+                                          : "${panierController.adresse.value['address']} / ${panierController.adresse.value['pincode']} - ${panierController.adresse.value['city']}",
                                       style: TextStyle(fontSize: 11),
                                     ),
                                   ),
@@ -647,11 +650,13 @@ class _Panier extends State<Panier> {
                                     Icons.payment,
                                     color: Colors.red,
                                   ),
-                                  title: Text(
-                                    panierController.modeP.value == ""
-                                        ? "Veuillez sélectionner le mode de paiement"
-                                        : panierController.modeP.value,
-                                    style: const TextStyle(fontSize: 11),
+                                  title: Obx(
+                                    () => Text(
+                                      panierController.modeP.value == ""
+                                          ? "Veuillez sélectionner le mode de paiement"
+                                          : panierController.modeP.value,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
                                   ),
                                   trailing: const Icon(
                                     Icons.edit,
@@ -799,198 +804,204 @@ class _Panier extends State<Panier> {
                                   ),
                                 );
                                 //
-                                if (true) {
-                                  final fcmToken = await FirebaseMessaging
-                                      .instance
-                                      .getToken();
-                                  //
-                                  Get.dialog(
-                                    const Center(
-                                      child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: CircularProgressIndicator(
-                                          backgroundColor: Colors.red,
-                                          strokeWidth: 7,
-                                        ),
+                                final fcmToken =
+                                    await FirebaseMessaging.instance.getToken();
+                                //
+                                Get.dialog(
+                                  const Center(
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Colors.red,
+                                        strokeWidth: 7,
                                       ),
                                     ),
-                                  );
-                                  //
-                                  var headers = {
-                                    'Authorization':
-                                        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
-                                    'Cookie':
-                                        'PHPSESSID=3d673c385319a7c1570963dcb99ee8f8'
-                                  };
-                                  var request = http.MultipartRequest(
-                                      'POST',
-                                      Uri.parse(
-                                          'https://webadmin.koumishop.com/api-firebase/get-user-data.php'));
-                                  request.fields.addAll({
-                                    'get_user_data': '1',
-                                    'accesskey': '90336',
-                                    'user_id':
-                                        '${profilController.infos['user_id']}'
-                                  });
+                                  ),
+                                );
+                                //
+                                var headers = {
+                                  'Authorization':
+                                      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+                                  'Cookie':
+                                      'PHPSESSID=3d673c385319a7c1570963dcb99ee8f8'
+                                };
+                                var request = http.MultipartRequest(
+                                    'POST',
+                                    Uri.parse(
+                                        'https://webadmin.koumishop.com/api-firebase/get-user-data.php'));
+                                request.fields.addAll({
+                                  'get_user_data': '1',
+                                  'accesskey': '90336',
+                                  'user_id':
+                                      '${profilController.infos['user_id']}'
+                                });
 
-                                  request.headers.addAll(headers);
+                                request.headers.addAll(headers);
 
-                                  http.StreamedResponse response =
-                                      await request.send();
+                                http.StreamedResponse response =
+                                    await request.send();
 
-                                  if (response.statusCode == 200) {
-                                    String rep =
-                                        await response.stream.bytesToString();
-                                    Map map = json.decode(rep);
-                                    if ("${map['data'][0]['status']}"
-                                        .contains("1")) {
+                                if (response.statusCode == 200) {
+                                  String rep =
+                                      await response.stream.bytesToString();
+                                  Map map = json.decode(rep);
+                                  if ("${map['data'][0]['status']}"
+                                      .contains("1")) {
+                                    //
+                                    List l = [];
+                                    panierController.listeDeElement
+                                        .forEach((produit) {
                                       //
-                                      List l = [];
-                                      panierController.listeDeElement
-                                          .forEach((produit) {
-                                        //
-                                        l.add(produit['id']);
-                                      });
+                                      l.add(produit['id']);
+                                    });
+                                    //
+                                    List ll = [];
+                                    panierController.listeDeElement
+                                        .forEach((produit) {
                                       //
-                                      List ll = [];
-                                      panierController.listeDeElement
-                                          .forEach((produit) {
-                                        //
-                                        ll.add(produit['nombre']);
-                                      });
-                                      Map<String, String> commande = {};
-                                      if (panierController.modeP.value ==
-                                          "Paiement à la livraison") {
-                                        //
-                                        commande = {
-                                          'order_note': '',
-                                          'total': '${r.value}',
-                                          'quantity': '$ll',
-                                          'delivery_charge':
-                                              '${panierController.adresse.value['delivery_charges']}',
-                                          'user_id':
-                                              '${profilController.infos['user_id']}',
-                                          'final_total':
-                                              '${int.parse(panierController.adresse.value['delivery_charges']) + r.value}',
-                                          'address_id':
-                                              '${panierController.adresse.value['id']}',
-                                          'place_order': '1',
-                                          'wallet_balance': '0.0',
-                                          'delivery_time':
-                                              '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
-                                          'product_variant_id': '$l',
-                                          'payment_method':
-                                              panierController.modeP.value,
-                                          'accesskey': '90336'
-                                        };
-                                        //
-                                        // ignore: use_build_context_synchronously
-                                        panierController.paiement(
-                                            commande, context);
-                                        //
-                                      } else if (panierController.modeP.value
-                                              .split("/")
-                                              .first ==
-                                          "Mobile money") {
-                                        //https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF
-                                        commande = {
-                                          'order_note': '',
-                                          'total': '${r.value}',
-                                          'quantity': '$ll',
-                                          'delivery_charge':
-                                              '${panierController.adresse.value['delivery_charges']}',
-                                          'user_id':
-                                              '${profilController.infos['user_id']}',
-                                          'final_total': '$x',
-                                          //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
-                                          'address_id':
-                                              '${panierController.adresse.value['id']}',
-                                          'place_order': '1',
-                                          'wallet_balance': '0.0',
-                                          'delivery_time':
-                                              '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
-                                          'product_variant_id': '$l',
-                                          'payment_method': "mobile money",
-                                          'accesskey': '90336'
-                                        };
-                                        /*
+                                      ll.add(produit['nombre']);
+                                    });
+                                    Map<String, String> commande = {};
+                                    if (panierController.modeP.value ==
+                                        "Paiement à la livraison") {
+                                      //
+                                      Get.back();
+                                      commande = {
+                                        'order_note': '',
+                                        'total': '${r.value}',
+                                        'quantity': '$ll',
+                                        'delivery_charge':
+                                            '${panierController.adresse.value['delivery_charges']}',
+                                        'user_id':
+                                            '${profilController.infos['user_id']}',
+                                        'final_total':
+                                            '${int.parse(panierController.adresse.value['delivery_charges']) + r.value}',
+                                        'address_id':
+                                            '${panierController.adresse.value['id']}',
+                                        'place_order': '1',
+                                        'wallet_balance': '0.0',
+                                        'delivery_time':
+                                            '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
+                                        'product_variant_id': '$l',
+                                        'payment_method':
+                                            panierController.modeP.value,
+                                        'accesskey': '90336'
+                                      };
+                                      //
+                                      // ignore: use_build_context_synchronously
+                                      panierController.paiement(
+                                          commande, context);
+                                      //
+                                    } else if (panierController.modeP.value
+                                            .split("/")
+                                            .first ==
+                                        "Mobile money") {
+                                      //https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF
+                                      double t = double.parse(panierController
+                                              .adresse
+                                              .value['delivery_charges'] ??
+                                          "0");
+                                      //
+                                      var xc = (t +
+                                          r.value); //Je calcule le montant en franc...
+                                      //
+                                      Get.back();
+                                      commande = {
+                                        'order_note': '',
+                                        'total': '${r.value}',
+                                        'quantity': '$ll',
+                                        'delivery_charge':
+                                            '${panierController.adresse.value['delivery_charges']}',
+                                        'user_id':
+                                            '${profilController.infos['user_id']}',
+                                        'final_total':
+                                            '${panierController.modeP.value.split("/")[1] == "CDF" ? xc : x}',
+                                        //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
+                                        'address_id':
+                                            '${panierController.adresse.value['id']}',
+                                        'place_order': '1',
+                                        'wallet_balance': '0.0',
+                                        'delivery_time':
+                                            '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
+                                        'product_variant_id': '$l',
+                                        'payment_method': "mobile money",
+                                        'accesskey': '90336'
+                                      };
+                                      /*
                                         panierController
                                               .modeP.value
                                               .toLowerCase()
                                         */
-                                        //
-                                        sendPaiementMobile(
-                                            commande,
-                                            double.parse(
-                                                commande['final_total']!),
-                                            panierController.modeP.value
-                                                .split("/")[1],
-                                            false);
-                                        // Get.to(
-                                        //   PaiementMobile(
-                                        //     "https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF",
-                                        //     {},
-                                        //   ),
-                                        // );
-                                        // ignore: use_build_context_synchronously
-                                        //panierController.paiement_mobile(
-                                        //  commande, context);
-                                      } else {
-                                        //
-                                        commande = {
-                                          'order_note': '',
-                                          'total': '${r.value}',
-                                          'quantity': '$ll',
-                                          'delivery_charge':
-                                              '${panierController.adresse.value['delivery_charges']}',
-                                          'user_id':
-                                              '${profilController.infos['user_id']}',
-                                          'final_total': '$x',
-                                          //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
-                                          'address_id':
-                                              '${panierController.adresse.value['id']}',
-                                          'place_order': '1',
-                                          'wallet_balance': '0.0',
-                                          'delivery_time':
-                                              '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
-                                          'product_variant_id': '$l',
-                                          'payment_method': "visa",
-                                          'accesskey': '90336'
-                                        };
-                                        //
-
-                                        sendPaiementMobile(
-                                            commande,
-                                            double.parse(
-                                                commande['final_total']!),
-                                            "visa",
-                                            true);
-
-                                        // Get.to(
-                                        //   PaiementMobile(
-                                        //     "https://koumishop.com/pay/getAwayCard.php?phone=+243815824641&reference=1664189374560271&amount=20&description=payement par visa",
-                                        //     {},
-                                        //   ),
-                                        // );
-                                      }
+                                      //
+                                      sendPaiementMobile(
+                                          commande,
+                                          double.parse(
+                                              commande['final_total']!),
+                                          panierController.modeP.value
+                                              .split("/")[1],
+                                          false);
+                                      // Get.to(
+                                      //   PaiementMobile(
+                                      //     "https://koumishop.com/pay/?phone=+243815824641&reference=1664189374560281&amount=1000&currency=CDF",
+                                      //     {},
+                                      //   ),
+                                      // );
                                       // ignore: use_build_context_synchronously
+                                      //panierController.paiement_mobile(
+                                      //  commande, context);
                                     } else {
+                                      //
                                       Get.back();
-                                      Get.snackbar(
-                                        "Bloqué",
-                                        "Votre status est désactivé",
-                                        duration: const Duration(
-                                          seconds: 7,
-                                        ),
-                                      );
+                                      commande = {
+                                        'order_note': '',
+                                        'total': '${r.value}',
+                                        'quantity': '$ll',
+                                        'delivery_charge':
+                                            '${panierController.adresse.value['delivery_charges']}',
+                                        'user_id':
+                                            '${profilController.infos['user_id']}',
+                                        'final_total': '$x',
+                                        //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
+                                        'address_id':
+                                            '${panierController.adresse.value['id']}',
+                                        'place_order': '1',
+                                        'wallet_balance': '0.0',
+                                        'delivery_time':
+                                            '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
+                                        'product_variant_id': '$l',
+                                        'payment_method': "visa",
+                                        'accesskey': '90336'
+                                      };
+                                      //
+                                      sendPaiementMobile(
+                                          commande,
+                                          double.parse(
+                                              commande['final_total']!),
+                                          "visa",
+                                          true);
+
+                                      // Get.to(
+                                      //   PaiementMobile(
+                                      //     "https://koumishop.com/pay/getAwayCard.php?phone=+243815824641&reference=1664189374560271&amount=20&description=payement par visa",
+                                      //     {},
+                                      //   ),
+                                      // );
                                     }
+                                    // ignore: use_build_context_synchronously
                                   } else {
-                                    print(response.reasonPhrase);
+                                    Get.back();
+                                    Get.snackbar(
+                                      "Bloqué",
+                                      "Votre status est désactivé",
+                                      duration: const Duration(
+                                        seconds: 7,
+                                      ),
+                                    );
                                   }
                                 } else {
-                                  Get.snackbar(
-                                      "Téléphone", "Numéro de téléphone vide.");
+                                  Get.back();
+                                  print(response.reasonPhrase);
                                 }
                               }
                               //
@@ -1058,8 +1069,9 @@ class _Panier extends State<Panier> {
         ),
       );
     } else {
+      var uxx = getCode();
       request = http.MultipartRequest('POST', Uri.parse(//815824641
-          'https://koumishop.com/pay/?phone=+243$numero&reference=${getCode()}&amount=$montant&currency=$devise'));
+          'https://koumishop.com/pay/?phone=+243$numero&reference=$uxx&amount=$montant&currency=$devise'));
       //
       request.fields.addAll({
         'promotion': '1',
@@ -1076,6 +1088,8 @@ class _Panier extends State<Panier> {
         String rep = await response.stream.bytesToString();
         Map r = json.decode(rep);
         print(r);
+        print(
+            'https://koumishop.com/pay/?phone=+243$numero&reference=$uxx&amount=$montant&currency=$devise');
         if (r['error']) {
           Get.back();
           Get.snackbar("Erreur", "${r['data']['message']}");
@@ -1114,7 +1128,7 @@ class _Panier extends State<Panier> {
     panierController.listeDeElement.forEach((produit) {
       //
       double prix = double.parse(produit['variants'][0]['price']);
-
+      print(produit);
       //
       if (produit['variants'][0]['discounted_price'] == "" ||
           produit['variants'][0]['discounted_price'] == "0") {

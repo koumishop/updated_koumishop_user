@@ -594,7 +594,7 @@ class _RefaireCommande extends State<RefaireCommande> {
                                                     ),
                                                     Expanded(
                                                       flex: 1,
-                                                      child: AdresseShow(),
+                                                      child: AdresseShow(this),
                                                     ),
                                                   ],
                                                 ),

@@ -119,6 +119,7 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
       Map r = jsonDecode(rep);
       if ("${r['status']}" == "1") {
         //
+        Get.back();
         Get.snackbar("Erreur", "${r['message']}");
       } else {
         //
