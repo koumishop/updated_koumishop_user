@@ -57,37 +57,40 @@ class _Details extends State<Details> {
     try {
       produit = widget.produit;
       //
+      isLike(produit['id']);
+      //
       Timer(Duration(seconds: 1), () {
         List lf = box.read("favoris") ?? [];
-        print(lf.length);
+        //print(lf.length);
         // for (var i = 0; i < favoritController.listeDeElement.length; i++) {
         //   if(favoritController.listeDeElement[i]['id'] == ){
         //     contient.value = true;
         //   }
         // }
         //contient.value = favoritController.listeDeElement.contains(produit);
-        print(contient.value);
+        //print(contient.value);
         for (var i = 0; i < lf.length; i++) {
-          print(lf[i]['id']);
-          print(produit["id"]);
-          print(lf[i]['id'] == produit["id"]);
+          //print(lf[i]['id']);
+          //print(produit["id"]);
+          //print(lf[i]['id'] == produit["id"]);
 
           if (lf[i]['id'] == produit["id"]) {
-            contient.value = true;
+            //contient.value = true;
           }
         }
         //
-        print(contient.value);
+        //print(contient.value);
         //panierController.listeDeElement.addAll(box.read('paniers') ?? []);
       });
     } catch (e) {
-      print(e);
+      //print(e);
     }
     //
     //print("la liste: ${panierController.listeDeElement.value}");
-    //paniers.add(produit);
+    print(widget.produit);
     //box.write('paniers', paniers);
-    nombre.value = int.parse(widget.produit['nombre'] ?? "0");
+    nombre.value = nombre.value = getNombreProduitByListePanier(produit["id"]);
+    //int.parse(widget.produit['nombre'] ?? "0");
     //
     for (var i = 0; i < panierController.listeDeElement.length; i++) {
       Map e = panierController.listeDeElement.elementAt(i);
@@ -194,11 +197,11 @@ class _Details extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: SizedBox(),
                               ),
                               Expanded(
-                                flex: 5,
+                                flex: 6,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -225,6 +228,8 @@ class _Details extends State<Details> {
                                                     .listeDeElement[widget.idx]
                                                 ['nombre'] = "${nombre.value}";
                                             //
+                                            bool v = false;
+                                            //
                                             for (var i = 0;
                                                 i <
                                                     panierController
@@ -237,9 +242,20 @@ class _Details extends State<Details> {
                                                 panierController
                                                         .listeDeElement[i] =
                                                     produit;
-                                                break;
+                                                v = true;
                                               }
                                             }
+                                            if (!v) {
+                                              panierController.listeDeElement
+                                                  .add(produit);
+                                            }
+                                            panierController
+                                                    .listeDeElement.value =
+                                                panierController.listeDeElement
+                                                    .toSet()
+                                                    .toList()
+                                                    .obs;
+
                                             //
                                             for (int x = 0;
                                                 x <
@@ -342,16 +358,7 @@ class _Details extends State<Details> {
                                               //box.write('${produit["id"]}',
                                               //  jsonEncode(produit));
                                               //bool v = false;
-
-                                              panierController.listeDeElement
-                                                  .add(produit);
-                                              panierController
-                                                      .listeDeElement.value =
-                                                  panierController
-                                                      .listeDeElement
-                                                      .toSet()
-                                                      .toList()
-                                                      .obs;
+                                              bool v = false;
                                               //
                                               for (var i = 0;
                                                   i <
@@ -366,9 +373,23 @@ class _Details extends State<Details> {
                                                   panierController
                                                           .listeDeElement[i] =
                                                       produit;
-                                                  break;
+                                                  v = true;
                                                 }
                                               }
+                                              if (!v) {
+                                                panierController.listeDeElement
+                                                    .add(produit);
+                                              }
+
+                                              panierController
+                                                      .listeDeElement.value =
+                                                  panierController
+                                                      .listeDeElement
+                                                      .toSet()
+                                                      .toList()
+                                                      .obs;
+                                              //
+
                                               //
 
                                               for (int x = 0;
@@ -453,7 +474,7 @@ class _Details extends State<Details> {
                                 ),
                               ),
                               const Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: SizedBox(),
                               )
                             ],
@@ -996,7 +1017,7 @@ class _Details extends State<Details> {
             ),
             onPressed: () {
               Get.back();
-              Get.to(Panier());
+              Get.to(Panier(this));
             },
             child: Container(
               width: Get.size.width / 1.2,
@@ -1057,7 +1078,7 @@ class _Details extends State<Details> {
     request.fields.addAll({
       'accesskey': '90336',
       'remove_from_favorites': '1',
-      'id': id,
+      'product_id': id,
       'user_id ': '${profilController.infos['user_id']}',
     });
 
@@ -1106,5 +1127,67 @@ class _Details extends State<Details> {
     });
     //
     super.dispose();
+  }
+
+  isLike(String id) async {
+    //contient.value
+    //
+    var headers = {
+      'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+      'Cookie': 'PHPSESSID=12aa9d01877bc697e052e8483dd51afb'
+    };
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://webadmin.koumishop.com/api-firebase/get-products.php'));
+    request.fields.addAll({
+      'accesskey': '90336',
+      'subcategory_id': '7',
+      'offset': '0',
+      'limit': '10',
+      'get_all_products': "1",
+      'user_id': '${profilController.infos['user_id']}',
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rep = await response.stream.bytesToString();
+      print("la reponse du serveur: $rep");
+      Map r = jsonDecode(rep);
+      if (!r["error"]) {
+        List l = r["data"]; //[0]["is_favorite"];
+        l.forEach((element) {
+          if (element['id'] == id && element['is_favorite'] == true) {
+            contient.value = true;
+          }
+        });
+      }
+      print(r);
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  int getNombreProduitByListePanier(String id) {
+    //
+    int n = 0;
+    bool v = false;
+    panierController.listeDeElement.forEach((element) {
+      //
+      print("$element");
+      //
+      if ("${element['id']}" == id) {
+        print("${element['product_id']} ----------------------------- $id");
+        n = int.parse("${element['nombre']}");
+        v = true;
+      }
+    });
+
+    if (v) {}
+    return n;
   }
 }

@@ -120,7 +120,7 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
       if ("${r['status']}" == "1") {
         //
         Get.back();
-        Get.snackbar("Erreur", "${r['message']}");
+        Get.snackbar("Commande", "${r['message']}");
       } else {
         //
         PanierController panierController = Get.find();
@@ -142,208 +142,216 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red, // Status bar color
-      child: SafeArea(
-        left: false,
-        right: false,
-        bottom: false,
-        child: Scaffold(
-          // appBar: AppBar(
-          //     leading: IconButton(
-          //   onPressed: () {
-          //     //
-          //     Get.back();
-          //     //
-          //   },
-          //   icon: Icon(
-          //     Icons.arrow_back,
-          //     color: Colors.black,
-          //   ),
-          // )),
-          backgroundColor: Color.fromARGB(255, 255, 232, 235),
-          //appBar: AppBar(),
-          body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromRGBO(255, 137, 147, 1),
-                  Color(0xFFFFFFFF),
-                ],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 1.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          //
-                          Get.back();
-                          Get.back();
-                          //
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          width: 100,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Icon(
-                                Icons.arrow_back_ios,
-                                size: 20,
-                                color: Colors.red,
-                              ),
-                              Text(
-                                "Panier",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+    return WillPopScope(
+      onWillPop: () {
+        Get.back();
+        //contextApp!.
+        //stateMenu!.setState(() {});
+        return Future.value(false);
+      },
+      child: Container(
+        color: Colors.red, // Status bar color
+        child: SafeArea(
+          left: false,
+          right: false,
+          bottom: false,
+          child: Scaffold(
+            // appBar: AppBar(
+            //     leading: IconButton(
+            //   onPressed: () {
+            //     //
+            //     Get.back();
+            //     //
+            //   },
+            //   icon: Icon(
+            //     Icons.arrow_back,
+            //     color: Colors.black,
+            //   ),
+            // )),
+            backgroundColor: Color.fromARGB(255, 255, 232, 235),
+            //appBar: AppBar(),
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(255, 137, 147, 1),
+                    Color(0xFFFFFFFF),
+                  ],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(1.0, 1.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "La vérification de votre paiement se fera dans ",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+              ),
+              child: Column(
+                children: [
+                  // SizedBox(
+                  //   height: 50,
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     children: [
+                  //       InkWell(
+                  //         onTap: () {
+                  //           //
+                  //           Get.back();
+                  //           //Get.back();
+                  //           //
+                  //         },
+                  //         child: Container(
+                  //           padding: const EdgeInsets.only(left: 10),
+                  //           width: 100,
+                  //           height: 40,
+                  //           alignment: Alignment.center,
+                  //           child: Row(
+                  //             mainAxisAlignment: MainAxisAlignment.start,
+                  //             children: const [
+                  //               Icon(
+                  //                 Icons.arrow_back_ios,
+                  //                 size: 20,
+                  //                 color: Colors.red,
+                  //               ),
+                  //               Text(
+                  //                 "Panier",
+                  //                 style: TextStyle(
+                  //                   fontSize: 15,
+                  //                   color: Colors.red,
+                  //                   fontWeight: FontWeight.w500,
+                  //                 ),
+                  //               )
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "La vérification de votre paiement se fera dans ",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Obx(
-                          () => Text(
-                            "${temps.value} s",
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Obx(
+                            () => Text(
+                              "${temps.value} s",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Mais vous pouvez aussi une foi le paiement éffectué lancer la vérification",
                             style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.red,
+                          ),
+                          overlayColor: MaterialStateProperty.all(
+                            Colors.red.shade100,
+                          ),
+                        ),
+                        onPressed: () async {
+                          //HYYNbQAs1OOt243815824641
+                          sendTest();
+                          // var headers = {
+                          //   'Authorization':
+                          //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+                          // };
+                          // //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
+                          // var request = http.MultipartRequest(
+                          //     'POST', Uri.parse(widget.lien));
+                          // request.fields.addAll({
+                          //   'promotion': '1',
+                          //   'accesskey': '90336',
+                          //   'mobile': '813999922',
+                          //   ' type': 'verify-user'
+                          // });
+
+                          // request.headers.addAll(headers);
+
+                          // http.StreamedResponse response = await request.send();
+
+                          // if (response.statusCode == 200) {
+                          //   String rep = await response.stream.bytesToString();
+                          //   Map r = jsonDecode(rep);
+                          //   if ("${r['status']}" == "1") {
+                          //     //
+                          //     Get.snackbar("Erreur", "${r['message']}");
+                          //   } else {
+                          //     //
+                          //     PanierController panierController = Get.find();
+                          //     //
+                          //     if (widget.visa) {
+                          //       // ignore: use_build_context_synchronously
+                          //       panierController.paiement(
+                          //           widget.commande, context);
+                          //     } else {
+                          //       // ignore: use_build_context_synchronously
+                          //       panierController.paiement(
+                          //           widget.commande, context);
+                          //     }
+                          //     //Get.snackbar("Erreur", "${r['message']}");
+                          //   }
+                          //   print(rep);
+                          // } else {
+                          //   print(response.reasonPhrase);
+                          // }
+                        },
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "Vérification",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
-                        Text(
-                          "Mais vous pouvez aussi une foi le paiement éffectué lancer la vérification",
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.red,
-                        ),
-                        overlayColor: MaterialStateProperty.all(
-                          Colors.red.shade100,
-                        ),
-                      ),
-                      onPressed: () async {
-                        //HYYNbQAs1OOt243815824641
-                        sendTest();
-                        // var headers = {
-                        //   'Authorization':
-                        //       'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-                        // };
-                        // //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
-                        // var request = http.MultipartRequest(
-                        //     'POST', Uri.parse(widget.lien));
-                        // request.fields.addAll({
-                        //   'promotion': '1',
-                        //   'accesskey': '90336',
-                        //   'mobile': '813999922',
-                        //   ' type': 'verify-user'
-                        // });
-
-                        // request.headers.addAll(headers);
-
-                        // http.StreamedResponse response = await request.send();
-
-                        // if (response.statusCode == 200) {
-                        //   String rep = await response.stream.bytesToString();
-                        //   Map r = jsonDecode(rep);
-                        //   if ("${r['status']}" == "1") {
-                        //     //
-                        //     Get.snackbar("Erreur", "${r['message']}");
-                        //   } else {
-                        //     //
-                        //     PanierController panierController = Get.find();
-                        //     //
-                        //     if (widget.visa) {
-                        //       // ignore: use_build_context_synchronously
-                        //       panierController.paiement(
-                        //           widget.commande, context);
-                        //     } else {
-                        //       // ignore: use_build_context_synchronously
-                        //       panierController.paiement(
-                        //           widget.commande, context);
-                        //     }
-                        //     //Get.snackbar("Erreur", "${r['message']}");
-                        //   }
-                        //   print(rep);
-                        // } else {
-                        //   print(response.reasonPhrase);
-                        // }
-                      },
-                      child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "Vérification",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

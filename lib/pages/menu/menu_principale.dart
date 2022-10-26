@@ -215,13 +215,13 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 0),
                               child: InkWell(
-                                onLongPress: () => Get.to(Panier()),
+                                //onLongPress: () => Get.to(Panier(this)),
                                 onTap: () {
                                   //
                                   //print(
                                   //  "Salut........................");
                                   //
-                                  Get.to(Panier());
+                                  Get.to(Panier(this));
                                   //Get.to(Panier());
                                   //
                                 },

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:koumishop/main.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,9 +44,20 @@ class _AdresseShow extends State<AdresseShow> {
     if (response.statusCode == 200) {
       String rep = await response.stream.bytesToString();
       print("reponse pour la supp: $rep");
-      Get.back();
-      Get.back();
-      Get.snackbar("Succès", "Adresse supprimé");
+      if (panierController.adresse['id'] == id) {
+        panierController.adresse = {}.obs;
+        print("-------------------------------------1");
+
+        Get.back();
+        Get.back();
+        statePanier!.setState(() {});
+        Get.snackbar("Succès", "Adresse supprimé");
+      } else {
+        print("-------------------------------------2");
+        Get.back();
+        Get.back();
+        Get.snackbar("Succès", "Adresse supprimé");
+      }
     } else {
       //print(response.reasonPhrase);
       Get.snackbar("Erreur", response.reasonPhrase!);
@@ -105,8 +117,11 @@ class _AdresseShow extends State<AdresseShow> {
                         Get.back();
                         widget.st.setState(() {});
                       },
-                      child: SizedBox(
-                        height: 120,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5,
+                        ),
+                        height: 130,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -135,38 +150,59 @@ class _AdresseShow extends State<AdresseShow> {
                                       // onTap: () {
 
                                       // },
-                                      title: Text.rich(
-                                        TextSpan(
-                                          text: "",
-                                          children: [
-                                            ////${adresse["landmark"]}
-                                            TextSpan(
-                                                text:
-                                                    "${adresse["pincode"]} / ${adresse["city"]}")
-                                          ],
-                                        ),
+                                      title: Text(
+                                        "${adresse["pincode"]} / ${adresse["city"]}",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      subtitle: Text.rich(
-                                        TextSpan(
-                                          text: "",
-                                          children: [
-                                            ////
-                                            TextSpan(
-                                              text:
-                                                  "${adresse["address"]} / ${adresse["city"]} \n",
-                                              children: [
-                                                TextSpan(
-                                                  text:
-                                                      "${adresse["landmark"]}\n",
+                                      subtitle: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: Get.size.width / 2.5,
+                                                child: Text(
+                                                  "${adresse["address"]} / ${adresse["city"]}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                                TextSpan(
-                                                  text:
-                                                      "${adresse["delivery_charges"]} Fc",
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                                              )
+                                            ],
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              "${adresse["landmark"]}",
+                                              overflow: TextOverflow.clip,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              "${adresse["delivery_charges"]} Fc",
+                                              overflow: TextOverflow.clip,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       trailing: IconButton(
                                         onPressed: () {
@@ -286,38 +322,57 @@ class _AdresseShow extends State<AdresseShow> {
               tileMode: TileMode.clamp,
             ),
           ),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            // ignore: sort_child_properties_last
-            child: FutureBuilder(
-              future: getFaq(),
-              builder: (context, t) {
-                if (t.hasData) {
-                  return t.data as Widget;
-                } else if (t.hasError) {
-                  return Container();
-                }
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade100,
-                  direction: ShimmerDirection.ttb,
-                  child: Center(
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: CircularProgressIndicator(),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      //
+                      Get.back();
+                    },
+                    icon: Icon(Icons.arrow_back_ios),
+                  )
+                ],
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  // ignore: sort_child_properties_last
+                  child: FutureBuilder(
+                    future: getFaq(),
+                    builder: (context, t) {
+                      if (t.hasData) {
+                        return t.data as Widget;
+                      } else if (t.hasError) {
+                        return Container();
+                      }
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        direction: ShimmerDirection.ttb,
+                        child: Center(
+                          child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  decoration: const BoxDecoration(
+                    //color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
                     ),
                   ),
-                );
-              },
-            ),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-            ),
+                ),
+              )
+            ],
           ),
         ),
         floatingActionButton: FloatingActionButton(

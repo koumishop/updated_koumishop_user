@@ -174,7 +174,7 @@ class _Recherche extends State<Recherche> {
                                 children: List.generate(state!.length, (index) {
                                   //print('truc:--------');
                                   Map produit = state[index];
-
+                                  RxString epuise = "epuise".obs;
                                   RxInt nombre = 0.obs;
                                   //Map e = menuController.listeProduit.elementAt(i);
                                   //print("le produit: $e");
@@ -559,64 +559,82 @@ class _Recherche extends State<Recherche> {
                                               children: [
                                                 InkWell(
                                                   onTap: () {
-                                                    if (panierController
-                                                        .listeDeElement
-                                                        .isNotEmpty) {
-                                                      menuController
-                                                          .showMiniPanier
-                                                          .value = true;
-                                                    }
-                                                    if (nombre.value > 0) {
-                                                      nombre.value--;
-                                                      produit["nombre"] =
-                                                          "${nombre.value}";
-                                                      //
-                                                      for (var i = 0;
-                                                          i <
-                                                              panierController
-                                                                  .listeDeElement
-                                                                  .length;
-                                                          i++) {
-                                                        if (panierController
-                                                                    .listeDeElement[
-                                                                i]['id'] ==
-                                                            produit["id"]) {
-                                                          panierController
-                                                                  .listeDeElement[
-                                                              i] = produit;
-                                                          break;
-                                                        }
+                                                    if (int.parse(produit[
+                                                                    'variants']
+                                                                [0]['stock']) <=
+                                                            0 ||
+                                                        produit['variants'][0]
+                                                                ['serve_for'] ==
+                                                            "Sold Out") {
+                                                      Get.snackbar("Oups!",
+                                                          "Le stock est épuisé");
+                                                    } else {
+                                                      if (panierController
+                                                          .listeDeElement
+                                                          .isNotEmpty) {
+                                                        menuController
+                                                            .showMiniPanier
+                                                            .value = true;
                                                       }
-                                                      panierController
-                                                          .listeDeElement
-                                                          .add(produit);
-                                                      panierController
-                                                              .listeDeElement
-                                                              .value =
+                                                      if (nombre.value > 0) {
+                                                        nombre.value--;
+                                                        produit["nombre"] =
+                                                            "${nombre.value}";
+                                                        //
+                                                        bool v = false;
+                                                        //
+                                                        for (var i = 0;
+                                                            i <
+                                                                panierController
+                                                                    .listeDeElement
+                                                                    .length;
+                                                            i++) {
+                                                          if (panierController
+                                                                      .listeDeElement[
+                                                                  i]['id'] ==
+                                                              produit["id"]) {
+                                                            panierController
+                                                                    .listeDeElement[
+                                                                i] = produit;
+                                                            v = true;
+                                                          }
+                                                        }
+                                                        if (!v) {
                                                           panierController
                                                               .listeDeElement
-                                                              .toSet()
-                                                              .toList()
-                                                              .obs;
-                                                    }
-                                                    if (nombre.value == 0) {
-                                                      panierController
-                                                          .listeDeElement
-                                                          .remove(produit);
-                                                      //
-                                                      var box = GetStorage();
-                                                      box.write(
-                                                          "panier",
-                                                          panierController
-                                                              .listeDeElement);
-                                                      // box.write(
-                                                      //     'paniers',
-                                                      //     panierController
-                                                      //         .listeDeElement);
-                                                      //panierController.listeDeElement
-                                                      //  .clear();
-                                                      //panierController
-                                                      //  .listeDeElement.value = paniers;
+                                                              .add(produit);
+                                                        }
+                                                        panierController
+                                                            .listeDeElement
+                                                            .add(produit);
+                                                        panierController
+                                                                .listeDeElement
+                                                                .value =
+                                                            panierController
+                                                                .listeDeElement
+                                                                .toSet()
+                                                                .toList()
+                                                                .obs;
+                                                      }
+                                                      if (nombre.value == 0) {
+                                                        panierController
+                                                            .listeDeElement
+                                                            .remove(produit);
+                                                        //
+                                                        var box = GetStorage();
+                                                        box.write(
+                                                            "panier",
+                                                            panierController
+                                                                .listeDeElement);
+                                                        // box.write(
+                                                        //     'paniers',
+                                                        //     panierController
+                                                        //         .listeDeElement);
+                                                        //panierController.listeDeElement
+                                                        //  .clear();
+                                                        //panierController
+                                                        //  .listeDeElement.value = paniers;
+                                                      }
                                                     }
                                                   },
                                                   child: Container(
@@ -643,29 +661,28 @@ class _Recherche extends State<Recherche> {
                                                 ),
                                                 Obx(
                                                   () => (int.parse(produit[
-                                                                      'variants']
-                                                                  [
-                                                                  0]['stock']) <
+                                                                      'variants'][0]
+                                                                  ['stock']) <=
                                                               0 ||
                                                           produit['variants'][0]
                                                                   [
                                                                   'serve_for'] ==
                                                               "Sold Out")
-                                                      ? Text("${nombre.value}")
-                                                      : Text(
-                                                          " epuise ",
+                                                      ? Text(
+                                                          " $epuise ",
                                                           style: TextStyle(
                                                             fontSize: 6,
                                                             color: Colors
                                                                 .red.shade700,
                                                           ),
-                                                        ),
+                                                        )
+                                                      : Text("${nombre.value}"),
                                                 ),
                                                 InkWell(
                                                   onTap: () {
                                                     if (int.parse(produit[
                                                                     'variants']
-                                                                [0]['stock']) <
+                                                                [0]['stock']) <=
                                                             0 ||
                                                         produit['variants'][0]
                                                                 ['serve_for'] ==
@@ -686,10 +703,11 @@ class _Recherche extends State<Recherche> {
                                                         nombre.value++;
                                                         produit["nombre"] =
                                                             "${nombre.value}";
+                                                        print(nombre);
                                                         //box.write('${produit["id"]}',
                                                         //  jsonEncode(produit));
                                                         bool v = false;
-                                                        //panierController.listeDeElement.
+                                                        //
                                                         for (var i = 0;
                                                             i <
                                                                 panierController
@@ -703,12 +721,14 @@ class _Recherche extends State<Recherche> {
                                                             panierController
                                                                     .listeDeElement[
                                                                 i] = produit;
-                                                            break;
+                                                            v = true;
                                                           }
                                                         }
-                                                        panierController
-                                                            .listeDeElement
-                                                            .add(produit);
+                                                        if (!v) {
+                                                          panierController
+                                                              .listeDeElement
+                                                              .add(produit);
+                                                        }
                                                         panierController
                                                                 .listeDeElement
                                                                 .value =

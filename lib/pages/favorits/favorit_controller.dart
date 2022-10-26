@@ -6,7 +6,7 @@ import 'package:koumishop/pages/profil/profil_controller.dart';
 class FavoritController extends GetxController with StateMixin<List> {
   RxList listeDeElement = [].obs;
   //
-  checkProduits(String ps, List listeE) async {
+  checkProduits() async {
     //
     ProfilController profilController = Get.find();
     //
@@ -64,7 +64,8 @@ class FavoritController extends GetxController with StateMixin<List> {
         // }
         //
         //
-        print('liste3: $listeDeElement');
+        listeDeElement.forEach(((e) => print('liste3: $e')));
+        //
         change(
           listeDeElement,
           status: RxStatus.success(),

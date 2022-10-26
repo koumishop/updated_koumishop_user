@@ -12,6 +12,7 @@ import 'favorit_controller.dart';
 
 class Favorit extends GetView<FavoritController> {
   FavoritController favoritController = Get.find();
+  //ProfilController profilController = Get.find();
   //favoritController
   RxBool load = true.obs;
   //
@@ -92,20 +93,7 @@ class Favorit extends GetView<FavoritController> {
 
   loading() async {
     //
-    //setState(() {
-    listeE = box.read("favoris") ?? [];
-    listeE = listeE.toSet().toList();
-    //
-    List<int> lcheck = [];
-    //checkProduits();
-    for (var i = 0; i < listeE.length; i++) {
-      lcheck.add(int.parse(listeE[i]['id']));
-    }
-    String t = jsonEncode(lcheck);
-    //print(t);
-    controller.checkProduits(t.substring(1, t.length - 1), listeE);
-    //checkProduits(t.substring(1, t.length - 1));
-    //});
+    controller.checkProduits();
     //
   }
 
@@ -150,11 +138,6 @@ class Favorit extends GetView<FavoritController> {
                         onTap: () {
                           index.value = 0;
                           //
-                          controllerP!.animateToPage(
-                            0,
-                            duration: const Duration(seconds: 1),
-                            curve: Curves.ease,
-                          );
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
@@ -170,7 +153,7 @@ class Favorit extends GetView<FavoritController> {
                                 color: Colors.red,
                               ),
                               Text(
-                                "Favoris",
+                                "Accueil",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
@@ -198,10 +181,12 @@ class Favorit extends GetView<FavoritController> {
                             (index) {
                               Map produit = controller.listeDeElement[index];
                               //
+                              String idR = produit["product_id"];
+                              produit["id"] = produit["product_id"];
                               //RxInt nombre = 0.obs;
-                              RxInt nombre = getNombreProduitByListePanier(
-                                      produit["product_id"])
-                                  .obs;
+                              RxInt nombre =
+                                  getNombreProduitByListePanier(produit["id"])
+                                      .obs;
                               //RxInt(int.parse(
                               //  controller.listeDeElement[index]["nombre"]));
                               RxInt p = 0.obs;
@@ -235,11 +220,15 @@ class Favorit extends GetView<FavoritController> {
                               }
                               //
                               p.value = prix.round();
+                              RxString epuise = "epuise".obs;
                               //
                               return Card(
                                 elevation: 1,
                                 child: Container(
-                                  margin: const EdgeInsets.only(bottom: 15),
+                                  margin: const EdgeInsets.only(
+                                    bottom: 15,
+                                    top: 5,
+                                  ),
                                   height: 115,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -294,12 +283,12 @@ class Favorit extends GetView<FavoritController> {
                                                     flex: 1,
                                                     child: Text(
                                                       "${produit['name']}",
-                                                      maxLines: 2,
+                                                      maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 20,
+                                                        fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
@@ -384,246 +373,6 @@ class Favorit extends GetView<FavoritController> {
                                                 flex: 5,
                                                 child: Container(
                                                   alignment: Alignment.center,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const Expanded(
-                                                        flex: 1,
-                                                        child: SizedBox(),
-                                                      ),
-                                                      Expanded(
-                                                        flex: 5,
-                                                        child: Container(
-                                                          //width: 100,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                          ),
-                                                          child: int.parse(produit[
-                                                                          'variants'][0]
-                                                                      [
-                                                                      'stock']) >
-                                                                  0
-                                                              ? Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        if (int.parse(produit['variants'][0]['stock']) <=
-                                                                                0 ||
-                                                                            produit['variants'][0]['serve_for'] ==
-                                                                                "Sold Out") {
-                                                                          Get.snackbar(
-                                                                              "Oups!",
-                                                                              "Le stock est épuisé");
-                                                                        } else {
-                                                                          if (panierController
-                                                                              .listeDeElement
-                                                                              .isNotEmpty) {
-                                                                            menuController.showMiniPanier.value =
-                                                                                true;
-                                                                          }
-                                                                          if (nombre.value >
-                                                                              0) {
-                                                                            nombre.value--;
-                                                                            produit["nombre"] =
-                                                                                "${nombre.value}";
-                                                                            //
-                                                                            for (var i = 0;
-                                                                                i < panierController.listeDeElement.length;
-                                                                                i++) {
-                                                                              if (panierController.listeDeElement[i]['id'] == produit["id"]) {
-                                                                                panierController.listeDeElement[i] = produit;
-                                                                                break;
-                                                                              }
-                                                                            }
-                                                                            panierController.listeDeElement.add(produit);
-                                                                            panierController.listeDeElement.value =
-                                                                                panierController.listeDeElement.toSet().toList().obs;
-                                                                          }
-                                                                          if (nombre.value ==
-                                                                              0) {
-                                                                            panierController.listeDeElement.remove(produit);
-                                                                            //
-                                                                            var box =
-                                                                                GetStorage();
-                                                                            box.write("panier",
-                                                                                panierController.listeDeElement);
-                                                                            // box.write(
-                                                                            //     'paniers',
-                                                                            //     panierController
-                                                                            //         .listeDeElement);
-                                                                            //panierController.listeDeElement
-                                                                            //  .clear();
-                                                                            //panierController
-                                                                            //  .listeDeElement.value = paniers;
-                                                                          }
-                                                                        }
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            28,
-                                                                        width:
-                                                                            28,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(
-                                                                            14,
-                                                                          ),
-                                                                          border:
-                                                                              Border.all(
-                                                                            color:
-                                                                                Colors.grey.shade300,
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            const Icon(
-                                                                          Icons
-                                                                              .remove,
-                                                                          size:
-                                                                              19,
-                                                                          color:
-                                                                              Colors.red,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Obx(
-                                                                      () => (int.parse(produit['variants'][0]['stock']) <= 0 ||
-                                                                              produit['variants'][0]['serve_for'] ==
-                                                                                  "Sold Out")
-                                                                          ? Text(
-                                                                              " epuise ",
-                                                                              style: TextStyle(
-                                                                                fontSize: 6,
-                                                                                color: Colors.red.shade700,
-                                                                              ),
-                                                                            )
-                                                                          : Text(
-                                                                              "${nombre.value}"),
-                                                                    ),
-                                                                    InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        if (int.parse(produit['variants'][0]['stock']) <=
-                                                                                0 ||
-                                                                            produit['variants'][0]['serve_for'] ==
-                                                                                "Sold Out") {
-                                                                          Get.snackbar(
-                                                                              "Oups!",
-                                                                              "Le stock est épuisé");
-                                                                        } else {
-                                                                          if (int.parse(produit['variants'][0]['stock']) <=
-                                                                              nombre.value) {
-                                                                            Get.snackbar("Oups!",
-                                                                                "Le stock est épuisé");
-                                                                          } else {
-                                                                            menuController.showMiniPanier.value =
-                                                                                true;
-                                                                            nombre.value++;
-                                                                            produit["nombre"] =
-                                                                                "${nombre.value}";
-                                                                            //box.write('${produit["id"]}',
-                                                                            //  jsonEncode(produit));
-                                                                            bool
-                                                                                v =
-                                                                                false;
-                                                                            //panierController.listeDeElement.
-                                                                            for (var i = 0;
-                                                                                i < panierController.listeDeElement.length;
-                                                                                i++) {
-                                                                              if (panierController.listeDeElement[i]['id'] == produit["id"]) {
-                                                                                panierController.listeDeElement[i] = produit;
-                                                                                break;
-                                                                              }
-                                                                            }
-                                                                            panierController.listeDeElement.add(produit);
-                                                                            panierController.listeDeElement.value =
-                                                                                panierController.listeDeElement.toSet().toList().obs;
-                                                                            //
-                                                                            var box =
-                                                                                GetStorage();
-                                                                            box.write("panier",
-                                                                                panierController.listeDeElement);
-                                                                            // panierController.listeDeElement
-                                                                            //     .forEach((element) {});
-                                                                            //
-                                                                            // if (!v) {
-                                                                            //   panierController.listeDeElement
-                                                                            //       .add('${produit["id"]}');
-                                                                            //   box.write(
-                                                                            //       'paniers',
-                                                                            //       panierController
-                                                                            //           .listeDeElement.value);
-                                                                            //   //panierController.listeDeElement
-                                                                            //   //  .clear();
-                                                                            //   //panierController
-                                                                            //   //  .listeDeElement.value = paniers;
-                                                                            // }
-                                                                          }
-                                                                        }
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            28,
-                                                                        width:
-                                                                            28,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color: Colors
-                                                                              .red
-                                                                              .shade700,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(
-                                                                            14,
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            const Icon(
-                                                                          Icons
-                                                                              .add,
-                                                                          size:
-                                                                              20,
-                                                                          color:
-                                                                              Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              : Text("Epuisé"),
-                                                        ),
-                                                      ),
-                                                      const Expanded(
-                                                        flex: 1,
-                                                        child: SizedBox(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 4,
-                                                child: Container(
-                                                  alignment: Alignment.center,
                                                   child: Obx(
                                                     () => Text(
                                                       "FC ${p.value * (nombre.value == 0 ? 1 : nombre.value)}",
@@ -631,12 +380,323 @@ class Favorit extends GetView<FavoritController> {
                                                       style: TextStyle(
                                                         color:
                                                             Colors.red.shade700,
-                                                        fontSize: 15,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 4,
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(0),
+                                                      width: 100,
+                                                      height: 30,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors.red),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                      child:
+                                                          // int.parse(produit[
+                                                          //                 'variants']
+                                                          //             [0]['stock']) >
+                                                          //         0
+                                                          //     ?
+                                                          Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () {
+                                                              if (int.parse(produit['variants']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'stock']) <=
+                                                                      0 ||
+                                                                  produit['variants']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'serve_for'] ==
+                                                                      "Sold Out") {
+                                                                Get.snackbar(
+                                                                    "Oups!",
+                                                                    "Le stock est épuisé");
+                                                              } else {
+                                                                if (panierController
+                                                                    .listeDeElement
+                                                                    .isNotEmpty) {
+                                                                  menuController
+                                                                      .showMiniPanier
+                                                                      .value = true;
+                                                                }
+                                                                if (nombre
+                                                                        .value >
+                                                                    0) {
+                                                                  nombre
+                                                                      .value--;
+                                                                  produit["nombre"] =
+                                                                      "${nombre.value}";
+                                                                  //
+                                                                  bool v =
+                                                                      false;
+                                                                  //panierController.listeDeElement.
+                                                                  for (var i =
+                                                                          0;
+                                                                      i <
+                                                                          panierController
+                                                                              .listeDeElement
+                                                                              .length;
+                                                                      i++) {
+                                                                    if (panierController.listeDeElement[i]
+                                                                            [
+                                                                            'product_id'] ==
+                                                                        produit[
+                                                                            "id"]) {
+                                                                      panierController.listeDeElement[i]
+                                                                              [
+                                                                              "nombre"] =
+                                                                          "${nombre.value}";
+                                                                      v = true;
+                                                                    }
+                                                                  }
+                                                                  if (!v) {
+                                                                    panierController
+                                                                        .listeDeElement
+                                                                        .add(
+                                                                            produit);
+                                                                  }
+                                                                  //panierController.listeDeElement.add(produit);
+                                                                  panierController
+                                                                          .listeDeElement
+                                                                          .value =
+                                                                      panierController
+                                                                          .listeDeElement
+                                                                          .toSet()
+                                                                          .toList()
+                                                                          .obs;
+                                                                }
+                                                                if (nombre
+                                                                        .value ==
+                                                                    0) {
+                                                                  panierController
+                                                                      .listeDeElement
+                                                                      .remove(
+                                                                          produit);
+                                                                  //
+                                                                  var box =
+                                                                      GetStorage();
+                                                                  box.write(
+                                                                      "panier",
+                                                                      panierController
+                                                                          .listeDeElement);
+                                                                  // box.write(
+                                                                  //     'paniers',
+                                                                  //     panierController
+                                                                  //         .listeDeElement);
+                                                                  //panierController.listeDeElement
+                                                                  //  .clear();
+                                                                  //panierController
+                                                                  //  .listeDeElement.value = paniers;
+                                                                }
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              height: 28,
+                                                              width: 28,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  14,
+                                                                ),
+                                                                border:
+                                                                    Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ),
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.remove,
+                                                                size: 19,
+                                                                color:
+                                                                    Colors.red,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Obx(
+                                                            () => (int.parse(produit['variants'][0]
+                                                                            [
+                                                                            'stock']) <=
+                                                                        0 ||
+                                                                    produit['variants'][0]
+                                                                            [
+                                                                            'serve_for'] ==
+                                                                        "Sold Out")
+                                                                ? Text(
+                                                                    " $epuise",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          6,
+                                                                      color: Colors
+                                                                          .red
+                                                                          .shade700,
+                                                                    ),
+                                                                  )
+                                                                : Text(
+                                                                    "${nombre.value}"),
+                                                          ),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              if (int.parse(produit['variants']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'stock']) <=
+                                                                      0 ||
+                                                                  produit['variants']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'serve_for'] ==
+                                                                      "Sold Out") {
+                                                                Get.snackbar(
+                                                                    "Oups!",
+                                                                    "Le stock est épuisé");
+                                                              } else {
+                                                                if (int.parse(produit[
+                                                                            'variants'][0]
+                                                                        [
+                                                                        'stock']) <=
+                                                                    nombre
+                                                                        .value) {
+                                                                  Get.snackbar(
+                                                                      "Oups!",
+                                                                      "Le stock est épuisé");
+                                                                } else {
+                                                                  menuController
+                                                                      .showMiniPanier
+                                                                      .value = true;
+                                                                  nombre
+                                                                      .value++;
+                                                                  produit["nombre"] =
+                                                                      "${nombre.value}";
+                                                                  //box.write('${produit["id"]}',
+                                                                  //  jsonEncode(produit));
+                                                                  bool v =
+                                                                      false;
+                                                                  produit["id"] =
+                                                                      produit[
+                                                                          "product_id"];
+                                                                  //panierController.listeDeElement.
+                                                                  for (var i =
+                                                                          0;
+                                                                      i <
+                                                                          panierController
+                                                                              .listeDeElement
+                                                                              .length;
+                                                                      i++) {
+                                                                    if (panierController.listeDeElement[i]
+                                                                            [
+                                                                            'id'] ==
+                                                                        produit[
+                                                                            "id"]) {
+                                                                      panierController.listeDeElement[i]
+                                                                              [
+                                                                              "nombre"] =
+                                                                          "${nombre.value}";
+                                                                      v = true;
+                                                                    }
+                                                                  }
+                                                                  if (!v) {
+                                                                    panierController
+                                                                        .listeDeElement
+                                                                        .add(
+                                                                            produit);
+                                                                  }
+                                                                  //
+                                                                  panierController
+                                                                          .listeDeElement
+                                                                          .value =
+                                                                      panierController
+                                                                          .listeDeElement
+                                                                          .toSet()
+                                                                          .toList()
+                                                                          .obs;
+                                                                  //
+                                                                  var box =
+                                                                      GetStorage();
+                                                                  box.write(
+                                                                      "panier",
+                                                                      panierController
+                                                                          .listeDeElement);
+                                                                  // panierController.listeDeElement
+                                                                  //     .forEach((element) {});
+                                                                  //
+                                                                  // if (!v) {
+                                                                  //   panierController.listeDeElement
+                                                                  //       .add('${produit["id"]}');
+                                                                  //   box.write(
+                                                                  //       'paniers',
+                                                                  //       panierController
+                                                                  //           .listeDeElement.value);
+                                                                  //   //panierController.listeDeElement
+                                                                  //   //  .clear();
+                                                                  //   //panierController
+                                                                  //   //  .listeDeElement.value = paniers;
+                                                                  // }
+                                                                }
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              height: 28,
+                                                              width: 28,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .red
+                                                                    .shade700,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  14,
+                                                                ),
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.add,
+                                                                size: 20,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                      //: Text("Epuisé"),
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -652,9 +712,24 @@ class Favorit extends GetView<FavoritController> {
                                             IconButton(
                                               onPressed: () {
                                                 //setState(() {
-                                                nL.removeAt(index);
+                                                listeE =
+                                                    box.read("favoris") ?? [];
+                                                for (var i = 0;
+                                                    i < listeE.length;
+                                                    i++) {
+                                                  if (listeE[i]['id'] ==
+                                                      produit['id']) {
+                                                    listeE.removeAt(i);
+                                                  }
+                                                }
                                                 //
-                                                supprimerFavoris(produit['id']);
+                                                box.write("favoris", listeE);
+                                                //
+                                                //nL.removeAt(index);
+                                                //
+                                                print(idR);
+                                                print(produit["id"]);
+                                                supprimerFavoris(idR);
                                                 //
 
                                                 listeE =
@@ -665,9 +740,8 @@ class Favorit extends GetView<FavoritController> {
                                                     i++) {
                                                   if (produit['id'] ==
                                                           listeE[i]['id'] ||
-                                                      produit['product_id'] ==
-                                                          listeE[i]
-                                                              ['product_id']) {
+                                                      produit['id'] ==
+                                                          listeE[i]['id']) {
                                                     listeE.removeAt(i);
                                                   }
                                                 }
@@ -685,10 +759,6 @@ class Favorit extends GetView<FavoritController> {
                                                 }
                                                 String t = jsonEncode(lcheck);
                                                 //print(t);
-                                                controller.checkProduits(
-                                                    t.substring(
-                                                        1, t.length - 1),
-                                                    listeE);
 
                                                 //widget.listeC.value = box.read("panier");
                                                 // box.write(
@@ -1089,7 +1159,7 @@ class Favorit extends GetView<FavoritController> {
                     //           ),
                     //         ),
                     // ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -1102,89 +1172,99 @@ class Favorit extends GetView<FavoritController> {
             ),
           ),
           // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
+          //   onPressed: () async {
           //     //
-          //     List l = listeProduit;
-          //     //print(l);
-          //     if (l.isNotEmpty) {
-          //       Get.to(
-          //         RefaireCommande(
-          //           l,
-          //           true,
-          //           key: UniqueKey(),
-          //         ),
-          //       );
+          //     var headers = {
+          //       'Authorization':
+          //           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
+          //       'Cookie': 'PHPSESSID=12aa9d01877bc697e052e8483dd51afb'
+          //     };
+          //     var request = http.MultipartRequest(
+          //         'POST',
+          //         Uri.parse(
+          //             'https://webadmin.koumishop.com/api-firebase/get-products.php'));
+          //     request.fields.addAll({
+          //       'accesskey': '90336',
+          //       'subcategory_id': '7',
+          //       'offset': '0',
+          //       'limit': '100',
+          //       'get_all_products': '1',
+          //       'user_id': '${profilController.infos['user_id']}'
+          //     });
+
+          //     request.headers.addAll(headers);
+
+          //     http.StreamedResponse response = await request.send();
+
+          //     if (response.statusCode == 200) {
+          //       print(await response.stream.bytesToString());
           //     } else {
-          //       Get.snackbar("Panier", "Le panier est vide");
+          //       print(response.reasonPhrase);
           //     }
+
           //     //
           //   },
           //   backgroundColor: Colors.red.shade700,
-          //   child: true
-          //       ? Container(
-          //           height: 50,
-          //           width: 50,
-          //           //color: Colors.white,
-          //           child: Padding(
-          //             padding: EdgeInsets.only(bottom: 0),
-          //             child: Stack(
-          //               children: [
-          //                 Card(
-          //                   elevation: 1,
-          //                   shape: RoundedRectangleBorder(
-          //                     borderRadius: BorderRadius.circular(20),
-          //                   ),
-          //                   child: Container(
-          //                     height: 50,
-          //                     width: 50,
-          //                     alignment: Alignment.center,
-          //                     child: const Icon(
-          //                       Icons.shopping_cart,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ),
-          //                 ),
-          //                 Align(
-          //                   alignment: Alignment.bottomRight,
-          //                   //width: 10,
-          //                   //height: 20,
-
-          //                   child: Card(
-          //                     elevation: 0,
-          //                     child: Container(
-          //                       decoration: BoxDecoration(
-          //                         borderRadius: BorderRadius.circular(
-          //                           3,
-          //                         ),
-          //                         color: Colors.yellow.shade700,
-          //                       ),
-          //                       child: Text(
-          //                         "${listeProduit.length}",
-          //                         style: const TextStyle(
-          //                           fontWeight: FontWeight.bold,
-          //                           fontSize: 17,
-          //                         ),
-          //                       ),
-          //                       // child: Obx(
-          //                       //   () => Text(
-          //                       //     "${length(panierController.listeDeElement)}",
-          //                       //     style: const TextStyle(
-          //                       //       fontSize: 11,
-          //                       //       fontWeight: FontWeight.bold,
-          //                       //     ),
-          //                       //   ),
-          //                       // ),
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ],
+          //   child: Container(
+          //     height: 50,
+          //     width: 50,
+          //     //color: Colors.white,
+          //     child: Padding(
+          //       padding: EdgeInsets.only(bottom: 0),
+          //       child: Stack(
+          //         children: [
+          //           Card(
+          //             elevation: 1,
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(20),
+          //             ),
+          //             child: Container(
+          //               height: 50,
+          //               width: 50,
+          //               alignment: Alignment.center,
+          //               child: const Icon(
+          //                 Icons.shopping_cart,
+          //                 color: Colors.red,
+          //               ),
           //             ),
           //           ),
-          //         )
-          //       : Icon(
-          //           Icons.shopping_cart,
-          //           color: Colors.white,
-          //         ),
+          //           Align(
+          //             alignment: Alignment.bottomRight,
+          //             //width: 10,
+          //             //height: 20,
+
+          //             child: Card(
+          //               elevation: 0,
+          //               child: Container(
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.circular(
+          //                     3,
+          //                   ),
+          //                   color: Colors.yellow.shade700,
+          //                 ),
+          //                 child: Text(
+          //                   "${listeProduit.length}",
+          //                   style: const TextStyle(
+          //                     fontWeight: FontWeight.bold,
+          //                     fontSize: 17,
+          //                   ),
+          //                 ),
+          //                 // child: Obx(
+          //                 //   () => Text(
+          //                 //     "${length(panierController.listeDeElement)}",
+          //                 //     style: const TextStyle(
+          //                 //       fontSize: 11,
+          //                 //       fontWeight: FontWeight.bold,
+          //                 //     ),
+          //                 //   ),
+          //                 // ),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
           // ),
         ),
       ),
@@ -1200,7 +1280,7 @@ class Favorit extends GetView<FavoritController> {
       //print("$id");
       //print("$element");
 
-      if ("${element['product_id']}" == id) {
+      if ("${element['id']}" == id) {
         //print("-----------------------------------------------------1");
         n = int.parse("${element['nombre']}");
       }
@@ -1218,8 +1298,8 @@ class Favorit extends GetView<FavoritController> {
     request.fields.addAll({
       'accesskey': '90336',
       'remove_from_favorites': '1',
-      'id': id,
-      'user_id ': '${profilController.infos['user_id']}',
+      'product_id': id,
+      'user_id': '${profilController.infos['user_id']}',
     });
 
     request.headers.addAll(headers);

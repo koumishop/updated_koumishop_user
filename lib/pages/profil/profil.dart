@@ -90,13 +90,9 @@ class _Profil extends State<Profil> {
                         children: [
                           InkWell(
                             onTap: () {
+                              //
                               index.value = 0;
                               //
-                              controllerP!.animateToPage(
-                                0,
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.ease,
-                              );
                             },
                             child: Container(
                               padding: const EdgeInsets.only(left: 10),

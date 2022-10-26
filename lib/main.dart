@@ -10,6 +10,10 @@ import 'package:koumishop/pages/splash.dart';
 
 import 'utils/notification_service.dart';
 
+BuildContext? contextApp;
+State? stateMenu;
+State? statePanier;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
@@ -94,6 +98,7 @@ class Koimishope extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
+    contextApp = context;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
