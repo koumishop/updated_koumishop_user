@@ -35,7 +35,7 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
     if (Platform.isAndroid) WebView.platform = AndroidWebView();
 
     //
-    temps = widget.visa ? 180.obs : 30.obs;
+    temps = widget.visa ? 360.obs : 30.obs;
     if (widget.visa) {
       Timer(
         const Duration(seconds: 1),
@@ -89,7 +89,6 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
       temps.value = temps.value - 1;
       if (temps.value == 0) {
         sendTest();
-        tm!.cancel();
         //Get.snackbar("Ecoulé", "Salut comment ?");
       }
       print("la valeur: ${t.tick}");
@@ -97,47 +96,66 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
   }
 
   sendTest() async {
-    var headers = {
-      'Authorization':
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
-    };
-    //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
-    var request = http.MultipartRequest('POST', Uri.parse(widget.lien));
-    request.fields.addAll({
-      'promotion': '1',
-      'accesskey': '90336',
-      'mobile': '813999922',
-      ' type': 'verify-user'
-    });
+    tm!.cancel();
+    //
+    Get.dialog(
+      Center(
+        child: SizedBox(
+          height: 70,
+          width: 70,
+          child: Compteur(),
+        ),
+      ),
+    );
+    //
+    Timer(const Duration(seconds: 40), () async {
+      print("Test et tout!");
+      var headers = {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+      };
+      //https://koumishop.com/pay/traitement.ajax.php?phone=243815824641&reference=HYYNbQAs1OOt243815824641
+      var request = http.MultipartRequest('POST', Uri.parse(widget.lien));
+      request.fields.addAll({
+        'promotion': '1',
+        'accesskey': '90336',
+        'mobile': '813999922',
+        ' type': 'verify-user'
+      });
 
-    request.headers.addAll(headers);
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      String rep = await response.stream.bytesToString();
-      Map r = jsonDecode(rep);
-      if ("${r['status']}" == "1") {
-        //
+      if (response.statusCode == 200) {
         Get.back();
-        Get.snackbar("Commande", "${r['message']}");
-      } else {
-        //
-        PanierController panierController = Get.find();
-        //
-        if (widget.visa) {
-          // ignore: use_build_context_synchronously
-          panierController.paiement(widget.commande, context);
+        String rep = await response.stream.bytesToString();
+        Map r = jsonDecode(rep);
+        print("La reponse apres la commande: $r");
+        if ("${r['status']}" == "1") {
+          //
+          Get.back();
+          Get.snackbar("Commande", "${r['message']}");
         } else {
-          // ignore: use_build_context_synchronously
-          panierController.paiement(widget.commande, context);
+          //
+          PanierController panierController = Get.find();
+          //
+          if (widget.visa) {
+            // ignore: use_build_context_synchronously
+            panierController.paiement(widget.commande, context);
+          } else {
+            // ignore: use_build_context_synchronously
+            panierController.paiement(widget.commande, context);
+          }
+          //Get.snackbar("Erreur", "${r['message']}");
         }
-        //Get.snackbar("Erreur", "${r['message']}");
+        print(rep);
+      } else {
+        Get.back();
+        Get.back();
+        Get.snackbar("Erreur", "");
+        print(response.reasonPhrase);
       }
-      print(rep);
-    } else {
-      print(response.reasonPhrase);
-    }
+    });
   }
 
   @override
@@ -367,8 +385,65 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
     super.dispose();
   }
 }
-/*
-WebView(
-      initialUrl: widget.lien,
-    )
-*/
+
+class Compteur extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _Compteur();
+  }
+}
+
+class _Compteur extends State<Compteur> {
+  RxInt seconde = 40.obs;
+  RxInt temps = 40.obs;
+
+  Timer? tm;
+
+  @override
+  void initState() {
+    //
+    //
+    tm = Timer.periodic(const Duration(seconds: 1), (t) {
+      //
+      temps.value = temps.value - 1;
+      seconde.value = temps.value;
+      if (temps.value == 0) {
+        //sendTest();
+        tm!.cancel();
+
+        //Get.snackbar("Ecoulé", "Salut comment ?");
+      }
+      print("la valeur: ${t.tick}");
+    });
+    //
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      child: Container(
+        height: 70,
+        width: 70,
+        alignment: Alignment.center,
+        child: Obx(
+          () => Text(
+            "${seconde.value}",
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    tm!.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+}

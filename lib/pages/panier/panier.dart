@@ -963,6 +963,9 @@ class _Panier extends State<Panier> {
                                         //  commande, context);
                                       } else {
                                         //
+                                        double ii = 12.4;
+                                        var i = (ii).toStringAsFixed(2);
+                                        print("la valeur de la money: $i");
                                         commande = {
                                           'order_note': '',
                                           'total': '${r.value}',
@@ -971,7 +974,7 @@ class _Panier extends State<Panier> {
                                               '${panierController.adresse.value['delivery_charges']}',
                                           'user_id':
                                               '${profilController.infos['user_id']}',
-                                          'final_total': '$x',
+                                          'final_total': (x).toStringAsFixed(2),
                                           //{int.parse(panierController.adresse.value['delivery_charges']) + r.value}
                                           'address_id':
                                               '${panierController.adresse.value['id']}',
@@ -1074,11 +1077,13 @@ class _Panier extends State<Panier> {
       var uxx = getCode();
       Get.back();
       Get.to(
+        //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien
         PaiementMobileVisa(
           "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx}",
           commande,
           visa,
-          'https://koumishop.com/pay/getAwayCard.php?phone=+243$numero&reference=$uxx&amount=$montant&description=nom',
+          //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien
+          'https://koumishop.com/pay/getAwayCard.php?phone=+243$numero&reference=$uxx&amount=$montant&description=bien',
         ),
       );
     } else {
@@ -1108,9 +1113,10 @@ class _Panier extends State<Panier> {
           Get.snackbar("Erreur", "${r['data']['message']}");
         } else {
           Get.back();
+          print("la ref: ${r['data']['orderNumber']}}");
           Get.to(
             PaiementMobileVisa(
-              "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=${r['data']['orderNumber']}}",
+              "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx",
               commande,
               visa,
               "",
