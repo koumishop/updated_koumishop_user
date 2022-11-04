@@ -291,7 +291,7 @@ class _Profil extends State<Profil> {
                                             "Creez un compte ou loggez-vous");
                                       } else {
                                         //
-                                        Get.to(Commande());
+                                        Get.to(Commande(false));
                                       }
                                     },
                                     leading: Icon(

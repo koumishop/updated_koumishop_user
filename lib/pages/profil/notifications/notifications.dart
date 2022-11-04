@@ -4,6 +4,7 @@ import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Notifications extends StatefulWidget {
@@ -20,14 +21,28 @@ class _Notifications extends State<Notifications> {
           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
       'Cookie': 'PHPSESSID=ee65a021e19e60dc198d082ab96806ba'
     };
+    //
+    ProfilController profilController = Get.find();
+    //
     var request = http.MultipartRequest('POST',
         Uri.parse('https://webadmin.koumishop.com/api-firebase/sections.php'));
-    request.fields.addAll({
-      'offset': '0',
-      'limit': '10',
-      'get-notifications': '1',
-      'accesskey': '90336'
-    });
+
+    if (profilController.infos['user_id'] != null) {
+      request.fields.addAll({
+        'offset': '0',
+        'limit': '10',
+        'get-notifications': '1',
+        'accesskey': '90336',
+        'id': profilController.infos['user_id']
+      });
+    } else {
+      request.fields.addAll({
+        'offset': '0',
+        'limit': '10',
+        'get-notifications': '1',
+        'accesskey': '90336'
+      });
+    }
 
     request.headers.addAll(headers);
 
@@ -66,7 +81,8 @@ class _Notifications extends State<Notifications> {
               headerBackgroundColor: Colors.black,
               headerBackgroundColorOpened: Colors.red,
               header: Text('${faq['name']}', style: _headerStyle),
-              content: Text("${faq['subtitle']}", style: _contentStyle),
+              content: Text("Commande du ${faq['date']}\n${faq['subtitle']}",
+                  style: _contentStyle),
               contentHorizontalPadding: 20,
               contentBorderWidth: 1,
               // onOpenSection: () => print('onOpenSection ...'),

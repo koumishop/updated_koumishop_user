@@ -58,7 +58,7 @@ class PanierController extends GetxController {
         Get.back();
         Get.back();
         Get.off(Accueil(false));
-        Get.to(Commande());
+        Get.to(Commande(true));
         Get.snackbar("Succès", "${map['message']}");
         //
       }
@@ -148,7 +148,7 @@ class MessageFinal extends StatelessWidget {
                           onPressed: () {
                             //
                             Get.back();
-                            Get.to(Commande());
+                            Get.to(Commande(false));
                           },
                           child: SizedBox(
                             height: 50,

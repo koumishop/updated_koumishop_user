@@ -19,7 +19,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
   final box = GetStorage();
   //
   DetailsCommande(this.commande) {
-    //print(commande['address']);
+    print(commande['currency']);
   }
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
         right: false,
         bottom: false,
         child: Scaffold(
-          backgroundColor: Color.fromARGB(255, 255, 232, 235),
+          backgroundColor: const Color.fromARGB(255, 255, 232, 235),
           //appBar: AppBar(),
           body: Container(
             decoration: const BoxDecoration(
@@ -103,6 +103,30 @@ class DetailsCommande extends GetView<DetailsCommandeController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          //
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                          //   child: Container(
+                          //     height: 35,
+                          //     width: 250,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.yellow,
+                          //       borderRadius: BorderRadius.circular(20),
+                          //     ),
+                          //     alignment: Alignment.center,
+                          //     child: const Text(
+                          //       "REPASSER LA COMMANDE",
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         fontSize: 17,
+                          //         fontWeight: FontWeight.w400,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
                           //
                           SizedBox(
                             //height: 80,

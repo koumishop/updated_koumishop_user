@@ -898,9 +898,11 @@ class _Panier extends State<Panier> {
                                           'product_variant_id': '$l',
                                           'payment_method':
                                               panierController.modeP.value,
-                                          'accesskey': '90336'
+                                          'accesskey': '90336',
+                                          'devise': 'CDF',
                                         };
                                         //
+                                        print("La commande ::: $commande");
                                         // ignore: use_build_context_synchronously
                                         panierController.paiement(
                                             commande, context);
@@ -937,7 +939,9 @@ class _Panier extends State<Panier> {
                                               '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
                                           'product_variant_id': '$l',
                                           'payment_method': "mobile money",
-                                          'accesskey': '90336'
+                                          'accesskey': '90336',
+                                          'devise': panierController.modeP.value
+                                              .split("/")[1],
                                         };
                                         /*
                                         panierController
@@ -984,7 +988,8 @@ class _Panier extends State<Panier> {
                                               '${panierController.dateL.value['date']} - ${panierController.dateL.value['heure']}',
                                           'product_variant_id': '$l',
                                           'payment_method': "visa",
-                                          'accesskey': '90336'
+                                          'accesskey': '90336',
+                                          'devise': 'USD',
                                         };
                                         //
                                         sendPaiementMobile(
@@ -1079,7 +1084,7 @@ class _Panier extends State<Panier> {
       Get.to(
         //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien
         PaiementMobileVisa(
-          "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx}",
+          "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx",
           commande,
           visa,
           //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien
@@ -1114,9 +1119,11 @@ class _Panier extends State<Panier> {
         } else {
           Get.back();
           print("la ref: ${r['data']['orderNumber']}}");
+          String idUser = profilController.infos['user_id'];
+          String date = DateTime.now().toString().split(".")[0];
           Get.to(
             PaiementMobileVisa(
-              "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx",
+              "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx&id=$idUser&amount=$montant&currency=$devise&date=$date",
               commande,
               visa,
               "",

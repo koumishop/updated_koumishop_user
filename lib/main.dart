@@ -62,9 +62,12 @@ void registerNotification() async {
       print("Message réçu: ${message.from}");
       //
       ns.setup(
-          id: 1, title: "${m['title']}", body: "${m['message']}", payload: "");
+          id: 1,
+          title: "${m['title']}",
+          body: "${m['message'] ?? 'Echec'}",
+          payload: "");
       //("${m['title']}", "${m['message']}");
-      print("Message réçu: ${message.notification!.body}");
+      //print("Message réçu: ${message.notification!.body}");
     });
     //
   } else {

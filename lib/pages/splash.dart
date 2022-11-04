@@ -24,6 +24,7 @@ import 'package:koumishop/pages/profil/mode_paiement/mode_paiement.dart';
 import 'package:koumishop/pages/profil/profil.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'package:koumishop/utils/notification_service.dart';
+import 'package:koumishop/widgets/dynamic_island.dart';
 import 'package:shimmer/shimmer.dart';
 import 'favorits/favorit_controller.dart';
 import 'panier/paiement_mobile.dart';
@@ -72,7 +73,9 @@ class SplashtScreen extends StatelessWidget {
       //
       //Get.off(Commande()); //PaiementMobile
       Get.off(Accueil(true)); //PaiementMobile//true
-      //Get.off(Favorit());
+      //Get.off(DynamicIsland());
+      //
+      //Get.off(Commande(true));
       //
       //Get.off(Inscription("815381693", "+243"));
       //

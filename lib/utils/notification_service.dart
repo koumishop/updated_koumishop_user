@@ -62,7 +62,7 @@ class NotificationService {
       int id, String? title, String? body, String? payload) {
     print('id $id');
     //
-    Get.to(Commande());
+    Get.to(Commande(false));
     //
   }
 

@@ -10,6 +10,8 @@ import 'package:shimmer/shimmer.dart';
 import '../profil_controller.dart';
 
 class Commande extends StatefulWidget {
+  bool showMessage;
+  Commande(this.showMessage);
   @override
   State<StatefulWidget> createState() {
     return _Commande();
@@ -71,7 +73,7 @@ else {
     if (response.statusCode == 200) {
       //print(await response.stream.bytesToString());
       Map mapFaqs = jsonDecode(await response.stream.bytesToString());
-      //print(mapFaqs);
+      print(mapFaqs);
       if (mapFaqs["error"]) {
         return Container();
       } else {
@@ -372,7 +374,8 @@ else {
                               children: [
                                 Text.rich(
                                   TextSpan(
-                                    text: "FC ${commande['final_total']}   ",
+                                    text:
+                                        "${commande['currency']} ${commande['final_total']}   ",
                                     children: [
                                       TextSpan(
                                         text: "",
@@ -410,6 +413,9 @@ else {
   void initState() {
     //
     //adresses = box.read('adresses') ?? [];
+    if (widget.showMessage) {
+      showMessage();
+    }
     //
     super.initState();
   }
@@ -626,4 +632,7 @@ else {
       ],
     );
   }
+
+  //
+  showMessage() async {}
 }
