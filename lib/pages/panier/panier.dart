@@ -1081,10 +1081,14 @@ class _Panier extends State<Panier> {
     if (visa) {
       var uxx = getCode();
       Get.back();
+
+      //print("la ref: ${r['data']['orderNumber']}}");
+      String idUser = profilController.infos['user_id'];
+      String date = DateTime.now().toString().split(".")[0];
       Get.to(
         //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien
         PaiementMobileVisa(
-          "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx",
+          "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx&id=$idUser&amount=$montant&currency=$devise&date=$date",
           commande,
           visa,
           //https://koumishop.com/pay/getAwayCard.php?phone=+243812148475&reference=21&amount=1&description=bien

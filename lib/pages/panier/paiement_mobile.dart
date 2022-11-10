@@ -701,8 +701,10 @@ class _Compteur extends State<Compteur> {
     );
   }
 
+  Timer? tr;
+
   checkStatus() async {
-    Timer(const Duration(seconds: 10), () async {
+    tr = Timer(const Duration(seconds: 10), () async {
       print("Test et tout!");
       var headers = {
         'Authorization':
@@ -783,7 +785,7 @@ class _Compteur extends State<Compteur> {
 
   @override
   void dispose() {
-    //tm!.cancel();
+    tr!.cancel();
     // TODO: implement dispose
     super.dispose();
   }
