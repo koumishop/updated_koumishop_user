@@ -1082,7 +1082,8 @@ class _Panier extends State<Panier> {
       var uxx = getCode();
       Get.back();
 
-      //print("la ref: ${r['data']['orderNumber']}}");
+      print(
+          "-----------: https://koumishop.com/pay/getAwayCard.php?phone=+243$numero&reference=$uxx&amount=$montant&description=bien");
       String idUser = profilController.infos['user_id'];
       String date = DateTime.now().toString().split(".")[0];
       Get.to(

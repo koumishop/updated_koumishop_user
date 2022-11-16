@@ -35,7 +35,7 @@ class _PaiementMobileVisa extends State<PaiementMobileVisa> {
     if (Platform.isAndroid) WebView.platform = AndroidWebView();
 
     //
-    temps = widget.visa ? 360.obs : 30.obs;
+    temps = widget.visa ? 30.obs : 30.obs;
     if (widget.visa) {
       Timer(
         const Duration(seconds: 1),
@@ -786,7 +786,6 @@ class _Compteur extends State<Compteur> {
   @override
   void dispose() {
     tr!.cancel();
-    // TODO: implement dispose
     super.dispose();
   }
 }
