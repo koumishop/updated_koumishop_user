@@ -17,8 +17,9 @@ import 'package:shimmer/shimmer.dart';
 class MenuPrincipal extends StatefulWidget {
   //
   List data;
+  int idService;
   //
-  MenuPrincipal(this.data);
+  MenuPrincipal(this.data, this.idService);
   //
   @override
   State<StatefulWidget> createState() {
@@ -69,13 +70,15 @@ class _MenuPrincipal extends State<MenuPrincipal> {
   void initState() {
     //
     //sousCat.value = ;
-    //print("ààààààààààà:${widget.data[0]}");
+    //print("ééééééééééé:${widget.data[0]}");
     List sc = widget.data[0]["childs"].isNotEmpty
         ? widget.data[0]["childs"].keys.toList()
         : [];
     //sc.isNotEmpty
+    print("ààààààààààà:$sc");
+    print("ààààààààààà:$sc");
     for (var i = 0; i < sc.length; i++) {
-      sousCat.add(widget.data[i]["childs"][sc[i]]);
+      //sousCat.add(widget.data[i]["childs"][sc[i]]);
     }
     loading();
     // sc.forEach((element) {
@@ -178,7 +181,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
                                   textInputAction: TextInputAction.search,
                                   onSubmitted: (text) {
                                     //
-                                    Get.to(Recherche(text));
+                                    Get.to(Recherche(text, widget.idService));
                                     //
                                   },
                                   decoration: const InputDecoration(

@@ -9,7 +9,8 @@ import 'package:shimmer/shimmer.dart';
 
 class Recherche extends StatefulWidget {
   String text;
-  Recherche(this.text);
+  int idService;
+  Recherche(this.text, this.idService);
   @override
   State<StatefulWidget> createState() {
     return _Recherche();
@@ -28,7 +29,7 @@ class _Recherche extends State<Recherche> {
   void initState() {
     //
 
-    controller.getRecherche(widget.text);
+    controller.getRecherche(widget.text, widget.idService);
     //
     super.initState();
   }
@@ -117,7 +118,8 @@ class _Recherche extends State<Recherche> {
                                 textInputAction: TextInputAction.search,
                                 onSubmitted: (text) {
                                   //
-                                  controller.getRecherche(text);
+                                  controller.getRecherche(
+                                      text, widget.idService);
                                   //
                                 },
                                 decoration: const InputDecoration(

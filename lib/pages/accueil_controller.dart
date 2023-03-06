@@ -32,7 +32,7 @@ class AccueilController extends GetxController with StateMixin<Map> {
       Map rep = jsonDecode(await response.stream.bytesToString());
       print(rep["data"]);
       Get.back();
-      Get.to(MenuPrincipal(rep["data"]));
+      Get.to(MenuPrincipal(rep["data"], int.parse(id)));
     } else {
       print(response.reasonPhrase);
       Get.back();

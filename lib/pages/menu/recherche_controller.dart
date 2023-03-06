@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class RechercheController extends GetxController with StateMixin<List> {
-  getRecherche(String text) async {
+  getRecherche(String text, int idS) async {
     //
     change([], status: RxStatus.loading());
     //
@@ -18,9 +18,9 @@ class RechercheController extends GetxController with StateMixin<List> {
             'https://webadmin.koumishop.com/api-firebase/get-products.php'));
     request.fields.addAll({
       'search': text,
-      ' offset': '0',
+      'offset': '0',
       'accesskey': '90336',
-      'service_id': '1',
+      'service_id': '$idS',
       'limit': '10',
       'get_all_products': '1'
     });
