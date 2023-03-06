@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>543115661864-4hhs93nmiakhsg5jqoib5n1thghl9bu1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.543115661864-4hhs93nmiakhsg5jqoib5n1thghl9bu1</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>543115661864-16ka6v8c06domth2cl7ed1gah5pe1cag.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC87TtcPRwqJLIoe_88u9H-yA0Ed7_JK1g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>543115661864</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.koumishop</string>
+	<key>PROJECT_ID</key>
+	<string>koumishop-3fdfa</string>
+	<key>STORAGE_BUCKET</key>
+	<string>koumishop-3fdfa.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:543115661864:ios:471c81f080eecf94711b1d</string>
+</dict>
+</plist>
