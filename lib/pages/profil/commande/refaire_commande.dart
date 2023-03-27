@@ -945,7 +945,7 @@ class _RefaireCommande extends State<RefaireCommande> {
                                         });
                                         Map<String, String> commande = {};
                                         if (panierController.modeP.value ==
-                                            "Paiement à la livraison") {
+                                            "Paiement cash") {
                                           //
                                           commande = {
                                             'order_note': '',
