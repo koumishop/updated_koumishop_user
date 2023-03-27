@@ -14,11 +14,43 @@
       },
       "oauth_client": [
         {
-          "client_id": "543115661864-mihk8bpg16q087nlesa3gpt9e07d87t2.apps.googleusercontent.com",
+          "client_id": "543115661864-16ka6v8c06domth2cl7ed1gah5pe1cag.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.koumi.shop",
-            "certificate_hash": "e4eb7fdadf39024b14de088c6390945041d369fd"
+            "certificate_hash": "7e6f893c555ac33c7aed78b902a86cf68222723d"
+          }
+        },
+        {
+          "client_id": "543115661864-4dd8tu5rim63i7devjfmd08trv5iqg2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop",
+            "certificate_hash": "1c0b19622e2c66fa48e906ce8acd945bc496cae4"
+          }
+        },
+        {
+          "client_id": "543115661864-4mkmbmndfqgt733ku42cfnia0umscpi9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop",
+            "certificate_hash": "8a04edbf350bfb3708421eb1d7f2ebf9e74be54c"
+          }
+        },
+        {
+          "client_id": "543115661864-93hs2e02sv88i5cate7ga5vvs8810hsj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop",
+            "certificate_hash": "867714209d79eef4ccaf028ab7575b889a0d0980"
+          }
+        },
+        {
+          "client_id": "543115661864-c9dql0s4bhoicaucde86lrcdmdsgck2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop",
+            "certificate_hash": "81af60a37508efcf20ac5244794c018cccf89c47"
           }
         },
         {
@@ -37,6 +69,13 @@
             {
               "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "543115661864-2kl10mmphuiok9atii2oem82k98qjulv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.koumishop.app"
+              }
             }
           ]
         }
@@ -44,18 +83,34 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:543115661864:android:1798f7aa0f8b59c9711b1d",
+        "mobilesdk_app_id": "1:543115661864:android:e01dd999e06d5754711b1d",
         "android_client_info": {
-          "package_name": "com.koumishop.apps"
+          "package_name": "com.koumi.shop.boy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "543115661864-i86na8n0541dspmec8n9mtjta6elnqlc.apps.googleusercontent.com",
+          "client_id": "543115661864-s5rh9dv4qbopd2l92tv97nhneigg4avl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.koumishop.apps",
+            "package_name": "com.koumi.shop.boy",
             "certificate_hash": "e4eb7fdadf39024b14de088c6390945041d369fd"
+          }
+        },
+        {
+          "client_id": "543115661864-trocvuvrub1be1amkbkg6dd094qnus28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop.boy",
+            "certificate_hash": "ea61c78396a75fb256610c55a0859365c61d0dae"
+          }
+        },
+        {
+          "client_id": "543115661864-vvru8n48djg46s8j1e4gh6ci689vcq2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop.boy",
+            "certificate_hash": "486224885758db9a5a30396144c3c588fa134c00"
           }
         },
         {
@@ -74,6 +129,117 @@
             {
               "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "543115661864-2kl10mmphuiok9atii2oem82k98qjulv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.koumishop.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543115661864:android:0f13a348bde578d5711b1d",
+        "android_client_info": {
+          "package_name": "com.koumi.shop.seller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543115661864-3c181d9rn7dk8tju8mqaq4gcg8o9l2ts.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop.seller",
+            "certificate_hash": "ea61c78396a75fb256610c55a0859365c61d0dae"
+          }
+        },
+        {
+          "client_id": "543115661864-3v4j3flds2e8np0ulpgntnjfrvkr9iui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop.seller",
+            "certificate_hash": "1dc6c5d406eea7beef60741991501ae08df2f1b6"
+          }
+        },
+        {
+          "client_id": "543115661864-k364shvjbdip661a9los878ordklca1m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumi.shop.seller",
+            "certificate_hash": "7e6f893c555ac33c7aed78b902a86cf68222723d"
+          }
+        },
+        {
+          "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUDjpWk4IkUxSUzSdns8SHNf73HQHp5-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543115661864-2kl10mmphuiok9atii2oem82k98qjulv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.koumishop.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543115661864:android:0431f65502eb3f1a711b1d",
+        "android_client_info": {
+          "package_name": "com.koumishop.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "543115661864-m60crmgicimffa5psl4tq11kn88bsnbe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koumishop.app",
+            "certificate_hash": "7e6f893c555ac33c7aed78b902a86cf68222723d"
+          }
+        },
+        {
+          "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUDjpWk4IkUxSUzSdns8SHNf73HQHp5-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "543115661864-ompt3prt59vc8b2oi426qcefh5mrhdf3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "543115661864-2kl10mmphuiok9atii2oem82k98qjulv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.koumishop.app"
+              }
             }
           ]
         }
