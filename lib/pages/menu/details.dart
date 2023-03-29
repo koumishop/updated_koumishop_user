@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:koumishop/pages/favorits/favorit_controller.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
 import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/log/log.dart';
@@ -37,7 +37,7 @@ class _Details extends State<Details> {
   PanierController panierController = Get.find();
   FavoritController favoritController = Get.find();
   DetailsController controller = Get.find();
-  MenuController menuController = Get.find();
+  menu.MenuController menuController = Get.find();
   ProfilController profilController = Get.find();
   //
   //

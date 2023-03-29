@@ -21,7 +21,7 @@ PageController? controllerP = PageController();
 class Accueil extends GetView<AccueilController> {
   //
   AccueilController accueilController = Get.find();
-  BuildContext? c;
+
   bool show;
   PanierController panierController = Get.find();
   //

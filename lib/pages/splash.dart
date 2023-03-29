@@ -9,7 +9,7 @@ import 'package:koumishop/pages/accueil.dart';
 import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/favorits/favorit.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
 import 'package:koumishop/pages/menu/recherche_controller.dart';
 import 'package:koumishop/pages/menu/sous_categorie_controller.dart';
 import 'package:koumishop/pages/panier/creno_controller.dart';
@@ -46,7 +46,8 @@ class SplashtScreen extends StatelessWidget {
       PanierController panierController = Get.put(PanierController());
       ProfilController profilController = Get.put(ProfilController());
       DetailsController detailsController = Get.put(DetailsController());
-      MenuController menuController = Get.put(MenuController());
+      menu.MenuController menuController = Get.put(menu.MenuController());
+      //MenuController menuController = Get.put(MenuController());
       NotificationController notificationController =
           Get.put(NotificationController());
       AutreController autreController = Get.put(AutreController());

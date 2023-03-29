@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
 import 'package:shimmer/shimmer.dart';
 
 import 'details.dart';
@@ -18,7 +18,7 @@ class SousCategorie extends GetView<SousCategorieController> {
     controller.getMenu(id);
     //});
   }
-  MenuController menuController = Get.find();
+  menu.MenuController menuController = Get.find();
   late RxInt sousCatIndex = 0.obs;
   @override
   Widget build(BuildContext context) {

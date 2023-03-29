@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/menu/details.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart';
+import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
 import 'package:koumishop/pages/menu/recherche_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
@@ -22,7 +22,7 @@ class _Recherche extends State<Recherche> {
   RechercheController controller = Get.find();
   //
   PanierController panierController = Get.find();
-  MenuController menuController = Get.find();
+  menu.MenuController menuController = Get.find();
   //
 
   @override
