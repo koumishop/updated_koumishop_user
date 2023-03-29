@@ -126,7 +126,7 @@ void registerNotification() async {
     });
     //
   } else {
-    print('User declined or has not accepted permission');
+    print(' Message ré User declined or has not accepted permission');
   }
 }
 
