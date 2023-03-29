@@ -13,6 +13,7 @@ import 'utils/notification_service.dart';
 BuildContext? contextApp;
 State? stateMenu;
 State? statePanier;
+BuildContext? c;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ NotificationService ns = NotificationService();
 registerNewToken(String token) async {
   //
   var box = GetStorage();
-  Map x = box.read("profile");
+  Map x = box.read("profile") ?? {};
   //
   var headers = {
     'Authorization':
@@ -45,7 +46,7 @@ registerNewToken(String token) async {
   request.fields.addAll({
     'accesskey': '90336',
     "type": "register-device",
-    'user_id': x['user_id'],
+    'user_id': x['user_id'] ?? "",
     'token': token,
   });
 
@@ -98,8 +99,8 @@ void registerNotification() async {
       print("Message réçu: ${message.messageType}");
       print("Message réçu: ${message.messageId}");
       print("Message réçu: ${message.senderId}");
-      print("Message réçu: ${message.notification!.title}");
-      print("Message réçu: ${message.notification!.body}");
+      //print("Message réçu: ${message.notification!.title}");
+      //print("Message réçu: ${message.notification!.body}");
 
       Map m = {"title": "Jojo", "message": "Comment ?"};
       try {
