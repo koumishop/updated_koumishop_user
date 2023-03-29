@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/splash.dart';
-
+import 'package:http/http.dart' as http;
 import 'utils/notification_service.dart';
 
 BuildContext? contextApp;
@@ -31,6 +31,36 @@ void main() async {
 
 NotificationService ns = NotificationService();
 //
+registerNewToken(String token) async {
+  //
+  var box = GetStorage();
+  Map x = box.read("profile");
+  //
+  var headers = {
+    'Authorization':
+        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+  };
+  var request = http.MultipartRequest('POST',
+      Uri.parse('https://webadmin.koumishop.com/api-firebase/login.php'));
+  request.fields.addAll({
+    'accesskey': '90336',
+    "type": "register-device",
+    'user_id': x['user_id'],
+    'token': token,
+  });
+
+  request.headers.addAll(headers);
+
+  http.StreamedResponse response = await request.send();
+
+  if (response.statusCode == 200) {
+    print("Rep: ok! ${await response.stream.bytesToString()}");
+  } else {
+    print("Rep: erreur! ${response.reasonPhrase}");
+  }
+}
+
+//
 void registerNotification() async {
   // 1. Initialize the Firebase app
   await Firebase.initializeApp();
@@ -47,19 +77,43 @@ void registerNotification() async {
   //
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     print('User granted permission');
+    var fcmToken = await FirebaseMessaging.instance.getToken();
     //
+    registerNewToken(fcmToken!);
+    //
+    print('User tocken $fcmToken');
+    /*
+    
+    */
     //FirebaseMessaging.on
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       //message
-      Map m = jsonDecode(message.data['data']);
-      print("Message réçu: ${message}");
-      print("Message réçu: ${message.category}");
-      print("Message réçu: ${message.messageId}");
-      print("Message title: ${m['title']}");
-      print("Message message: ${m['message']}");
+
+      print("Message réçu: ${message.data}");
+      //print("Message réçu: ${message.from}");
       print("Message réçu: ${message.from}");
+      print("Message réçu: ${message.category}");
+      print("Message réçu: ${message.messageType}");
+      print("Message réçu: ${message.messageId}");
+      print("Message réçu: ${message.senderId}");
+      print("Message réçu: ${message.notification!.title}");
+      print("Message réçu: ${message.notification!.body}");
+
+      Map m = {"title": "Jojo", "message": "Comment ?"};
+      try {
+        m = jsonDecode(message.data['data'] ?? '');
+        print("Message réçu: ${message}");
+        print("Message réçu: ${message.category}");
+        print("Message réçu: ${message.messageId}");
+        print("Message title: ${m['title']}");
+        print("Message message: ${m['message']}");
+        print("Message réçu: ${message.from}");
+      } catch (e) {
+        print(e);
+      }
+
       //
       ns.setup(
           id: 1,

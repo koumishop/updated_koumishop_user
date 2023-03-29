@@ -42,14 +42,14 @@ class _ModePaiement extends State<ModePaiement> {
           leftIcon: const Icon(Icons.money, color: Colors.white),
           headerBackgroundColor: Colors.black,
           headerBackgroundColorOpened: Colors.red,
-          header: Text('Paiement à la livraison', style: _headerStyle),
+          header: Text('Paiement cash', style: _headerStyle),
           content: SizedBox(
             height: 50,
             child: CheckboxListTile(
               value: mode1.value,
-              title: Text("Paiement à la livraison"),
+              title: Text("Paiement cash"),
               onChanged: (e) {
-                faire("Paiement à la livraison");
+                faire("Paiement cash");
               },
             ),
           ),

@@ -50,6 +50,7 @@ class _Profil extends State<Profil> {
   void initState() {
     //
     //initializeDefault();
+    print(profilController.infos);
     //
     super.initState();
   }
@@ -618,6 +619,81 @@ class _Profil extends State<Profil> {
                                       size: 20,
                                     ),
                                   ),
+                                  Obx(
+                                    () => profilController.infos['mobile'] !=
+                                            null
+                                        ? ListTile(
+                                            onTap: () {
+                                              //
+                                              if (profilController
+                                                      .infos['mobile'] ==
+                                                  null) {
+                                                Get.to(Log(this));
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (c) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text("Suppression"),
+                                                      content: Text(
+                                                          "Voulez-vous vraiment supprimer votre compte ?"),
+                                                      actions: [
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            Get.back();
+                                                          },
+                                                          icon: Icon(
+                                                            Icons.close,
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            //
+                                                            _suppression();
+                                                            //
+                                                            profilController
+                                                                .infos
+                                                                .value = {};
+                                                            box.write("profile",
+                                                                null);
+                                                            Timer(
+                                                                const Duration(
+                                                                    microseconds:
+                                                                        500),
+                                                                () {
+                                                              setState(() {
+                                                                Get.back();
+                                                              });
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.check,
+                                                            color: Colors.green,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            leading: Icon(
+                                              Icons.delete_forever,
+                                              color: Colors.black,
+                                            ),
+                                            title: Text(
+                                              "Suppression de compte",
+                                              style: styleDeMenu(),
+                                            ),
+                                            trailing: Icon(
+                                              Icons.arrow_forward_ios,
+                                              size: 20,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ),
                                 ],
                               ),
                             ),
@@ -649,6 +725,44 @@ class _Profil extends State<Profil> {
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //
+  Future<void> _suppression() async {
+    try {
+      var headers = {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg'
+      };
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
+      request.fields.addAll({
+        'accesskey': '90336',
+        'type': 'delete-profile',
+        'user_id': '${profilController.infos['user_id']}',
+        'email': '${profilController.infos['email']}',
+        'mobile': '${profilController.infos['mobile']}'
+      });
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String rep = await response.stream.bytesToString();
+        print(rep);
+        Get.snackbar("Compte", "Votre compte a été supprimé avec succès.");
+        _logout();
+        index = 0.obs; //Accueil
+      } else {
+        Get.snackbar("Erreur", "${response.reasonPhrase}.");
+        print('Pas cool');
+      }
     } catch (e) {
       print(e.toString());
     }
