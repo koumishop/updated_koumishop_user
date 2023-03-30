@@ -21,16 +21,18 @@
 	<key>STORAGE_BUCKET</key>
 	<string>koumishop-3fdfa.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:543115661864:ios:b7b4fc2de54b6952711b1d</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We do not use microphone</string>
 </dict>
 </plist>
