@@ -74,7 +74,7 @@ class SplashtScreen extends StatelessWidget {
       //
       //Get.off(Commande()); //PaiementMobile
       Get.off(Accueil(true)); //PaiementMobile//true
-      //Get.off(DynamicIsland());
+      //Get.off(Inscription("", ""));
       //
       //Get.off(Commande(true));
       //

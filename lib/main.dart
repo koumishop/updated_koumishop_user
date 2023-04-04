@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/splash.dart';
 import 'package:http/http.dart' as http;
+import 'pages/profil/profil.dart';
 import 'utils/notification_service.dart';
 
 BuildContext? contextApp;
@@ -80,7 +81,7 @@ void registerNotification() async {
     print('User granted permission');
     var fcmToken = await FirebaseMessaging.instance.getToken();
     //
-    registerNewToken(fcmToken!);
+    //registerNewToken(fcmToken!);
     //
     print('User tocken $fcmToken');
     /*
