@@ -43,7 +43,7 @@ class _Inscription extends State<Inscription> {
   final code_ref = TextEditingController();
 
   RxString cd = "+243".obs;
-  String sexe = "F";
+  var sexe = "";
   String dateNaissance = "";
   //
   final countryPicker = const FlCountryCodePicker();
@@ -204,25 +204,32 @@ class _Inscription extends State<Inscription> {
                                         child: Text("Sexe"),
                                       ),
                                       Expanded(
-                                        flex: 5,
-                                        child: DropdownButton<String>(
-                                          onChanged: (e) {
-                                            //
-                                            setState(() {
-                                              sexe = e as String;
-                                            });
-                                          },
-                                          value: sexe,
-                                          items: [
-                                            DropdownMenuItem(
-                                                value: "F",
-                                                child: Text("Femme")),
-                                            DropdownMenuItem(
-                                                value: "M",
-                                                child: Text("Homme")),
-                                          ],
-                                        ),
-                                      ),
+                                          flex: 5,
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton<String>(
+                                              onChanged: (e) {
+                                                //
+                                                setState(() {
+                                                  sexe = e as String;
+                                                });
+                                              },
+                                              value: sexe,
+                                              items: [
+                                                DropdownMenuItem(
+                                                  value: "",
+                                                  child: Text("Non renseigné"),
+                                                ),
+                                                DropdownMenuItem(
+                                                  value: "F",
+                                                  child: Text("Femme"),
+                                                ),
+                                                DropdownMenuItem(
+                                                  value: "M",
+                                                  child: Text("Homme"),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
                                     ],
                                   ),
                                 ),
