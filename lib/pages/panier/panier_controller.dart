@@ -36,7 +36,6 @@ class PanierController extends GetxController {
       //
       Map map = jsonDecode(rep);
       //
-      print(jsonDecode(rep));
       if (map['error']) {
         //Pas d'erreur
         Get.back();
@@ -69,7 +68,6 @@ class PanierController extends GetxController {
     //
   }
   //
-
 }
 
 class MessageFinal extends StatelessWidget {

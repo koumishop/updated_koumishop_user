@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/accueil.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
+import 'package:koumishop/controllers/menu_controller.dart' as menu;
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';
 import 'favorit_controller.dart';
@@ -439,7 +439,7 @@ class Favorit extends GetView<FavoritController> {
                                                                     .listeDeElement
                                                                     .isNotEmpty) {
                                                                   menuController
-                                                                      .showMiniPanier
+                                                                      .showMiniCart
                                                                       .value = true;
                                                                 }
                                                                 if (nombre
@@ -595,7 +595,7 @@ class Favorit extends GetView<FavoritController> {
                                                                       "Le stock est épuisé");
                                                                 } else {
                                                                   menuController
-                                                                      .showMiniPanier
+                                                                      .showMiniCart
                                                                       .value = true;
                                                                   nombre
                                                                       .value++;

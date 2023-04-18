@@ -5,13 +5,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:koumishop/pages/accueil.dart';
-import 'package:koumishop/pages/accueil_controller.dart';
+import 'package:koumishop/controllers/homepage_controller.dart';
+import 'package:koumishop/screens/homepage.dart';
+// import 'package:koumishop/pages/accueil.dart';
+// import 'package:koumishop/pages/accueil_controller.dart';
 import 'package:koumishop/pages/favorits/favorit.dart';
 import 'package:koumishop/pages/menu/details_controller.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
-import 'package:koumishop/pages/menu/recherche_controller.dart';
-import 'package:koumishop/pages/menu/sous_categorie_controller.dart';
+import 'package:koumishop/controllers/menu_controller.dart' as menu;
+import 'package:koumishop/controllers/search_controller.dart';
+import 'package:koumishop/controllers/subcategory_controller.dart';
 import 'package:koumishop/pages/panier/creno_controller.dart';
 import 'package:koumishop/pages/panier/paiement_mobile_controller.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
@@ -41,7 +43,7 @@ class SplashtScreen extends StatelessWidget {
     Timer(const Duration(seconds: 3), () {
       //
       //
-      AccueilController accueilController = Get.put(AccueilController());
+      HomepageController homepageController = Get.put(HomepageController());
       FavoritController favoritController = Get.put(FavoritController());
       PanierController panierController = Get.put(PanierController());
       ProfilController profilController = Get.put(ProfilController());
@@ -56,8 +58,8 @@ class SplashtScreen extends StatelessWidget {
       //
       RechercheController rechercheController = Get.put(RechercheController());
       //
-      SousCategorieController sousCategorieController =
-          Get.put(SousCategorieController());
+      SubcategoryController subcategoryController =
+          Get.put(SubcategoryController());
       //
       CrenoHoraireController crenoHoraireController =
           Get.put(CrenoHoraireController());
@@ -73,7 +75,7 @@ class SplashtScreen extends StatelessWidget {
       print("---------------------------- ${profilController.infos}");
       //
       //Get.off(Commande()); //PaiementMobile
-      Get.off(Accueil(true)); //PaiementMobile//true
+      Get.off(Homepage(true)); //PaiementMobile//true
       //Get.off(Inscription("", ""));
       //
       //Get.off(Commande(true));

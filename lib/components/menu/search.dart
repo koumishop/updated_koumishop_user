@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/pages/menu/details.dart';
 import 'package:koumishop/controllers/menu_controller.dart' as menu;
-import 'package:koumishop/pages/menu/recherche_controller.dart';
+import 'package:koumishop/controllers/search_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:shimmer/shimmer.dart';
@@ -30,7 +30,7 @@ class _Recherche extends State<Recherche> {
   void initState() {
     //
 
-    controller.getRecherche(widget.text, widget.idService);
+    controller.getSearch(widget.text, widget.idService);
     //
     super.initState();
   }
@@ -118,8 +118,7 @@ class _Recherche extends State<Recherche> {
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.search,
                                 onSubmitted: (text) {
-                                  controller.getRecherche(
-                                      text, widget.idService);
+                                  controller.getSearch(text, widget.idService);
                                 },
                                 decoration: const InputDecoration(
                                     fillColor: Colors.red,
@@ -155,7 +154,6 @@ class _Recherche extends State<Recherche> {
                                 crossAxisSpacing: 0.1,
                                 childAspectRatio: 0.6,
                                 children: List.generate(state!.length, (index) {
-                                  //print('truc:--------');
                                   Map produit = state[index];
                                   RxString epuise = "epuise".obs;
                                   RxInt nombre = 0.obs;
@@ -186,7 +184,6 @@ class _Recherche extends State<Recherche> {
                                             100);
                                     p = prix.round();
                                   }
-                                  //Map produit = listeProduit[index];
                                   return Card(
                                     elevation: 2,
                                     child: Column(
@@ -197,15 +194,12 @@ class _Recherche extends State<Recherche> {
                                           flex: 7,
                                           child: InkWell(
                                             onTap: () {
-                                              //PanierController
-                                              //
                                               showModalBottomSheet(
                                                 context: context,
                                                 isScrollControlled: true,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (c) {
-                                                  //return Details();
                                                   return Column(
                                                     children: [
                                                       const SizedBox(
@@ -328,22 +322,6 @@ class _Recherche extends State<Recherche> {
                                                           "${produit['image']}"),
                                                     ),
                                                   ),
-                                                  // Padding(
-                                                  //   padding: EdgeInsets.all(2),
-                                                  //   child: Align(
-                                                  //     alignment: Alignment.topRight,
-                                                  //     child: IconButton(
-                                                  //       icon: const Icon(
-                                                  //         Icons.favorite_outline,
-                                                  //         size: 20,
-                                                  //       ),
-                                                  //       color: Colors.red,
-                                                  //       onPressed: () {
-                                                  //         //
-                                                  //       },
-                                                  //     ),
-                                                  //   ),
-                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -353,15 +331,12 @@ class _Recherche extends State<Recherche> {
                                           flex: 5,
                                           child: InkWell(
                                             onTap: () {
-                                              //PanierController
-                                              //
                                               showModalBottomSheet(
                                                 context: context,
                                                 isScrollControlled: true,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (c) {
-                                                  //return Details();
                                                   return Column(
                                                     children: [
                                                       const SizedBox(
@@ -487,7 +462,7 @@ class _Recherche extends State<Recherche> {
                                                   style: const TextStyle(
                                                     fontSize: 10,
                                                   ),
-                                                ), //"${produit['price']} FC",
+                                                ),
                                                 Text(
                                                   "$p FC",
                                                   maxLines: 2,
@@ -590,14 +565,6 @@ class _Recherche extends State<Recherche> {
                                                             "panier",
                                                             panierController
                                                                 .listeDeElement);
-                                                        // box.write(
-                                                        //     'paniers',
-                                                        //     panierController
-                                                        //         .listeDeElement);
-                                                        //panierController.listeDeElement
-                                                        //  .clear();
-                                                        //panierController
-                                                        //  .listeDeElement.value = paniers;
                                                       }
                                                     }
                                                   },
