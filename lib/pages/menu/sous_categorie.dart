@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
+import 'package:koumishop/pages/menu/menus_controller.dart' as menu;
 import 'package:shimmer/shimmer.dart';
 
 import 'details.dart';

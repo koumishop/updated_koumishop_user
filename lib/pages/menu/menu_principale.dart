@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/pages/menu/menu.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
+import 'package:koumishop/pages/menu/menus_controller.dart' as menu;
 import 'package:koumishop/pages/menu/recherche.dart';
 import 'package:koumishop/pages/menu/sous_categorie.dart';
 import 'package:koumishop/pages/menu/sous_categorie_controller.dart';

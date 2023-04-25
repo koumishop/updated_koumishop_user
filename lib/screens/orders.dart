@@ -3,51 +3,24 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:koumishop/pages/profil/commande/details_commande.dart';
+import 'package:koumishop/components/orders/order_details.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:koumishop/controllers/profile_controller.dart';
 
-import '../profil_controller.dart';
-
-class Commande extends StatefulWidget {
+// ignore: must_be_immutable
+class Orders extends StatefulWidget {
   bool showMessage;
-  Commande(this.showMessage);
+  Orders(this.showMessage, {super.key});
   @override
   State<StatefulWidget> createState() {
-    return _Commande();
+    return _Orders();
   }
 }
 
-class _Commande extends State<Commande> {
-  /*
-  var headers = {
-  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDAyNTM3ODYsImlzcyI6ImVLYXJ0IiwiZXhwIjoxNjQwMjU1NTg2LCJzdWIiOiJlS2FydCBBdXRoZW50aWNhdGlvbiJ9.cBhkpRrvjJDK15wBtHtENZJGWG1YdvX09Z9zysbAnyA'
-};
-var request = http.MultipartRequest('POST', Uri.parse('koumishopapi/webadmin/api-firebase/order-process.php'));
-request.fields.addAll({
-  'accesskey': '90336',
-  'get_orders': '1',
-  'user_id': '5'
-});
-
-request.headers.addAll(headers);
-
-http.StreamedResponse response = await request.send();
-
-if (response.statusCode == 200) {
-  print(await response.stream.bytesToString());
-}
-else {
-  print(response.reasonPhrase);
-}
-
-  */
-  //
+class _Orders extends State<Orders> {
   ProfilController profilController = Get.find();
-  //
   double txl = 8;
-  //
   Future<Widget> getFaq() async {
-    //
     var headers = {
       'Authorization':
           'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjI2NjgwMTEsImlzcyI6ImVLYXJ0IiwiZXhwIjo2LjQ4MDAwMDAwMDAwMDAwMmUrMjQsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIn0.B3j6ZUzOa-7XfPvjJ3wvu3eosEw9CN5cWy1yOrv2Ppg',
@@ -59,20 +32,16 @@ else {
             'https://webadmin.koumishop.com/api-firebase/order-process.php'));
     request.fields.addAll({
       'offset': '0',
-      'user_id': '${profilController.infos['user_id']}',
+      'user_id': '${profilController.data['user_id']}',
       'limit': '10',
       'get_orders': '1',
       'accesskey': '90336'
     });
 
     request.headers.addAll(headers);
-
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
-      //print(await response.stream.bytesToString());
       Map mapFaqs = jsonDecode(await response.stream.bytesToString());
-      print(mapFaqs);
       if (mapFaqs["error"]) {
         return Container();
       } else {
@@ -82,12 +51,10 @@ else {
           children: List.generate(
             adresses.length,
             (index) {
-              Map commande = adresses[index];
+              Map orders = adresses[index];
               return InkWell(
                 onTap: () {
-                  //
-                  Get.to(DetailsCommande(commande));
-                  //
+                  Get.to(OrderDetails(orders));
                 },
                 child: Card(
                   elevation: 2,
@@ -112,11 +79,11 @@ else {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "OTP: ${commande['otp']}",
+                                  "OTP: ${orders['otp']}",
                                   style: tx(),
                                 ),
                                 Text(
-                                  "N° ${commande['id']}",
+                                  "N° ${orders['id']}",
                                   style: tx(),
                                 ),
                               ],
@@ -133,7 +100,7 @@ else {
                         Expanded(
                           flex: 2,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                             ),
                             child: Row(
@@ -148,8 +115,8 @@ else {
                                       textAlign: TextAlign.center,
                                       style: tx2(
                                           txl,
-                                          (commande['status'].length > 0
-                                                  ? commande['status'][0][0]
+                                          (orders['status'].length > 0
+                                                  ? orders['status'][0][0]
                                                   : "") ==
                                               "received"),
                                     ),
@@ -157,47 +124,41 @@ else {
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                    child: Text(
-                                      "Commande en traitemant",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 1
-                                                  ? commande['status'][1][0]
-                                                  : "") ==
-                                              "processed"),
-                                    ),
+                                  child: Text(
+                                    "Commande en traitemant",
+                                    textAlign: TextAlign.center,
+                                    style: tx2(
+                                        txl,
+                                        (orders['status'].length > 1
+                                                ? orders['status'][1][0]
+                                                : "") ==
+                                            "processed"),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                    child: Text(
-                                      "Commande en cours de livraison",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 2
-                                                  ? commande['status'][2][0]
-                                                  : "") ==
-                                              "shipped"),
-                                    ),
+                                  child: Text(
+                                    "Commande en cours de livraison",
+                                    textAlign: TextAlign.center,
+                                    style: tx2(
+                                        txl,
+                                        (orders['status'].length > 2
+                                                ? orders['status'][2][0]
+                                                : "") ==
+                                            "shipped"),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                    child: Text(
-                                      "Commande livrée",
-                                      textAlign: TextAlign.center,
-                                      style: tx2(
-                                          txl,
-                                          (commande['status'].length > 3
-                                                  ? commande['status'][3][0]
-                                                  : "") ==
-                                              "delivered"),
-                                    ),
+                                  child: Text(
+                                    "Commande livrée",
+                                    textAlign: TextAlign.center,
+                                    style: tx2(
+                                        txl,
+                                        (orders['status'].length > 3
+                                                ? orders['status'][3][0]
+                                                : "") ==
+                                            "delivered"),
                                   ),
                                 ),
                               ],
@@ -215,8 +176,8 @@ else {
                               children: [
                                 Icon(
                                   Icons.shopping_cart,
-                                  color: (commande['status'].length > 0
-                                              ? commande['status'][0][0]
+                                  color: (orders['status'].length > 0
+                                              ? orders['status'][0][0]
                                               : "") ==
                                           "received"
                                       ? Colors.red
@@ -231,8 +192,8 @@ else {
                                 ),
                                 Icon(
                                   Icons.shopping_bag,
-                                  color: (commande['status'].length > 1
-                                              ? commande['status'][1][0]
+                                  color: (orders['status'].length > 1
+                                              ? orders['status'][1][0]
                                               : "") ==
                                           "processed"
                                       ? Colors.red
@@ -247,8 +208,8 @@ else {
                                 ),
                                 Icon(
                                   Icons.delivery_dining_outlined,
-                                  color: (commande['status'].length > 2
-                                              ? commande['status'][2][0]
+                                  color: (orders['status'].length > 2
+                                              ? orders['status'][2][0]
                                               : "") ==
                                           "shipped"
                                       ? Colors.red
@@ -263,8 +224,8 @@ else {
                                 ),
                                 Icon(
                                   Icons.headset,
-                                  color: (commande['status'].length > 3
-                                              ? commande['status'][3][0]
+                                  color: (orders['status'].length > 3
+                                              ? orders['status'][3][0]
                                               : "") ==
                                           "delivered"
                                       ? Colors.red
@@ -287,62 +248,19 @@ else {
                                   flex: 3,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    // child: Text(
-                                    //   "${commande['status'].length > 0 ? commande['status'][0][1] : ''}",
-                                    //   textAlign: TextAlign.center,
-                                    //   style: tx2(
-                                    //       txl,
-                                    //       (commande['status'].length > 0
-                                    //               ? commande['status'][0][0]
-                                    //               : "") ==
-                                    //           "received"),
-                                    // ),
                                   ),
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                      // child: Text(
-                                      //   "${commande['status'].length > 1 ? commande['status'][1][1] : ''}",
-                                      //   textAlign: TextAlign.center,
-                                      //   style: tx2(
-                                      //       txl,
-                                      //       (commande['status'].length > 1
-                                      //               ? commande['status'][1][0]
-                                      //               : "") ==
-                                      //           "processed"),
-                                      // ),
-                                      ),
+                                  child: Container(),
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                      // child: Text(
-                                      //   "${commande['status'].length > 2 ? commande['status'][2][1] : ''}",
-                                      //   textAlign: TextAlign.center,
-                                      //   style: tx2(
-                                      //       txl,
-                                      //       (commande['status'].length > 2
-                                      //               ? commande['status'][2][0]
-                                      //               : "") ==
-                                      //           "shipped"),
-                                      // ),
-                                      ),
+                                  child: Container(),
                                 ),
                                 Expanded(
                                   flex: 3,
-                                  child: Container(
-                                      // child: Text(
-                                      //   "${commande['status'].length > 3 ? commande['status'][3][1] : ''}",
-                                      //   textAlign: TextAlign.center,
-                                      //   style: tx2(
-                                      //       txl,
-                                      //       (commande['status'].length > 3
-                                      //               ? commande['status'][3][0]
-                                      //               : "") ==
-                                      //           "delivered"),
-                                      // ),
-                                      ),
+                                  child: Container(),
                                 ),
                               ],
                             ),
@@ -374,7 +292,7 @@ else {
                                 Text.rich(
                                   TextSpan(
                                     text:
-                                        "${commande['currency']} ${commande['final_total']}   ",
+                                        "${orders['currency']} ${orders['final_total']}   ",
                                     children: [
                                       TextSpan(
                                         text: "",
@@ -398,20 +316,15 @@ else {
         );
       }
     } else {
-      print(response.reasonPhrase);
       return Container();
     }
   }
 
-  //
   List adresses = [];
-  //
   final box = GetStorage();
-  //
+
   @override
   void initState() {
-    //
-    //adresses = box.read('adresses') ?? [];
     if (widget.showMessage) {
       showMessage();
     }
@@ -429,7 +342,6 @@ else {
         bottom: false,
         child: Scaffold(
           backgroundColor: const Color.fromARGB(255, 255, 232, 235),
-          //appBar: AppBar(),
           body: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -561,7 +473,7 @@ else {
 
   //
   TextStyle tx() {
-    return TextStyle(
+    return const TextStyle(
       color: Colors.black,
       fontSize: 17,
       fontWeight: FontWeight.w900,
@@ -578,14 +490,15 @@ else {
   }
 
   //
+  // ignore: non_constant_identifier_names
   Widget Shimm() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Card(
+        const Card(
           elevation: 1,
           color: Colors.grey,
-          child: Container(
+          child: SizedBox(
             height: 100,
             width: 100,
           ),
@@ -620,9 +533,9 @@ else {
         ),
         Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-          child: Card(
+          child: const Card(
             elevation: 1,
-            child: Container(
+            child: SizedBox(
               height: 10,
               width: 100,
             ),

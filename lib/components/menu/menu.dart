@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/main.dart';
 import 'package:koumishop/controllers/menu_controller.dart' as menu;
-import 'package:koumishop/pages/panier/panier.dart';
-import 'package:koumishop/pages/panier/panier_controller.dart';
-import 'package:koumishop/pages/profil/profil_controller.dart';
+import 'package:koumishop/screens/cart.dart';
+import 'package:koumishop/controllers/cart_controller.dart';
+import 'package:koumishop/controllers/profile_controller.dart';
 import 'package:koumishop/widgets/carte_produit.dart';
 
 class Menu extends StatefulWidget {
@@ -19,7 +19,7 @@ class Menu extends StatefulWidget {
 }
 
 class _Menu extends State<Menu> {
-  PanierController panierController = Get.find();
+  CartController cartController = Get.find();
   ProfilController profilController = Get.find();
   menu.MenuController menuController = Get.find();
   RxString epuise = "Epuisé".obs;
@@ -108,10 +108,10 @@ class _Menu extends State<Menu> {
                                   bottom: 10,
                                 ),
                                 children: List.generate(
-                                  panierController.listeDeElement.length,
+                                  cartController.itemList.length,
                                   (index) {
                                     Map produit =
-                                        panierController.listeDeElement[index];
+                                        cartController.itemList[index];
                                     return Container(
                                       margin: const EdgeInsets.only(bottom: 5),
                                       child: Row(
@@ -196,7 +196,7 @@ class _Menu extends State<Menu> {
                             child: InkWell(
                               onTap: () {
                                 menuController.showMiniCart.value = false;
-                                Get.to(Panier(this));
+                                Get.to(Cart(this));
                               },
                               child: Container(
                                 height: 35,

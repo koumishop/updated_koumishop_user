@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/main.dart';
-import 'package:koumishop/pages/menu/menu_controller.dart' as menu;
+import 'package:koumishop/pages/menu/menus_controller.dart' as menu;
 import 'package:koumishop/pages/panier/panier.dart';
 import 'package:koumishop/pages/panier/panier_controller.dart';
 import 'package:koumishop/pages/profil/profil_controller.dart';

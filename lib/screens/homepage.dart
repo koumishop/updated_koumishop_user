@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -12,33 +11,28 @@ import 'package:get/get.dart';
 import 'package:koumishop/main.dart';
 import 'package:koumishop/controllers/homepage_controller.dart';
 import 'package:koumishop/pages/categorie/categorie.dart';
-import 'package:koumishop/pages/favorits/favorit.dart';
-import 'package:koumishop/pages/panier/panier_controller.dart';
-import 'package:koumishop/pages/profil/profil.dart';
+import 'package:koumishop/screens/favorites.dart';
+import 'package:koumishop/controllers/cart_controller.dart';
+import 'package:koumishop/screens/profile.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 RxInt index = 0.obs;
 PageController? controllerP = PageController();
 
 class Homepage extends GetView<HomepageController> {
-  //
-  HomepageController homepageController = Get.find();
+  HomepageController homepageController = Get.put(HomepageController());
 
   bool show;
-  PanierController panierController = Get.find();
-  //
-  //controllerP = PageController();
+  CartController cartController = Get.put(CartController());
   Homepage(this.show, {super.key}) {
     controller.getService1(1);
-    //
     var box = GetStorage();
-    panierController.listeDeElement.value = box.read("panier") ?? [];
-    //
+    cartController.itemList.value = box.read("panier") ?? [];
     Timer(const Duration(seconds: 1), () {
       showPopup(c!);
     });
   }
-  //
+
   List listeData = [
     Icons.shopping_basket,
     Icons.fastfood_sharp,
@@ -249,8 +243,8 @@ class Homepage extends GetView<HomepageController> {
                       ),
                     )
                   : index.value == 1
-                      ? Favorit()
-                      : Profil(),
+                      ? Favorites()
+                      : const Profile(),
             ),
           ),
           bottomNavigationBar: Obx(

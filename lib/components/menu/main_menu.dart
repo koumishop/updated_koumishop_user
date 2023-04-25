@@ -6,8 +6,8 @@ import 'menu.dart';
 import 'package:koumishop/controllers/menu_controller.dart' as menu;
 import 'package:koumishop/components/menu/search.dart';
 import 'package:koumishop/controllers/subcategory_controller.dart';
-import 'package:koumishop/pages/panier/panier.dart';
-import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/screens/cart.dart';
+import 'package:koumishop/controllers/cart_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MainMenu extends StatefulWidget {
@@ -24,9 +24,10 @@ class _MainMenu extends State<MainMenu> {
   RxInt i = 0.obs;
   int n = 2;
   RxBool load = true.obs;
-  menu.MenuController menuController = Get.find();
-  SubcategoryController subcategoryController = Get.find();
-  PanierController panierController = Get.find();
+  menu.MenuController menuController = Get.put(menu.MenuController());
+  SubcategoryController subcategoryController =
+      Get.put(SubcategoryController());
+  CartController cartController = Get.put(CartController());
   Rx vue = Rx(Container);
   List options = [
     {"nom": "Fruit & légume", "logo": "fruit.jpeg"},
@@ -80,7 +81,7 @@ class _MainMenu extends State<MainMenu> {
           backgroundColor: const Color.fromARGB(255, 255, 232, 235),
           body: RefreshIndicator(
             onRefresh: () async {
-              if (panierController.listeDeElement.isNotEmpty) {
+              if (cartController.itemList.isNotEmpty) {
                 menuController.showMiniCart.value = true;
               }
               return Future<void>.delayed(const Duration(seconds: 1));
@@ -174,7 +175,7 @@ class _MainMenu extends State<MainMenu> {
                               padding: const EdgeInsets.only(bottom: 0),
                               child: InkWell(
                                 onTap: () {
-                                  Get.to(Panier(this));
+                                  Get.to(Cart(this));
                                 },
                                 child: Stack(
                                   children: [
@@ -206,7 +207,7 @@ class _MainMenu extends State<MainMenu> {
                                           ),
                                           child: Obx(
                                             () => Text(
-                                              "${panierController.listeDeElement.length}",
+                                              "${cartController.itemList.length}",
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 17,
