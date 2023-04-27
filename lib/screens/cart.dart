@@ -9,13 +9,13 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:koumishop/main.dart';
-import 'package:koumishop/pages/panier/creno_horaire.dart';
-import 'package:koumishop/pages/panier/paiement_mobile.dart';
+import 'package:koumishop/components/cart/time_slots.dart';
+import 'package:koumishop/components/cart/mobile_payment.dart';
 import 'package:koumishop/controllers/cart_controller.dart';
-import 'package:koumishop/pages/profil/adresse/adresse_show.dart';
-import 'package:koumishop/pages/profil/log/log.dart';
+import 'package:koumishop/components/adress/show_adresses.dart';
+import 'package:koumishop/screens/login.dart';
 import 'package:koumishop/controllers/profile_controller.dart';
-import 'package:koumishop/pages/panier/mode_paiement.dart';
+import 'package:koumishop/components/cart/payment_method.dart';
 
 // ignore: must_be_immutable
 class Cart extends StatefulWidget {
@@ -506,7 +506,7 @@ class _Cart extends State<Cart> {
                                     onTap: () {
                                       Map p = box.read("profile") ?? RxMap();
                                       if (p['name'] == null) {
-                                        Get.to(Log(this));
+                                        Get.to(LoginScreen(this));
                                       } else {
                                         showDialog(
                                           context: context,
@@ -525,7 +525,7 @@ class _Cart extends State<Cart> {
                                                       Expanded(
                                                         flex: 1,
                                                         child:
-                                                            AdresseShow(this),
+                                                            ShowAdresses(this),
                                                       ),
                                                     ],
                                                   ),
@@ -567,7 +567,7 @@ class _Cart extends State<Cart> {
                                       } else {
                                         Map p = box.read("profile") ?? RxMap();
                                         if (p['name'] == null) {
-                                          Get.to(Log(this));
+                                          Get.to(LoginScreen(this));
                                         } else {
                                           showDialog(
                                             context: context,
@@ -579,7 +579,7 @@ class _Cart extends State<Cart> {
                                                     color: Colors.white,
                                                     height:
                                                         Get.size.height / 1.2,
-                                                    child: CrenoHoraire(this),
+                                                    child: TimeSlots(this),
                                                   ),
                                                 ),
                                               );
@@ -617,7 +617,7 @@ class _Cart extends State<Cart> {
                                       } else {
                                         Map p = box.read("profile") ?? RxMap();
                                         if (p['name'] == null) {
-                                          Get.to(Log(this));
+                                          Get.to(LoginScreen(this));
                                         } else {
                                           showModalBottomSheet(
                                             context: context,
@@ -630,7 +630,7 @@ class _Cart extends State<Cart> {
                                                   child: Container(
                                                     color: Colors.white,
                                                     height: Get.size.height / 2,
-                                                    child: ModePaiement(this),
+                                                    child: PaymentMethod(this),
                                                   ),
                                                 ),
                                               );
@@ -1004,7 +1004,7 @@ class _Cart extends State<Cart> {
       String idUser = profilController.data['user_id'];
       String date = DateTime.now().toString().split(".")[0];
       Get.to(
-        PaiementMobileVisa(
+        VisaMobilePayment(
           "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx&id=$idUser&amount=$montant&currency=$devise&date=$date",
           commande,
           visa,
@@ -1037,7 +1037,7 @@ class _Cart extends State<Cart> {
           String idUser = profilController.data['user_id'];
           String date = DateTime.now().toString().split(".")[0];
           Get.to(
-            PaiementMobileVisa(
+            VisaMobilePayment(
               "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx&id=$idUser&amount=$montant&currency=$devise&date=$date",
               commande,
               visa,

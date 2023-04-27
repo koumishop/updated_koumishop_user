@@ -3,20 +3,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:koumishop/pages/panier/creno_horaire.dart';
-import 'package:koumishop/pages/panier/mode_paiement.dart';
-import 'package:koumishop/pages/panier/paiement_mobile.dart';
+import 'package:koumishop/components/cart/time_slots.dart';
+import 'package:koumishop/components/cart/payment_method.dart';
+import 'package:koumishop/components/cart/mobile_payment.dart';
 import 'package:koumishop/controllers/cart_controller.dart';
-import 'package:koumishop/pages/profil/adresse/adresse_show.dart';
-import 'package:koumishop/pages/profil/log/log.dart';
+import 'package:koumishop/components/adress/show_adresses.dart';
+import 'package:koumishop/screens/login.dart';
 import 'package:koumishop/controllers/profile_controller.dart';
-import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class OrderAgain extends StatefulWidget {
@@ -539,12 +537,11 @@ class _OrderAgain extends State<OrderAgain> {
                                   onTap: () {
                                     Map p = box.read("profile") ?? RxMap();
                                     if (p['name'] == null) {
-                                      Get.to(Log(this));
+                                      Get.to(LoginScreen(this));
                                     } else {
                                       showDialog(
                                         context: context,
                                         builder: (c) {
-                                          //return Details();
                                           return Material(
                                             color: Colors.transparent,
                                             child: Center(
@@ -557,7 +554,7 @@ class _OrderAgain extends State<OrderAgain> {
                                                     ),
                                                     Expanded(
                                                       flex: 1,
-                                                      child: AdresseShow(this),
+                                                      child: ShowAdresses(this),
                                                     ),
                                                   ],
                                                 ),
@@ -604,7 +601,7 @@ class _OrderAgain extends State<OrderAgain> {
                                     } else {
                                       Map p = box.read("profile") ?? RxMap();
                                       if (p['name'] == null) {
-                                        Get.to(Log(this));
+                                        Get.to(LoginScreen(this));
                                       } else {
                                         showDialog(
                                           context: context,
@@ -615,7 +612,7 @@ class _OrderAgain extends State<OrderAgain> {
                                                 child: Container(
                                                   color: Colors.white,
                                                   height: Get.size.height / 1.2,
-                                                  child: CrenoHoraire(this),
+                                                  child: TimeSlots(this),
                                                 ),
                                               ),
                                             );
@@ -657,7 +654,7 @@ class _OrderAgain extends State<OrderAgain> {
                                     } else {
                                       Map p = box.read("profile") ?? RxMap();
                                       if (p['name'] == null) {
-                                        Get.to(Log(this));
+                                        Get.to(LoginScreen(this));
                                       } else {
                                         showModalBottomSheet(
                                           context: context,
@@ -671,7 +668,7 @@ class _OrderAgain extends State<OrderAgain> {
                                                 child: Container(
                                                   color: Colors.white,
                                                   height: Get.size.height / 2,
-                                                  child: ModePaiement(this),
+                                                  child: PaymentMethod(this),
                                                 ),
                                               ),
                                             );
@@ -1071,7 +1068,7 @@ class _OrderAgain extends State<OrderAgain> {
     if (visa) {
       var uxx = getCode();
       Get.to(
-        PaiementMobileVisa(
+        VisaMobilePayment(
           "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=$uxx}",
           commande,
           visa,
@@ -1102,7 +1099,7 @@ class _OrderAgain extends State<OrderAgain> {
         } else {
           Get.back();
           Get.to(
-            PaiementMobileVisa(
+            VisaMobilePayment(
               "https://koumishop.com/pay/traitement.ajax.php?phone=243$numero&reference=${r['data']['orderNumber']}}",
               commande,
               visa,

@@ -17,9 +17,9 @@ import 'package:koumishop/components/users/notifications.dart';
 import 'package:koumishop/controllers/profile_controller.dart';
 import 'package:koumishop/utils/notification_service.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:koumishop/components/users/user_adress.dart';
-import 'package:koumishop/pages/profil/autres/apropos.dart';
-import 'package:koumishop/pages/profil/log/log.dart';
+import 'package:koumishop/components/adress/user_adress.dart';
+import 'package:koumishop/components/users/about.dart';
+import 'package:koumishop/screens/login.dart';
 import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
@@ -330,9 +330,7 @@ class _Profile extends State<Profile> {
                                   ),
                                   ListTile(
                                     onTap: () {
-                                      //
                                       Get.to(const Notifications());
-                                      //
                                     },
                                     leading: const Icon(
                                       Icons.notifications_outlined,
@@ -407,9 +405,7 @@ class _Profile extends State<Profile> {
                                               children: [
                                                 ListTile(
                                                   onTap: () {
-                                                    //
-                                                    Get.to(Apropos());
-                                                    //
+                                                    Get.to(const About());
                                                   },
                                                   leading: const Icon(
                                                     Icons.info_outline,
@@ -504,10 +500,9 @@ class _Profile extends State<Profile> {
                                   const Divider(),
                                   ListTile(
                                     onTap: () {
-                                      //
                                       if (profilController.data['mobile'] ==
                                           null) {
-                                        Get.to(Log(this));
+                                        Get.to(LoginScreen(this));
                                       } else {
                                         showDialog(
                                           context: context,
@@ -582,7 +577,7 @@ class _Profile extends State<Profile> {
                                               if (profilController
                                                       .data['mobile'] ==
                                                   null) {
-                                                Get.to(Log(this));
+                                                Get.to(LoginScreen(this));
                                               } else {
                                                 showDialog(
                                                   context: context,
@@ -604,9 +599,7 @@ class _Profile extends State<Profile> {
                                                         ),
                                                         IconButton(
                                                           onPressed: () {
-                                                            //
                                                             _suppression();
-                                                            //
                                                             profilController
                                                                 .data
                                                                 .value = {};

@@ -12,7 +12,7 @@ import 'package:koumishop/controllers/favorites_controller.dart';
 import 'package:koumishop/controllers/menu_controller.dart' as menu;
 import 'package:koumishop/screens/cart.dart';
 import 'package:koumishop/controllers/cart_controller.dart';
-import 'package:koumishop/pages/profil/log/log.dart';
+import 'package:koumishop/screens/login.dart';
 import 'package:koumishop/controllers/profile_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -35,7 +35,7 @@ class _Details extends State<Details> {
   RxString epuise = "epuise".obs;
   CartController panierController = Get.find();
   FavoritesController favoritesController = Get.put(FavoritesController());
-  DetailsController controller = Get.find();
+  DetailsController controller = Get.put(DetailsController());
   menu.MenuController menuController = Get.find();
   ProfilController profilController = Get.find();
   RxInt nombre = 0.obs;
@@ -366,7 +366,7 @@ class _Details extends State<Details> {
                       onPressed: () async {
                         Map p = box.read("profile") ?? RxMap();
                         if (p['name'] == null) {
-                          Get.to(Log(this));
+                          Get.to(LoginScreen(this));
                         } else {
                           if (!contient.value) {
                             List lf = box.read("favoris") ?? [];

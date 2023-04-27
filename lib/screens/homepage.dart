@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/main.dart';
 import 'package:koumishop/controllers/homepage_controller.dart';
-import 'package:koumishop/pages/categorie/categorie.dart';
+import 'package:koumishop/components/menu/categorie/categorie.dart';
 import 'package:koumishop/screens/favorites.dart';
 import 'package:koumishop/controllers/cart_controller.dart';
 import 'package:koumishop/screens/profile.dart';

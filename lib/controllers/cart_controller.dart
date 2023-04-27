@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:koumishop/screens/homepage.dart';
-import 'package:koumishop/pages/profil/commande/commande.dart';
+import 'package:koumishop/screens/orders.dart';
 
 class CartController extends GetxController {
   RxList itemList = RxList();
@@ -49,7 +48,7 @@ class CartController extends GetxController {
         Get.back();
         Get.back();
         Get.off(Homepage(false));
-        Get.to(Commande(true));
+        Get.to(Orders(true));
         Get.snackbar("Succès", "${map['message']}");
       }
     } else {
@@ -137,7 +136,7 @@ class MessageFinal extends StatelessWidget {
                           onPressed: () {
                             //
                             Get.back();
-                            Get.to(Commande(false));
+                            Get.to(Orders(false));
                           },
                           child: SizedBox(
                             height: 50,

@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:koumishop/pages/menu/details.dart';
+import 'package:koumishop/components/menu/menu_details.dart';
 import 'package:koumishop/controllers/menu_controller.dart' as menu;
 import 'package:koumishop/controllers/search_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:koumishop/pages/panier/panier_controller.dart';
+import 'package:koumishop/controllers/cart_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
@@ -19,19 +19,13 @@ class Recherche extends StatefulWidget {
 }
 
 class _Recherche extends State<Recherche> {
-  //
   RechercheController controller = Get.find();
-  //
-  PanierController panierController = Get.find();
+  CartController cartController = Get.find();
   menu.MenuController menuController = Get.find();
-  //
 
   @override
   void initState() {
-    //
-
     controller.getSearch(widget.text, widget.idService);
-    //
     super.initState();
   }
 
@@ -66,24 +60,21 @@ class _Recherche extends State<Recherche> {
                     children: [
                       InkWell(
                         onTap: () {
-                          //
                           Get.back();
-                          //
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10),
-                          //width: 100,
                           height: 40,
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(
+                            children: const [
+                              Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,
                                 color: Colors.red,
                               ),
-                              const Text(
+                              Text(
                                 "Recherche",
                                 style: TextStyle(
                                   fontSize: 15,
@@ -508,8 +499,8 @@ class _Recherche extends State<Recherche> {
                                                       Get.snackbar("Oups!",
                                                           "Le stock est épuisé");
                                                     } else {
-                                                      if (panierController
-                                                          .listeDeElement
+                                                      if (cartController
+                                                          .itemList
                                                           .isNotEmpty) {
                                                         menuController
                                                             .showMiniCart
@@ -524,47 +515,44 @@ class _Recherche extends State<Recherche> {
                                                         //
                                                         for (var i = 0;
                                                             i <
-                                                                panierController
-                                                                    .listeDeElement
+                                                                cartController
+                                                                    .itemList
                                                                     .length;
                                                             i++) {
-                                                          if (panierController
-                                                                      .listeDeElement[
+                                                          if (cartController
+                                                                      .itemList[
                                                                   i]['id'] ==
                                                               produit["id"]) {
-                                                            panierController
-                                                                    .listeDeElement[
+                                                            cartController
+                                                                    .itemList[
                                                                 i] = produit;
                                                             v = true;
                                                           }
                                                         }
                                                         if (!v) {
-                                                          panierController
-                                                              .listeDeElement
+                                                          cartController
+                                                              .itemList
                                                               .add(produit);
                                                         }
-                                                        panierController
-                                                            .listeDeElement
+                                                        cartController.itemList
                                                             .add(produit);
-                                                        panierController
-                                                                .listeDeElement
+                                                        cartController.itemList
                                                                 .value =
-                                                            panierController
-                                                                .listeDeElement
+                                                            cartController
+                                                                .itemList
                                                                 .toSet()
                                                                 .toList()
                                                                 .obs;
                                                       }
                                                       if (nombre.value == 0) {
-                                                        panierController
-                                                            .listeDeElement
+                                                        cartController.itemList
                                                             .remove(produit);
                                                         //
                                                         var box = GetStorage();
                                                         box.write(
                                                             "panier",
-                                                            panierController
-                                                                .listeDeElement);
+                                                            cartController
+                                                                .itemList);
                                                       }
                                                     }
                                                   },
@@ -637,30 +625,29 @@ class _Recherche extends State<Recherche> {
                                                         bool v = false;
                                                         for (var i = 0;
                                                             i <
-                                                                panierController
-                                                                    .listeDeElement
+                                                                cartController
+                                                                    .itemList
                                                                     .length;
                                                             i++) {
-                                                          if (panierController
-                                                                      .listeDeElement[
+                                                          if (cartController
+                                                                      .itemList[
                                                                   i]['id'] ==
                                                               produit["id"]) {
-                                                            panierController
-                                                                    .listeDeElement[
+                                                            cartController
+                                                                    .itemList[
                                                                 i] = produit;
                                                             v = true;
                                                           }
                                                         }
                                                         if (!v) {
-                                                          panierController
-                                                              .listeDeElement
+                                                          cartController
+                                                              .itemList
                                                               .add(produit);
                                                         }
-                                                        panierController
-                                                                .listeDeElement
+                                                        cartController.itemList
                                                                 .value =
-                                                            panierController
-                                                                .listeDeElement
+                                                            cartController
+                                                                .itemList
                                                                 .toSet()
                                                                 .toList()
                                                                 .obs;
@@ -668,8 +655,8 @@ class _Recherche extends State<Recherche> {
                                                         var box = GetStorage();
                                                         box.write(
                                                             "panier",
-                                                            panierController
-                                                                .listeDeElement);
+                                                            cartController
+                                                                .itemList);
                                                       }
                                                     }
                                                   },
@@ -792,7 +779,7 @@ class _Recherche extends State<Recherche> {
 
   int getNombreProduitByListePanier(String id) {
     int n = 0;
-    for (var element in panierController.listeDeElement) {
+    for (var element in cartController.itemList) {
       if (element['id'] == id) {
         n = int.parse("${element['nombre']}");
       }

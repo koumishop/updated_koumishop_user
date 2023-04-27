@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
-import 'package:koumishop/pages/profil/commande/commande.dart';
+import 'package:koumishop/screens/orders.dart';
 //import 'package:flutter_push_notifications/utils/download_util.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -60,10 +61,7 @@ class NotificationService {
 
   void onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) {
-    print('id $id');
-    //
-    Get.to(Commande(false));
-    //
+    Get.to(Orders(false));
   }
 
   void selectNotification(String? payload) {
@@ -72,50 +70,33 @@ class NotificationService {
     }
   }
 
-  //
   Future<void> setup({
     required int id,
     required String title,
     required String body,
     required String payload,
   }) async {
-    // #1
     const androidSetting = AndroidInitializationSettings('launcher_icon');
+
     const iosSetting = IOSInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
-      //onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
-    // #2
     const initSettings =
         InitializationSettings(android: androidSetting, iOS: iosSetting);
 
-    // #3
     await _localNotificationsPlugin.initialize(initSettings).then((_) {
-      print('setupPlugin: setup success');
       showLocalNotification(id: id, title: title, body: body, payload: payload);
     }).catchError((Object error) {
-      print('Error: $error');
-    });
-    void onDidReceiveLocalNotification(
-        int id, String? title, String? body, String? payload) {
-      print('id $id');
-    }
-
-    void selectNotification(String? payload) {
-      if (payload != null && payload.isNotEmpty) {
-        behaviorSubject.add(payload);
+      if (kDebugMode) {
+        print('Error: $error');
       }
-    }
+    });
   }
 
   Future<NotificationDetails> _notificationDetails() async {
-    // final bigPicture = await DownloadUtil.downloadAndSaveFile(
-    //     "https://images.unsplash.com/photo-1624948465027-6f9b51067557?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-    //     "drinkwater");
-
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         const AndroidNotificationDetails(
       'channel id',
@@ -128,19 +109,13 @@ class NotificationService {
       playSound: true,
       ticker: 'ticker',
       largeIcon: DrawableResourceAndroidBitmap('launcher_icon'),
-      // styleInformation: BigPictureStyleInformation(
-      //   FilePathAndroidBitmap(bigPicture),
-      //   hideExpandedLargeIcon: false,
-      // ),
       color: Color(0xff2196f3),
     );
 
     IOSNotificationDetails iosNotificationDetails =
         const IOSNotificationDetails(
             threadIdentifier: "thread1",
-            attachments: <IOSNotificationAttachment>[
-          //IOSNotificationAttachment(bigPicture)
-        ]);
+            attachments: <IOSNotificationAttachment>[]);
 
     final details = await _localNotifications.getNotificationAppLaunchDetails();
     if (details != null && details.didNotificationLaunchApp) {
