@@ -17,9 +17,9 @@ class ChangePassword extends StatefulWidget {
 
 class _ChangePassword extends State<ChangePassword> {
   final _formKey = GlobalKey<FormState>();
-  final pwAc = TextEditingController();
-  final pwNC = TextEditingController();
-  final pwC = TextEditingController();
+  final customerCurrentPassword = TextEditingController();
+  final customerNewPassword = TextEditingController();
+  final customerPassword = TextEditingController();
   var box = GetStorage();
 
   bool showPw1 = true;
@@ -126,7 +126,7 @@ class _ChangePassword extends State<ChangePassword> {
                     }
                     return null;
                   },
-                  controller: pwAc,
+                  controller: customerCurrentPassword,
                 ),
               ),
             ),
@@ -162,7 +162,7 @@ class _ChangePassword extends State<ChangePassword> {
                   }
                   return null;
                 },
-                controller: pwNC,
+                controller: customerNewPassword,
               ),
             )),
             const SizedBox(
@@ -192,12 +192,12 @@ class _ChangePassword extends State<ChangePassword> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Veuillez saisir le mot de passe";
-                    } else if (value != pwNC.text) {
+                    } else if (value != customerNewPassword.text) {
                       return "Vous n'avez pas saisi le meme mot de passe";
                     }
                     return null;
                   },
-                  controller: pwC,
+                  controller: customerPassword,
                 ),
               ),
             ),
@@ -248,7 +248,7 @@ class _ChangePassword extends State<ChangePassword> {
                     request.fields.addAll({
                       'accesskey': '90336',
                       'type': 'change-password',
-                      'password': pwC.text,
+                      'password': customerPassword.text,
                       'user_id': '${profilController.data['user_id']}',
                     });
 
@@ -259,7 +259,7 @@ class _ChangePassword extends State<ChangePassword> {
                     if (response.statusCode == 200) {
                       Map infos =
                           jsonDecode(await response.stream.bytesToString());
-                      infos["mdp"] = pwC.text;
+                      infos["mdp"] = customerPassword.text;
                       profilController.data['mdp'] = infos["mdp"];
                       Get.back();
                       if (infos['error']) {
@@ -268,7 +268,7 @@ class _ChangePassword extends State<ChangePassword> {
                       } else {
                         Get.back();
                         Get.snackbar("Succès", "Mot de passe changé");
-                        box.write("mdp", pwC.text);
+                        box.write("mdp", customerPassword.text);
                       }
                     } else {
                       Get.back();

@@ -8,18 +8,18 @@ import 'package:koumishop/controllers/time_slots_controller.dart';
 
 // ignore: must_be_immutable
 class TimeSlots extends GetView<TimeSlotsController> {
-  State st;
-  TimeSlots(this.st, {super.key}) {
+  State timeSlotState;
+  TimeSlots(this.timeSlotState, {super.key}) {
     timeSlotsController.getTimeSlot();
     // ignore: invalid_use_of_protected_member
     cartController.deliveryDate.value["date"] =
         "${DateTime.now().day} ${DateTime.now().month} ${DateTime.now().year}";
   }
 
-  RxBool choix = true.obs;
+  RxBool choice = true.obs;
   RxString id = "".obs;
   Rx date = Rx(DateTime.now());
-  RxBool autreJour = false.obs;
+  RxBool anotherDay = false.obs;
   CartController cartController = Get.find();
   TimeSlotsController timeSlotsController = Get.put(TimeSlotsController());
 
@@ -59,7 +59,7 @@ class TimeSlots extends GetView<TimeSlotsController> {
                 cartController.deliveryDate.value["date"] =
                     "${d.day}-${d.month}-${d.year}";
                 //
-                autreJour.value = DateTime.now().isBefore(d);
+                anotherDay.value = DateTime.now().isBefore(d);
                 date.value = d;
               },
             ),
@@ -82,10 +82,10 @@ class TimeSlots extends GetView<TimeSlotsController> {
                       return ListTile(
                         leading: Checkbox(
                           onChanged: (c) {
-                            if (autreJour.value ||
+                            if (anotherDay.value ||
                                 int.parse('${e['from_time']}'.split(":")[0]) >
                                     DateTime.now().hour) {
-                              choix.value = true;
+                              choice.value = true;
                               s = true;
                               id.value = '${e['from_time']}';
                               // ignore: invalid_use_of_protected_member
@@ -94,7 +94,7 @@ class TimeSlots extends GetView<TimeSlotsController> {
                               Get.back();
                               Timer(const Duration(milliseconds: 500), () {
                                 // ignore: invalid_use_of_protected_member
-                                st.setState(() {});
+                                timeSlotState.setState(() {});
                               });
                             }
                           },
@@ -104,7 +104,7 @@ class TimeSlots extends GetView<TimeSlotsController> {
                         title: Text(
                           "${e['title']}",
                           style: TextStyle(
-                            color: autreJour.value || s
+                            color: anotherDay.value || s
                                 ? Colors.black
                                 : Colors.grey,
                           ),

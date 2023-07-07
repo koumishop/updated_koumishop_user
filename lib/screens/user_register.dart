@@ -13,9 +13,9 @@ import 'package:koumishop/controllers/profile_controller.dart';
 
 // ignore: must_be_immutable
 class Inscription extends StatefulWidget {
-  String phoneN;
+  String phoneNumber;
   String code;
-  Inscription(this.phoneN, this.code, {super.key});
+  Inscription(this.phoneNumber, this.code, {super.key});
   @override
   State<StatefulWidget> createState() {
     return _Inscription();
@@ -27,16 +27,16 @@ class _Inscription extends State<Inscription> {
   final name = TextEditingController();
   final email = TextEditingController();
   final mobile = TextEditingController();
-  final mdp = TextEditingController();
-  final mdpC = TextEditingController();
+  final password = TextEditingController();
+  final confirmedPassword = TextEditingController();
   bool accepte = false;
   bool showCode1 = false;
   bool showCode2 = false;
   // ignore: non_constant_identifier_names
   final code_ref = TextEditingController();
   RxString cd = "+243".obs;
-  var sexe = "";
-  String dateNaissance = "";
+  var gender = "";
+  String birthdate = "";
   final countryPicker = const FlCountryCodePicker();
 
   /// *user_id:10
@@ -132,7 +132,7 @@ class _Inscription extends State<Inscription> {
                                   ),
                                 ),
                                 Text(
-                                  widget.phoneN,
+                                  widget.phoneNumber,
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 17,
@@ -189,10 +189,10 @@ class _Inscription extends State<Inscription> {
                                             child: DropdownButton<String>(
                                               onChanged: (e) {
                                                 setState(() {
-                                                  sexe = e as String;
+                                                  gender = e as String;
                                                 });
                                               },
-                                              value: sexe,
+                                              value: gender,
                                               items: const [
                                                 DropdownMenuItem(
                                                   value: "",
@@ -235,7 +235,7 @@ class _Inscription extends State<Inscription> {
                                               lastDate: DateTime(2030),
                                             ).then((value) {
                                               setState(() {
-                                                dateNaissance =
+                                                birthdate =
                                                     "${value!.year}-${value.month}-${value.day}";
                                               });
                                             });
@@ -253,7 +253,7 @@ class _Inscription extends State<Inscription> {
                                               ),
                                             ),
                                             child: Text(
-                                              dateNaissance,
+                                              birthdate,
                                               style: const TextStyle(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.bold,
@@ -288,12 +288,13 @@ class _Inscription extends State<Inscription> {
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Veuillez saisir votre mot de passe";
-                                    } else if (value != mdpC.text) {
+                                    } else if (value !=
+                                        confirmedPassword.text) {
                                       return "Le mot de passe n'est pas identique";
                                     }
                                     return null;
                                   },
-                                  controller: mdp,
+                                  controller: password,
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -318,12 +319,12 @@ class _Inscription extends State<Inscription> {
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Veuillez saisir votre mot de passe pour confirmer";
-                                    } else if (value != mdp.text) {
+                                    } else if (value != password.text) {
                                       return "Le mot de passe n'est pas identique";
                                     }
                                     return null;
                                   },
-                                  controller: mdpC,
+                                  controller: confirmedPassword,
                                 ),
                                 const SizedBox(
                                   height: 30,
@@ -455,16 +456,16 @@ class _Inscription extends State<Inscription> {
                                         request.fields.addAll(
                                           {
                                             'country_code': '243',
-                                            'password': mdp.text,
+                                            'password': password.text,
                                             'friends_code': '',
                                             'accesskey': '90336',
                                             'name': name.text,
-                                            'mobile': widget.phoneN,
+                                            'mobile': widget.phoneNumber,
                                             'type': 'register',
                                             'email': email.text,
                                             'fcm_id': "$fcmToken",
-                                            'sex': sexe,
-                                            'date_of_birth': dateNaissance,
+                                            'sex': gender,
+                                            'date_of_birth': birthdate,
                                             //'1990-10-25'
                                           },
                                         );

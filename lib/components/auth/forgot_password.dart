@@ -31,7 +31,7 @@ class _ForgotPassword extends State<ForgotPassword> {
       'accesskey': '90336',
       'login': '1',
       'mobile': widget.telephone,
-      'password': pwC.text,
+      'password': customerPassword.text,
       'fcm_id': '$fcmToken',
     });
 
@@ -41,7 +41,7 @@ class _ForgotPassword extends State<ForgotPassword> {
 
     if (response.statusCode == 200) {
       Map infos = jsonDecode(await response.stream.bytesToString());
-      infos["mdp"] = pwC.text;
+      infos["mdp"] = customerPassword.text;
       Get.back();
       if (infos['error']) {
         Get.snackbar("Erreur d'authentification", "${infos['message']}");
@@ -49,7 +49,7 @@ class _ForgotPassword extends State<ForgotPassword> {
         ProfilController profilController = Get.find();
         profilController.data.value = infos;
         box.write("profile", infos); //
-        box.write("mdp", pwC.text);
+        box.write("mdp", customerPassword.text);
         Get.back();
         Get.snackbar("Succès", "Bienvenu ${infos['name']}");
         Timer(const Duration(seconds: 1), () {});
@@ -62,9 +62,9 @@ class _ForgotPassword extends State<ForgotPassword> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  final pwAc = TextEditingController();
-  final pwNC = TextEditingController();
-  final pwC = TextEditingController();
+  final customerCurrentPassword = TextEditingController();
+  final customerNewPassword = TextEditingController();
+  final customerPassword = TextEditingController();
   final phone = TextEditingController();
   var box = GetStorage();
   bool showPw1 = true;
@@ -73,7 +73,7 @@ class _ForgotPassword extends State<ForgotPassword> {
   ProfilController profilController = Get.find();
 
   changePassword(
-    String mdp,
+    String password,
     String telephone,
   ) async {
     var headers = {
@@ -86,7 +86,7 @@ class _ForgotPassword extends State<ForgotPassword> {
         Uri.parse(
             'https://webadmin.koumishop.com/api-firebase/user-registration.php'));
     request.fields.addAll({
-      'password': mdp,
+      'password': password,
       'mobile': telephone,
       'type': 'forgot-password-mobile',
       'accesskey': '90336'
@@ -266,7 +266,7 @@ class _ForgotPassword extends State<ForgotPassword> {
                               }
                               return null;
                             },
-                            controller: pwNC,
+                            controller: customerNewPassword,
                           ),
                         )),
                         const SizedBox(
@@ -297,12 +297,12 @@ class _ForgotPassword extends State<ForgotPassword> {
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Veuillez saisir le mot de passe";
-                                } else if (value != pwNC.text) {
+                                } else if (value != customerNewPassword.text) {
                                   return "Le mot de passe n'est pas identique";
                                 }
                                 return null;
                               },
-                              controller: pwC,
+                              controller: customerPassword,
                             ),
                           ),
                         ),
@@ -390,7 +390,7 @@ class _ForgotPassword extends State<ForgotPassword> {
                                     //
                                   } else {
                                     changePassword(
-                                      pwC.text,
+                                      customerPassword.text,
                                       widget.telephone,
                                     );
                                   }
