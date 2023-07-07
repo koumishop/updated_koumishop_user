@@ -126,9 +126,9 @@ class _Cart extends State<Cart> {
                             width: 100,
                             height: 40,
                             alignment: Alignment.center,
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Icon(
                                   Icons.arrow_back_ios,
                                   size: 20,
@@ -985,10 +985,6 @@ class _Cart extends State<Cart> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   sendPaiementMobile(Map<String, String> commande, double montant,
       String devise, bool visa) async {

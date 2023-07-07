@@ -114,9 +114,9 @@ class _Faq extends State<Faq> {
                           //width: 100,
                           height: 40,
                           alignment: Alignment.center,
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,

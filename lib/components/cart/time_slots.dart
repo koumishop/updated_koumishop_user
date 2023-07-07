@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koumishop/controllers/cart_controller.dart';
-import 'package:table_calendar/table_calendar.dart';
+import "package:table_calendar/table_calendar.dart";
 import 'package:koumishop/controllers/time_slots_controller.dart';
 
 // ignore: must_be_immutable

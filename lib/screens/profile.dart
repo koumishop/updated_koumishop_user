@@ -40,10 +40,6 @@ class _Profile extends State<Profile> {
 
   NotificationService ns = NotificationService();
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   //
   @override
@@ -89,9 +85,9 @@ class _Profile extends State<Profile> {
                               width: 100,
                               height: 40,
                               alignment: Alignment.center,
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.arrow_back_ios,
                                     size: 20,
@@ -355,12 +351,12 @@ class _Profile extends State<Profile> {
                                                 context: context,
                                                 anchorPoint: const Offset(0, 0),
                                                 builder: (c) {
-                                                  return Material(
+                                                  return const Material(
                                                     color: Colors.transparent,
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
-                                                      children: const [
+                                                      children: [
                                                         ChangePassword(),
                                                       ],
                                                     ),

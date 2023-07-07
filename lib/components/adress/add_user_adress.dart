@@ -8,8 +8,8 @@ enum Type { home, work, other }
 
 // ignore: must_be_immutable
 class AddAdress extends StatefulWidget {
-  State state;
-  AddAdress(this.state, {super.key});
+  State customerAdressState;
+  AddAdress(this.customerAdressState, {super.key});
   @override
   State<StatefulWidget> createState() {
     return _AddAdress();
@@ -17,15 +17,15 @@ class AddAdress extends StatefulWidget {
 }
 
 class _AddAdress extends State<AddAdress> {
-  Type choix = Type.home;
+  Type choice = Type.home;
   ProfilController profilController = Get.find();
 
   final _formKey = GlobalKey<FormState>();
-  var nomC = TextEditingController();
-  var tel1C = TextEditingController();
-  final tel2C = TextEditingController();
-  final avenueNumC = TextEditingController();
-  final pointRepC = TextEditingController();
+  var customerName = TextEditingController();
+  var customerPhone1 = TextEditingController();
+  final customerPhone2 = TextEditingController();
+  final roadNumber = TextEditingController();
+  final customerAdressRefPoint = TextEditingController();
 
   saveAdress(Map<String, String> m) async {
     var headers = {
@@ -41,26 +41,26 @@ class _AddAdress extends State<AddAdress> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      tel2C.clear();
-      avenueNumC.clear();
-      pointRepC.clear();
+      customerPhone2.clear();
+      roadNumber.clear();
+      customerAdressRefPoint.clear();
       Get.back();
       Get.back();
       Get.snackbar("Adresse", "Enregistrement éffectué");
-      widget.state.setState(() {});
+      widget.customerAdressState.setState(() {});
     } else {
       Get.snackbar("Erreur", "Un problème est survenu");
     }
   }
 
-  String c1 = "Kinshasa";
-  String idComm = "";
-  String c2 = "";
-  String idQuart = "";
-  List lq = [];
-  bool dft = false;
+  String city1 = "Kinshasa";
+  String municipalityId = "";
+  String city2 = "";
+  String districtId = "";
+  List districtList = [];
+  bool defaultAdress = false;
   Map adresse = {};
-  List lc = [
+  List municipalityList = [
     "Kinshasa",
     "Lingwala",
     "Ngaliema",
@@ -76,10 +76,11 @@ class _AddAdress extends State<AddAdress> {
   @override
   void initState() {
     var box = GetStorage();
-    nomC = TextEditingController(text: profilController.data['name']);
-    tel1C = TextEditingController(text: profilController.data['mobile']);
+    customerName = TextEditingController(text: profilController.data['name']);
+    customerPhone1 =
+        TextEditingController(text: profilController.data['mobile']);
     adresse = box.read("adresse") ?? {};
-    lc = adresse['data'];
+    municipalityList = adresse['data'];
     super.initState();
   }
 
@@ -121,9 +122,9 @@ class _AddAdress extends State<AddAdress> {
                           padding: const EdgeInsets.only(left: 10),
                           height: 40,
                           alignment: Alignment.center,
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,
@@ -162,7 +163,7 @@ class _AddAdress extends State<AddAdress> {
                             }
                             return null;
                           },
-                          controller: nomC,
+                          controller: customerName,
                         ),
                         TextFormField(
                           enabled: false,
@@ -175,14 +176,14 @@ class _AddAdress extends State<AddAdress> {
                             }
                             return null;
                           },
-                          controller: tel1C,
+                          controller: customerPhone1,
                         ),
                         TextField(
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: "Numéro de téléphone alternatif",
                           ),
-                          controller: tel2C,
+                          controller: customerPhone2,
                         ),
                         TextFormField(
                           decoration: const InputDecoration(
@@ -194,7 +195,7 @@ class _AddAdress extends State<AddAdress> {
                             }
                             return null;
                           },
-                          controller: avenueNumC,
+                          controller: roadNumber,
                         ),
                         TextFormField(
                           decoration: const InputDecoration(
@@ -206,7 +207,7 @@ class _AddAdress extends State<AddAdress> {
                             }
                             return null;
                           },
-                          controller: pointRepC,
+                          controller: customerAdressRefPoint,
                         ),
                         const SizedBox(
                           height: 20,
@@ -219,26 +220,28 @@ class _AddAdress extends State<AddAdress> {
                               child: SizedBox(
                                 height: 50,
                                 child: DropdownButton<String>(
-                                  value: c1,
+                                  value: city1,
                                   isExpanded: true,
                                   items: List.generate(
-                                    lc.length,
+                                    municipalityList.length,
                                     (index) => DropdownMenuItem<String>(
-                                      value: "${lc[index]['pincode']}",
-                                      child: Text("${lc[index]['pincode']}"),
+                                      value:
+                                          "${municipalityList[index]['pincode']}",
+                                      child: Text(
+                                          "${municipalityList[index]['pincode']}"),
                                     ),
                                   ),
                                   onChanged: (value) {
                                     setState(() {
-                                      c1 = value as String;
-                                      for (var element in lc) {
-                                        if (element['pincode'] == c1) {
-                                          lq = element['cities'];
-                                          c2 = lq.isNotEmpty
-                                              ? lq[0]['name']
+                                      city1 = value as String;
+                                      for (var element in municipalityList) {
+                                        if (element['pincode'] == city1) {
+                                          districtList = element['cities'];
+                                          city2 = districtList.isNotEmpty
+                                              ? districtList[0]['name']
                                               : "";
-                                          idQuart = lq[0]['id'];
-                                          idComm = element['id'];
+                                          districtId = districtList[0]['id'];
+                                          municipalityId = element['id'];
                                         }
                                       }
                                     });
@@ -251,25 +254,27 @@ class _AddAdress extends State<AddAdress> {
                             ),
                             Expanded(
                               flex: 4,
-                              child: idComm.isNotEmpty
+                              child: municipalityId.isNotEmpty
                                   ? SizedBox(
                                       height: 50,
                                       child: DropdownButton<String>(
-                                        value: c2,
+                                        value: city2,
                                         isExpanded: true,
                                         items: List.generate(
-                                          lq.length,
+                                          districtList.length,
                                           (index) => DropdownMenuItem<String>(
-                                            value: "${lq[index]['name']}",
-                                            child: Text("${lq[index]['name']}"),
+                                            value:
+                                                "${districtList[index]['name']}",
+                                            child: Text(
+                                                "${districtList[index]['name']}"),
                                           ),
                                         ),
                                         onChanged: (value) {
                                           setState(() {
-                                            c2 = value as String;
-                                            for (var element in lq) {
-                                              if (element['name'] == c2) {
-                                                idQuart = element['id'];
+                                            city2 = value as String;
+                                            for (var element in districtList) {
+                                              if (element['name'] == city2) {
+                                                districtId = element['id'];
                                               }
                                             }
                                           });
@@ -292,10 +297,10 @@ class _AddAdress extends State<AddAdress> {
                                 children: [
                                   Radio(
                                     value: Type.home,
-                                    groupValue: choix,
+                                    groupValue: choice,
                                     onChanged: (Type? value) {
                                       setState(() {
-                                        choix = value!;
+                                        choice = value!;
                                       });
                                     },
                                   ),
@@ -312,10 +317,10 @@ class _AddAdress extends State<AddAdress> {
                                 children: [
                                   Radio(
                                     value: Type.work,
-                                    groupValue: choix,
+                                    groupValue: choice,
                                     onChanged: (Type? value) {
                                       setState(() {
-                                        choix = value!;
+                                        choice = value!;
                                       });
                                     },
                                   ),
@@ -332,10 +337,10 @@ class _AddAdress extends State<AddAdress> {
                                 children: [
                                   Radio(
                                     value: Type.other,
-                                    groupValue: choix,
+                                    groupValue: choice,
                                     onChanged: (Type? value) {
                                       setState(() {
-                                        choix = value!;
+                                        choice = value!;
                                       });
                                     },
                                   ),
@@ -353,13 +358,13 @@ class _AddAdress extends State<AddAdress> {
                         ),
                         Row(children: [
                           Checkbox(
-                            value: dft,
+                            value: defaultAdress,
                             checkColor: Colors.white,
                             activeColor: Colors.red,
                             onChanged: (e) {
                               setState(() {
                                 //
-                                dft = e as bool;
+                                defaultAdress = e as bool;
                               });
                             },
                           ),
@@ -394,21 +399,21 @@ class _AddAdress extends State<AddAdress> {
                                 /**
                                * 
                                */
-                                if (idQuart != "") {
+                                if (districtId != "") {
                                   Map<String, String> adresse = {
                                     'accesskey': '90336',
                                     'add_address': '1',
                                     'user_id': profilController.data['user_id'],
-                                    'name': nomC.text,
-                                    'mobile': tel1C.text,
-                                    'alternate_mobile': tel2C.text,
-                                    'type': choix.name,
-                                    'address': avenueNumC.text,
+                                    'name': customerName.text,
+                                    'mobile': customerPhone1.text,
+                                    'alternate_mobile': customerPhone2.text,
+                                    'type': choice.name,
+                                    'address': roadNumber.text,
                                     'country_code': '243',
-                                    'landmark': pointRepC.text,
-                                    'pincode_id': idComm,
-                                    'city_id': idQuart,
-                                    'is_default': dft ? "0" : "1",
+                                    'landmark': customerAdressRefPoint.text,
+                                    'pincode_id': municipalityId,
+                                    'city_id': districtId,
+                                    'is_default': defaultAdress ? "0" : "1",
                                   };
 
                                   Get.dialog(

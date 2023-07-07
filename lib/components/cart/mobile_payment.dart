@@ -283,9 +283,9 @@ class _Compteur extends State<Compteur> {
                     padding: const EdgeInsets.only(left: 10),
                     height: 40,
                     alignment: Alignment.center,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
+                      children: [
                         Icon(
                           Icons.arrow_back_ios,
                           size: 20,
@@ -397,10 +397,10 @@ class _Compteur extends State<Compteur> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     alignment: Alignment.center,
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
+                                      children: [
                                         SizedBox(
                                           height: 28,
                                           width: 28,

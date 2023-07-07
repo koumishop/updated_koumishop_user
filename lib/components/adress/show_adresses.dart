@@ -270,10 +270,6 @@ class _ShowAdresses extends State<ShowAdresses> {
   List adresses = [];
   final box = GetStorage();
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

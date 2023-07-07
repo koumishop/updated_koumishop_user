@@ -46,10 +46,6 @@ class _MainMenu extends State<MainMenu> {
   RxList subcategory = [].obs;
   RxInt subcategoryIndex = 0.obs;
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   void initState() {

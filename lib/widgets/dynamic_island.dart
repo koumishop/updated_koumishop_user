@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DynamicIsland extends StatefulWidget {
+  const DynamicIsland({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _DynamicIsland();
@@ -10,7 +12,7 @@ class DynamicIsland extends StatefulWidget {
 class _DynamicIsland extends State<DynamicIsland> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: SizedBox(
           height: 35,

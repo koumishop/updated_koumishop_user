@@ -215,10 +215,6 @@ class _UserAdress extends State<UserAdress> {
   List adresses = [];
   final box = GetStorage();
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,9 +255,9 @@ class _UserAdress extends State<UserAdress> {
                           //width: 150,
                           height: 40,
                           alignment: Alignment.center,
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
+                            children: [
                               Icon(
                                 Icons.arrow_back_ios,
                                 size: 20,

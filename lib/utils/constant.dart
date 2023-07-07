@@ -19,7 +19,7 @@ class Constant {
 
   //MODIFICATION PART END
 
-  static String BaseUrl = MainBaseUrl + "api-firebase/";
+  static String BaseUrl = "${MainBaseUrl}api-firebase/";
 
   //Do not change anything in this link**************************************************
   static String PLAY_STORE_LINK =
@@ -38,8 +38,8 @@ class Constant {
   static String PAYTM_ORDER_PROCESS_DEMO_VAL =
       "https://securegw-stage.paytm.in/order/process";
   static String GENERATE_PAYTM_CHECKSUM =
-      MainBaseUrl + "paytm/generate-checksum.php";
-  static String VALID_TRANSACTION = MainBaseUrl + "/paytm/valid-transction.php";
+      "${MainBaseUrl}paytm/generate-checksum.php";
+  static String VALID_TRANSACTION = "$MainBaseUrl/paytm/valid-transction.php";
   static String CALLBACK_URL = "CALLBACK_URL";
   static String CHECKSUMHASH = "CHECKSUMHASH";
   static String ORDER_ID_ = "ORDER_ID";
@@ -50,33 +50,33 @@ class Constant {
   static String MID = "MID";
 
   //**********APIS**********
-  static String FAQ_URL = BaseUrl + "get-faqs.php";
-  static String CATEGORY_URL = BaseUrl + "get-categories.php";
-  static String SELLER_URL = BaseUrl + "get-seller-data.php";
-  static String GET_RAZORPAY_ORDER_URL = BaseUrl + "create-razorpay-order.php";
-  static String GET_SUB_CATEGORY_URL = BaseUrl + "get-subcategories.php";
-  static String GET_SECTION_URL = BaseUrl + "sections.php";
-  static String GET_ADDRESS_URL = BaseUrl + "user-addresses.php";
-  static String REGISTER_URL = BaseUrl + "user-registration.php";
-  static String PAPAL_URL = MainBaseUrl + "paypal/create-payment.php";
-  static String LOGIN_URL = BaseUrl + "login.php";
-  static String GET_ALL_DATA_URL = BaseUrl + "get-all-data.php";
-  static String GET_PRODUCTS_URL = BaseUrl + "get-products.php";
-  static String GET_SELLER_DATA_URL = BaseUrl + "get-seller-data.php";
-  static String SETTING_URL = BaseUrl + "settings.php";
+  static String FAQ_URL = "${BaseUrl}get-faqs.php";
+  static String CATEGORY_URL = "${BaseUrl}get-categories.php";
+  static String SELLER_URL = "${BaseUrl}get-seller-data.php";
+  static String GET_RAZORPAY_ORDER_URL = "${BaseUrl}create-razorpay-order.php";
+  static String GET_SUB_CATEGORY_URL = "${BaseUrl}get-subcategories.php";
+  static String GET_SECTION_URL = "${BaseUrl}sections.php";
+  static String GET_ADDRESS_URL = "${BaseUrl}user-addresses.php";
+  static String REGISTER_URL = "${BaseUrl}user-registration.php";
+  static String PAPAL_URL = "${MainBaseUrl}paypal/create-payment.php";
+  static String LOGIN_URL = "${BaseUrl}login.php";
+  static String GET_ALL_DATA_URL = "${BaseUrl}get-all-data.php";
+  static String GET_PRODUCTS_URL = "${BaseUrl}get-products.php";
+  static String GET_SELLER_DATA_URL = "${BaseUrl}get-seller-data.php";
+  static String SETTING_URL = "${BaseUrl}settings.php";
   static String GET_FAVORITES_URL = "${BaseUrl}favorites.php";
   static String MIDTRANS_PAYMENT_URL =
-      MainBaseUrl + "midtrans/create-payment.php";
-  static String GET_LOCATIONS_URL = BaseUrl + "get-locations.php";
-  static String ORDER_PROCESS_URL = BaseUrl + "order-process.php";
-  static String USER_DATA_URL = BaseUrl + "get-user-data.php";
-  static String CART_URL = BaseUrl + "cart.php";
-  static String STRIPE_BASE_URL = MainBaseUrl + "stripe/create-payment.php";
-  static String TRANSACTION_URL = BaseUrl + "get-user-transactions.php";
-  static String PROMO_CODE_CHECK_URL = BaseUrl + "validate-promo-code.php";
-  static String VERIFY_PAYMENT_REQUEST = BaseUrl + "payment-request.php";
-  static String REGISTER_DEVICE_URL = BaseUrl + "store-fcm-id.php";
-  static String GET_SERVICES_DATA_URL = BaseUrl + "get-service-data.php";
+      "${MainBaseUrl}midtrans/create-payment.php";
+  static String GET_LOCATIONS_URL = "${BaseUrl}get-locations.php";
+  static String ORDER_PROCESS_URL = "${BaseUrl}order-process.php";
+  static String USER_DATA_URL = "${BaseUrl}get-user-data.php";
+  static String CART_URL = "${BaseUrl}cart.php";
+  static String STRIPE_BASE_URL = "${MainBaseUrl}stripe/create-payment.php";
+  static String TRANSACTION_URL = "${BaseUrl}get-user-transactions.php";
+  static String PROMO_CODE_CHECK_URL = "${BaseUrl}validate-promo-code.php";
+  static String VERIFY_PAYMENT_REQUEST = "${BaseUrl}payment-request.php";
+  static String REGISTER_DEVICE_URL = "${BaseUrl}store-fcm-id.php";
+  static String GET_SERVICES_DATA_URL = "${BaseUrl}get-service-data.php";
 
   //**************parameters***************
 
@@ -367,7 +367,7 @@ class Constant {
   static double SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 0.0;
   static double WALLET_BALANCE = 0.0;
   static String U_ID = "";
-  static Map<String, String> CartValues = Map();
+  static Map<String, String> CartValues = {};
   static int selectedDatePosition = 0;
   static double FLOAT_TOTAL_AMOUNT = 0.0;
   static int TOTAL_CART_ITEM = 0;

@@ -80,9 +80,9 @@ class _ChangePassword extends State<ChangePassword> {
         child: Wrap(
           spacing: 5,
           children: <Widget>[
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
                   "Modifier le mot de passe ?",
                   textAlign: TextAlign.center,

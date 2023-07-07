@@ -55,9 +55,9 @@ class _LoginScreen extends State<LoginScreen> {
                       padding: const EdgeInsets.only(left: 10),
                       height: 40,
                       alignment: Alignment.center,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.arrow_back,
                             size: 20,
@@ -124,9 +124,9 @@ class _LoginScreen extends State<LoginScreen> {
                   // ignore: sort_child_properties_last
                   child: ListView(
                     children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             "Bienvenue",
                             style: TextStyle(

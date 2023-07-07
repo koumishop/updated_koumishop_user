@@ -142,9 +142,9 @@ class _ForgotPassword extends State<ForgotPassword> {
                       //width: 100,
                       height: 40,
                       alignment: Alignment.center,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.arrow_back,
                             size: 20,

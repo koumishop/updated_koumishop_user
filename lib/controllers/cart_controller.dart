@@ -47,7 +47,7 @@ class CartController extends GetxController {
         Get.back();
         Get.back();
         Get.back();
-        Get.off(Homepage(false));
+        Get.offAll(Homepage(false));
         Get.to(Orders(true));
         Get.snackbar("Succès", "${map['message']}");
       }

@@ -83,9 +83,9 @@ class _Inscription extends State<Inscription> {
                               padding: const EdgeInsets.only(left: 10),
                               height: 40,
                               alignment: Alignment.center,
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.arrow_back_ios,
                                     size: 20,
@@ -494,7 +494,7 @@ class _Inscription extends State<Inscription> {
                                             //
                                             box.write("profile", map);
                                             Get.back();
-                                            Get.off(Homepage(false));
+                                            Get.offAll(Homepage(false));
                                             Get.snackbar(
                                               "Téléphone",
                                               "${map['message']}",
